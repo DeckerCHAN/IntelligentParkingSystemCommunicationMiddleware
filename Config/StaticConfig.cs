@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IPSCM.Config
 {
-    public class StaticConfig:IPSCM.Config.Config
+    public sealed class StaticConfig : Config
     {
         private static StaticConfig _instance;
 
@@ -18,6 +18,7 @@ namespace IPSCM.Config
         {
             this.Set("username","TestUser");
             this.Set("userpassword","defaultPassword");
+            
         }
     }
 }
