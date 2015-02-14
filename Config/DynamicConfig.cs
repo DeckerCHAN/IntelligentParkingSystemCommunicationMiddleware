@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Config
+namespace IPSCM.Config
 {
-    class DynamicConfig : Config
+    class DynamicConfig : IPSCM.Config.Config
     {
         public DynamicConfig(FileInfo configFile)
             : base()

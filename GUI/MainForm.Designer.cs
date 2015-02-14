@@ -1,4 +1,4 @@
-﻿namespace GUI
+﻿namespace IPSCM.GUI
 {
     partial class MainForm
     {

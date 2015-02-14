@@ -7,7 +7,7 @@
     <ProjectGuid>{7E808700-EACA-4FE5-80DE-3B9811A2C67A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Config</RootNamespace>
+    <RootNamespace>IPSCM.Config</RootNamespace>
     <AssemblyName>Config</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -7,7 +7,7 @@
     <ProjectGuid>{00E840B7-5D18-44E0-BAD5-6D144C6F4151}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GUI</RootNamespace>
+    <RootNamespace>IPSCM.GUI</RootNamespace>
     <AssemblyName>GUI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

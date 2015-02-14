@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using GUI;
+﻿using System.Windows.Forms;
+using IPSCM.GUI;
 
-namespace Core
+namespace IPSCM.Core
 {
     class Engine:ApplicationContext
     {

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Config
+namespace IPSCM.Config
 {
 
     public abstract class Config

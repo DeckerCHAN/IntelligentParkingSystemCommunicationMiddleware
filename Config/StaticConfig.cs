@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Config
+namespace IPSCM.Config
 {
-    class StaticConfig:Config
+    class StaticConfig:IPSCM.Config.Config
     {
         private static StaticConfig _instance;
 
