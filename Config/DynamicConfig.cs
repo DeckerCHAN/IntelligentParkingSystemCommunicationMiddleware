@@ -6,7 +6,7 @@ using System.Text;
 
 namespace IPSCM.Config
 {
-    class DynamicConfig : IPSCM.Config.Config
+    public class DynamicConfig : IPSCM.Config.Config
     {
         public DynamicConfig(FileInfo configFile)
             : base()
