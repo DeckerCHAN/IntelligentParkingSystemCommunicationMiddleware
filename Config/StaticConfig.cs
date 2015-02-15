@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace IPSCM.Config
 {
@@ -16,8 +13,9 @@ namespace IPSCM.Config
 
         private StaticConfig() : base()
         {
-            this.Set("username","TestUser");
-            this.Set("userpassword","defaultPassword");
+            this.Set("LogPath","Logs\\"+DateTime.Now.ToString("F").Replace(':','-'));
+            this.Set("UserName","TestUser");
+            this.Set("UserPassword","defaultPassword");
             
         }
     }
