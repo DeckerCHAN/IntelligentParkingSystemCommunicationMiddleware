@@ -13,7 +13,7 @@ namespace IPSCM.Core
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(Engine.GetEngine());
+            Engine.GetEngine().Run();
         }
     }
 }
