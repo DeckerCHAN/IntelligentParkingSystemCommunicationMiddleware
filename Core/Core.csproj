@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IPSCM.Core</RootNamespace>
-    <AssemblyName>Core</AssemblyName>
+    <AssemblyName>IPSCM</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>IPSCM.Core.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
@@ -96,6 +99,10 @@
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{00e840b7-5d18-44e0-bad5-6d144c6f4151}</Project>
       <Name>GUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Logging.csproj">
+      <Project>{73fde06b-e56a-4df5-b2a7-05b780e5aa21}</Project>
+      <Name>Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
