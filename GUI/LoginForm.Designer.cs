@@ -31,80 +31,80 @@ namespace IPSCM.GUI
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
+            this.UserNameLabel = new System.Windows.Forms.Label();
+            this.PasswordLabel = new System.Windows.Forms.Label();
+            this.PasswordTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.UserNameTextBox = new System.Windows.Forms.TextBox();
+            this.LoginButton = new System.Windows.Forms.Button();
+            this.Resultlabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // label1
+            // UserNameLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(42, 55);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 21);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
+            this.UserNameLabel.AutoSize = true;
+            this.UserNameLabel.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.UserNameLabel.Location = new System.Drawing.Point(42, 55);
+            this.UserNameLabel.Name = "UserNameLabel";
+            this.UserNameLabel.Size = new System.Drawing.Size(73, 21);
+            this.UserNameLabel.TabIndex = 0;
+            this.UserNameLabel.Text = "用户名";
             // 
-            // label2
+            // PasswordLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(42, 108);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 21);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "label2";
+            this.PasswordLabel.AutoSize = true;
+            this.PasswordLabel.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.PasswordLabel.Location = new System.Drawing.Point(42, 108);
+            this.PasswordLabel.Name = "PasswordLabel";
+            this.PasswordLabel.Size = new System.Drawing.Size(52, 21);
+            this.PasswordLabel.TabIndex = 1;
+            this.PasswordLabel.Text = "密码";
             // 
-            // maskedTextBox1
+            // PasswordTextBox
             // 
-            this.maskedTextBox1.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.maskedTextBox1.Location = new System.Drawing.Point(140, 105);
-            this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.Size = new System.Drawing.Size(206, 31);
-            this.maskedTextBox1.TabIndex = 2;
+            this.PasswordTextBox.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.PasswordTextBox.Location = new System.Drawing.Point(140, 105);
+            this.PasswordTextBox.Name = "PasswordTextBox";
+            this.PasswordTextBox.Size = new System.Drawing.Size(206, 31);
+            this.PasswordTextBox.TabIndex = 2;
             // 
-            // textBox1
+            // UserNameTextBox
             // 
-            this.textBox1.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(140, 46);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(206, 31);
-            this.textBox1.TabIndex = 3;
+            this.UserNameTextBox.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.UserNameTextBox.Location = new System.Drawing.Point(140, 46);
+            this.UserNameTextBox.Name = "UserNameTextBox";
+            this.UserNameTextBox.Size = new System.Drawing.Size(206, 31);
+            this.UserNameTextBox.TabIndex = 3;
             // 
-            // button1
+            // LoginButton
             // 
-            this.button1.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(61, 177);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(300, 36);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.LoginButton.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.LoginButton.Location = new System.Drawing.Point(61, 177);
+            this.LoginButton.Name = "LoginButton";
+            this.LoginButton.Size = new System.Drawing.Size(300, 36);
+            this.LoginButton.TabIndex = 4;
+            this.LoginButton.Text = "登录";
+            this.LoginButton.UseVisualStyleBackColor = true;
             // 
-            // label4
+            // Resultlabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(320, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(41, 12);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "label4";
+            this.Resultlabel.AutoSize = true;
+            this.Resultlabel.Location = new System.Drawing.Point(320, 20);
+            this.Resultlabel.Name = "Resultlabel";
+            this.Resultlabel.Size = new System.Drawing.Size(29, 12);
+            this.Resultlabel.TabIndex = 6;
+            this.Resultlabel.Text = "结果";
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(411, 259);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.maskedTextBox1);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.Resultlabel);
+            this.Controls.Add(this.LoginButton);
+            this.Controls.Add(this.UserNameTextBox);
+            this.Controls.Add(this.PasswordTextBox);
+            this.Controls.Add(this.PasswordLabel);
+            this.Controls.Add(this.UserNameLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "LoginForm";
             this.Text = "LoginForm";
@@ -115,11 +115,11 @@ namespace IPSCM.GUI
 
         #endregion
 
-        private Label label1;
-        private Label label2;
-        private MaskedTextBox maskedTextBox1;
-        private TextBox textBox1;
-        private Button button1;
-        private Label label4;
+        private Label UserNameLabel;
+        private Label PasswordLabel;
+        private MaskedTextBox PasswordTextBox;
+        private TextBox UserNameTextBox;
+        private Button LoginButton;
+        private Label Resultlabel;
     }
 }
