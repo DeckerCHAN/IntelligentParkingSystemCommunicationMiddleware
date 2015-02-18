@@ -23,7 +23,7 @@ namespace IPSCM.Configuration
             {
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (String.IsNullOrEmpty(line)) { continue; }
+                    if (String.IsNullOrEmpty(line)||line[0]=='#') { continue; }
                     var key = line.Substring(0, line.IndexOf(':'));
                     var value = line.Substring(line.IndexOf(':') + 1);
 
@@ -40,7 +40,7 @@ namespace IPSCM.Configuration
 
         public void SaveToFile()
         {
-            using (StreamWriter writer = new StreamWriter(this.configFile.OpenWrite()))
+            using (var writer = new StreamWriter(this.configFile.OpenWrite()))
             {
                 foreach (var key in this.configs.Keys)
                 {
