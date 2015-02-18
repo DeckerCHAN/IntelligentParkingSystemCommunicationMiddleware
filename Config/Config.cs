@@ -27,13 +27,23 @@ namespace IPSCM.Configuration
         public virtual String GetString(String key)
         {
             key = key.ToUpper();
+            if (!configs.ContainsKey(key))
+            {
+                throw new KeyNotFoundException(String.Format("\"{0}\" did not found!", key));
+            }
             return this.configs[key];
         }
 
         public virtual UInt32 GetUInt(String key)
         {
-            key = key.ToUpper();
-            return Convert.ToUInt32(this.configs[key]);
+
+            return Convert.ToUInt32(this.GetString(key));
+        }
+
+        public virtual Int32 GetInt(String key)
+        {
+
+            return Convert.ToInt32(this.GetString(key));
         }
 
 
