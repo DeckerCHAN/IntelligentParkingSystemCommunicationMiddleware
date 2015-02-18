@@ -3,10 +3,16 @@
 
     public class UiControl
     {
+        private static UiControl _instance;
+
+        public static UiControl GetUiControl()
+        {
+            return _instance ?? (new UiControl());
+        }
         public MainForm MainWindow { get; private set; }
         public LoginForm LoginWindow { get; private set; }
 
-        public UiControl()
+        private UiControl()
         {
             this.MainWindow = new MainForm();
             this.LoginWindow = new LoginForm();

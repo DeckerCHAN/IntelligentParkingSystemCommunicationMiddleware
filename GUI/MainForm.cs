@@ -11,10 +11,6 @@ namespace IPSCM.GUI
             InitializeComponent();
         }
 
-        private void ConsoleTextBox_TextChanged(object sender, System.EventArgs e)
-        {
-
-        }
 
         public void Out(String text)
         {
@@ -36,6 +32,12 @@ namespace IPSCM.GUI
             this.ConsoleTextBox.AppendText(text);
             this.ConsoleTextBox.SelectionColor = this.ConsoleTextBox.ForeColor;
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            //this.ShowDialog(UiControl.GetUiControl().LoginWindow);
+        }
+
 
     }
 }

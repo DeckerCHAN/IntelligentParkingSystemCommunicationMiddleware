@@ -71,6 +71,10 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transactions\Transaction.cs" />
+    <Compile Include="Transactions\TransactionPool.cs" />
+    <Compile Include="Transactions\LoginTransaction.cs" />
+    <Compile Include="Transactions\TransactionStatus.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -103,6 +107,14 @@
     <ProjectReference Include="..\Logging\Logging.csproj">
       <Project>{73fde06b-e56a-4df5-b2a7-05b780e5aa21}</Project>
       <Name>Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Protocol\Protocol.csproj">
+      <Project>{b6676bb2-dcaf-42b2-acff-f94f409653b2}</Project>
+      <Name>Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{be77fcf7-2b11-4ca5-b988-2b5135188cdb}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

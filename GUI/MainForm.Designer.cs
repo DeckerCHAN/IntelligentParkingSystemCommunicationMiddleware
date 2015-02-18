@@ -45,8 +45,6 @@ namespace IPSCM.GUI
             this.ConsoleTextBox.Size = new System.Drawing.Size(636, 388);
             this.ConsoleTextBox.TabIndex = 0;
             this.ConsoleTextBox.Text = "";
-            this.ConsoleTextBox.TextChanged += new System.EventHandler(this.ConsoleTextBox_TextChanged);
-            this.ConsoleTextBox.ReadOnly = true;
             // 
             // MainForm
             // 
@@ -56,7 +54,9 @@ namespace IPSCM.GUI
             this.ClientSize = new System.Drawing.Size(636, 388);
             this.Controls.Add(this.ConsoleTextBox);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Console";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
 
         }

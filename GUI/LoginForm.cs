@@ -6,7 +6,7 @@ namespace IPSCM.GUI
     {
         public LoginForm()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

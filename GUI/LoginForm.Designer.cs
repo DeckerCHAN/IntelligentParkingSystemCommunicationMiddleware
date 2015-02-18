@@ -33,7 +33,7 @@ namespace IPSCM.GUI
         {
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.PasswordLabel = new System.Windows.Forms.Label();
-            this.PasswordTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.PasswordTextBox = new System.Windows.Forms.TextBox();
             this.UserNameTextBox = new System.Windows.Forms.TextBox();
             this.LoginButton = new System.Windows.Forms.Button();
             this.Resultlabel = new System.Windows.Forms.Label();
@@ -45,27 +45,28 @@ namespace IPSCM.GUI
             this.UserNameLabel.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.UserNameLabel.Location = new System.Drawing.Point(42, 55);
             this.UserNameLabel.Name = "UserNameLabel";
-            this.UserNameLabel.Size = new System.Drawing.Size(73, 21);
+            this.UserNameLabel.Size = new System.Drawing.Size(84, 21);
             this.UserNameLabel.TabIndex = 0;
-            this.UserNameLabel.Text = "用户名";
+            this.UserNameLabel.Text = "用户名:";
             // 
             // PasswordLabel
             // 
             this.PasswordLabel.AutoSize = true;
             this.PasswordLabel.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.PasswordLabel.Location = new System.Drawing.Point(42, 108);
+            this.PasswordLabel.Location = new System.Drawing.Point(63, 108);
             this.PasswordLabel.Name = "PasswordLabel";
-            this.PasswordLabel.Size = new System.Drawing.Size(52, 21);
+            this.PasswordLabel.Size = new System.Drawing.Size(63, 21);
             this.PasswordLabel.TabIndex = 1;
-            this.PasswordLabel.Text = "密码";
+            this.PasswordLabel.Text = "密码:";
             // 
             // PasswordTextBox
             // 
             this.PasswordTextBox.Font = new System.Drawing.Font("SimSun", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.PasswordTextBox.Location = new System.Drawing.Point(140, 105);
             this.PasswordTextBox.Name = "PasswordTextBox";
+            this.PasswordTextBox.PasswordChar = '*';
             this.PasswordTextBox.Size = new System.Drawing.Size(206, 31);
-            this.PasswordTextBox.TabIndex = 2;
+            this.PasswordTextBox.TabIndex = 3;
             // 
             // UserNameTextBox
             // 
@@ -73,7 +74,7 @@ namespace IPSCM.GUI
             this.UserNameTextBox.Location = new System.Drawing.Point(140, 46);
             this.UserNameTextBox.Name = "UserNameTextBox";
             this.UserNameTextBox.Size = new System.Drawing.Size(206, 31);
-            this.UserNameTextBox.TabIndex = 3;
+            this.UserNameTextBox.TabIndex = 2;
             // 
             // LoginButton
             // 
@@ -88,17 +89,19 @@ namespace IPSCM.GUI
             // Resultlabel
             // 
             this.Resultlabel.AutoSize = true;
+            this.Resultlabel.Font = new System.Drawing.Font("SimSun", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Resultlabel.ForeColor = System.Drawing.Color.Red;
             this.Resultlabel.Location = new System.Drawing.Point(320, 20);
             this.Resultlabel.Name = "Resultlabel";
-            this.Resultlabel.Size = new System.Drawing.Size(29, 12);
+            this.Resultlabel.Size = new System.Drawing.Size(0, 14);
             this.Resultlabel.TabIndex = 6;
-            this.Resultlabel.Text = "结果";
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(411, 259);
+            this.ControlBox = false;
             this.Controls.Add(this.Resultlabel);
             this.Controls.Add(this.LoginButton);
             this.Controls.Add(this.UserNameTextBox);
@@ -107,6 +110,7 @@ namespace IPSCM.GUI
             this.Controls.Add(this.UserNameLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "LoginForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "LoginForm";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -115,11 +119,11 @@ namespace IPSCM.GUI
 
         #endregion
 
-        private Label UserNameLabel;
-        private Label PasswordLabel;
-        private MaskedTextBox PasswordTextBox;
-        private TextBox UserNameTextBox;
-        private Button LoginButton;
-        private Label Resultlabel;
+        public Label UserNameLabel;
+        public Label PasswordLabel;
+        public TextBox PasswordTextBox;
+        public TextBox UserNameTextBox;
+        public Button LoginButton;
+        public Label Resultlabel;
     }
 }
