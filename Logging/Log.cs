@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using IPSCM.Config;
+using IPSCM.Configuration;
 using IPSCM.Logging.EventArgs;
 
 namespace IPSCM.Logging
@@ -25,6 +25,7 @@ namespace IPSCM.Logging
                     Directory.GetParent(logFile.ToString()).Create();
                 }
                 _logFileStreamWriter = new StreamWriter(StaticConfig.GetConfig().GetString("LogPath"));
+                _logFileStreamWriter.AutoFlush = true;
                 _isInitialized = true;
             }
         }
