@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Config", "Config\Config.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protocol", "Protocol\Protocol.csproj", "{B6676BB2-DCAF-42B2-ACFF-F94F409653B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Logging\Logging.csproj", "{73FDE06B-E56A-4DF5-B2A7-05B780E5AA21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj", "{BE77FCF7-2B11-4CA5-B988-2B5135188CDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{B6676BB2-DCAF-42B2-ACFF-F94F409653B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6676BB2-DCAF-42B2-ACFF-F94F409653B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6676BB2-DCAF-42B2-ACFF-F94F409653B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73FDE06B-E56A-4DF5-B2A7-05B780E5AA21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73FDE06B-E56A-4DF5-B2A7-05B780E5AA21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73FDE06B-E56A-4DF5-B2A7-05B780E5AA21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73FDE06B-E56A-4DF5-B2A7-05B780E5AA21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE77FCF7-2B11-4CA5-B988-2B5135188CDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE77FCF7-2B11-4CA5-B988-2B5135188CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE77FCF7-2B11-4CA5-B988-2B5135188CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE77FCF7-2B11-4CA5-B988-2B5135188CDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
