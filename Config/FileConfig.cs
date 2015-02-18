@@ -25,7 +25,7 @@ namespace IPSCM.Configuration
                 {
                     if (String.IsNullOrEmpty(line)) { continue; }
                     var key = line.Substring(0, line.IndexOf(':'));
-                    var value = line.Substring(line.IndexOf(':'));
+                    var value = line.Substring(line.IndexOf(':') + 1);
 
                     if (String.IsNullOrEmpty(key) || String.IsNullOrEmpty(value))
                     {
