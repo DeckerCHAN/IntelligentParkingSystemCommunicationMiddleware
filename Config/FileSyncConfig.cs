@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace IPSCM.Config
+namespace IPSCM.Configuration
 {
     class FileSyncConfig:FileConfig
     {

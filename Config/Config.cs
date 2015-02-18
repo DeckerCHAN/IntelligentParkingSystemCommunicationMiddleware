@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IPSCM.Config
+namespace IPSCM.Configuration
 {
 
     public abstract class Config
@@ -16,6 +16,10 @@ namespace IPSCM.Config
         public virtual void Set(String key, String value)
         {
             key = key.ToUpper();
+            if (this.configs.ContainsKey(key))
+            {
+                this.configs.Remove(key);
+            }
             this.configs.Add(key, value);
         }
 
