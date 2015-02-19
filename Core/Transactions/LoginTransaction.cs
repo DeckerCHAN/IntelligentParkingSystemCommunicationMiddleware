@@ -21,7 +21,9 @@ namespace IPSCM.Core.Transactions
                 try
                 {
                     var name = userName.Clone().ToString();
-                    var passEncoded = HashUtils.CalculateMD5Hash(rowPassword).Clone().ToString();
+                    //TODO:Temporarily do not encode
+                    //var passEncoded = HashUtils.CalculateMD5Hash(rowPassword).Clone().ToString();
+                    var passEncoded = rowPassword;
                     var result = Engine.GetEngine().CloudParking.LogIn(name, passEncoded);
                     switch (result.ResultCode)
                     {
