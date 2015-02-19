@@ -110,6 +110,7 @@ namespace IPSCM.Protocol.Gates
             {
                 sum.Append(datas[key]);
             }
+            sum.Append(this.SecurityKey);
             var sign = HashUtils.CalculateMD5Hash(sum.ToString());
             return sign;
 
