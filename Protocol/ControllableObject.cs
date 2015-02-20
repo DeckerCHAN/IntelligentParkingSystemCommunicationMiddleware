@@ -11,17 +11,17 @@ namespace IPSCM.Protocol
     {
         public ControllableObject()
         {
-            
+
         }
         public event StartEventHandler OnStart;
         public event StopEventHandler OnStop;
-        public void Start()
+        public virtual void Start()
         {
             var triger = this.OnStart;
             if (triger != null) triger(this);
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             var triger = this.OnStop;
             if (triger != null) triger(this);
