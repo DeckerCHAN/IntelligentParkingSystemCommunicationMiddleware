@@ -36,7 +36,7 @@ namespace IPSCM.Protocol.Gates
             this.Token = String.Empty;
             this.TickThread = new Thread(this.Tick);
         }
-        public void Start()
+        public override void Start()
         {
             Log.Info("CloudParking Starting...");
             base.Start();
@@ -44,7 +44,7 @@ namespace IPSCM.Protocol.Gates
             Log.Info("CloudParking Started");
         }
 
-        public void Stop()
+        public override void Stop()
         {
             Log.Info("CloudParking Stoping...");
             base.Stop();
@@ -125,7 +125,7 @@ namespace IPSCM.Protocol.Gates
                     Thread.Sleep(this.Config.GetInt("HeartBeatInterval"));
                     this.HeartBeat();
                 }
-                catch (ThreadInterruptedException ex)
+                catch (ThreadInterruptedException)
                 {
                     Log.Info("Cloud parking tick exit");
                     return;
