@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Logging.EventArgs;
 
@@ -14,20 +13,16 @@ namespace IPSCM.Logging
 
         public  event LogInfoEventHandler OnInfo;
         public  event LogErrorEventHandler OnError;
-        private static Log Instance;
+        private static Log _instance;
 
         public static Log GetLogger()
         {
-            if (Instance == null)
-            {
-                Instance = new Log();
-            }
-            return Instance;
+            return _instance ?? (_instance = new Log());
         }
 
         public static void Info(String message)
         {
-            var trigger = Log.GetLogger().OnInfo;
+            var trigger = GetLogger().OnInfo;
 
             if (trigger != null) trigger(new LogInfoEventArgs(message.Clone().ToString()));
 
@@ -36,7 +31,7 @@ namespace IPSCM.Logging
 
         public static void Error(String message)
         {
-            var trigger = Log.GetLogger().OnError;
+            var trigger = GetLogger().OnError;
             if (trigger != null) trigger(new LogErrorEventArgs(message.Clone().ToString()));
 
 
@@ -44,12 +39,12 @@ namespace IPSCM.Logging
 
         public static void Error(String message, Exception exception)
         {
-            var trigger = Log.GetLogger().OnError;
+            var trigger = GetLogger().OnError;
             if (trigger != null) trigger(new LogErrorEventArgs(message.Clone().ToString(), exception));
 
         }
 
-        private StreamWriter LogFileStreamWriter;
+        private readonly StreamWriter LogFileStreamWriter;
         private Log()
         {
             FileInfo logFile = new FileInfo(StaticConfig.GetConfig().GetString("LogPath"));
