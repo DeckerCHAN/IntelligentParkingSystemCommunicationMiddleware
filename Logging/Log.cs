@@ -12,11 +12,11 @@ namespace IPSCM.Logging
     public class Log
     {
 
-        public static event LogInfoEventHandler OnInfo;
-        public static event LogErrorEventHandler OnError;
+        public  event LogInfoEventHandler OnInfo;
+        public  event LogErrorEventHandler OnError;
         private static Log Instance;
 
-        private static Log GetInstance()
+        public static Log GetLogger()
         {
             if (Instance == null)
             {
@@ -27,27 +27,25 @@ namespace IPSCM.Logging
 
         public static void Info(String message)
         {
+            var trigger = Log.GetLogger().OnInfo;
 
-
-            if (OnInfo != null) OnInfo(new LogInfoEventArgs(message.Clone().ToString()));
+            if (trigger != null) trigger(new LogInfoEventArgs(message.Clone().ToString()));
 
 
         }
 
         public static void Error(String message)
         {
-
-          if (OnError != null) OnError(new LogErrorEventArgs(message.Clone().ToString()));
+            var trigger = Log.GetLogger().OnError;
+            if (trigger != null) trigger(new LogErrorEventArgs(message.Clone().ToString()));
 
 
         }
 
         public static void Error(String message, Exception exception)
         {
-
-
-
-            if (OnError != null) OnError(new LogErrorEventArgs(message.Clone().ToString(), exception));
+            var trigger = Log.GetLogger().OnError;
+            if (trigger != null) trigger(new LogErrorEventArgs(message.Clone().ToString(), exception));
 
         }
 
@@ -66,14 +64,14 @@ namespace IPSCM.Logging
 
         void Log_OnError(LogErrorEventArgs e)
         {
-            LogFileStreamWriter.WriteLine("[{0}] ERROR:{1}", DateTime.Now.ToString("O"), e.Message);
-
+           LogFileStreamWriter.WriteLine("[{0}] ERROR:{1}", DateTime.Now.ToString("O"), e.Message);
+            LogFileStreamWriter.Flush();
         }
 
         void Log_OnInfo(LogInfoEventArgs e)
         {
             LogFileStreamWriter.WriteLine("[{0}] INFO:{1}", DateTime.Now.ToString("O"), e.Messege);
-
+            LogFileStreamWriter.Flush();
         }
     }
 }

@@ -5,7 +5,6 @@ using IPSCM.Configuration;
 using IPSCM.Core.Transactions;
 using IPSCM.GUI;
 using IPSCM.Logging;
-using IPSCM.Protocol;
 using IPSCM.Protocol.Gates;
 
 namespace IPSCM.Core
@@ -43,7 +42,7 @@ namespace IPSCM.Core
             this.F3Gate.Stop();
             this.CloudParking.Stop();
             this.TransactionPool.Dispose();
-            foreach (var fileConfig in FileConfig.FileConfigs)
+            foreach (var fileConfig in FileConfig.FileConfigs.Values)
             {
                 fileConfig.SaveToFile();
             }
@@ -54,7 +53,10 @@ namespace IPSCM.Core
             this.UiControl.MainWindow.Show();
             this.RegisterEvent();
             Log.Info("Engine starting running...");
+#if DEBUG
             this.F3Gate.Start();
+#endif
+            //F3Gate would start after successful log in.
             this.CloudParking.Start();
             Log.Info("Engine started!");
             this.UiControl.LoginWindow.ShowDialog(this.UiControl.MainWindow);
@@ -74,13 +76,17 @@ namespace IPSCM.Core
 
         private void RegisterEvent()
         {
-            Log.OnInfo += i => { this.TryOut(i.Messege, Color.Lime); };
-            Log.OnError += i => { this.TryOut(i.Message, Color.Red); };
+            Log.GetLogger().OnInfo += i => { this.TryOut(i.Messege, Color.Lime); };
+            Log.GetLogger().OnError += i => { this.TryOut(i.Message, Color.Red); };
             this.UiControl.LoginWindow.LoginButton.Click += (i, o) =>
             {
-                var username = UiControl.LoginWindow.UserNameTextBox.Text.Clone().ToString();
-                var password = UiControl.LoginWindow.PasswordTextBox.Text.Clone().ToString();
+                var username = this.UiControl.LoginWindow.UserNameTextBox.Text.Clone().ToString();
+                var password = this.UiControl.LoginWindow.PasswordTextBox.Text.Clone().ToString();
                 this.TransactionPool.AddBeforeExecute(new LoginTransaction(username, password));
+            };
+            this.F3Gate.OnParking += (i, o) =>
+            {
+                this.TransactionPool.AddBeforeExecute(new ParkingTransaction(o.PlateNumber, o.InTime, o.InImg, o.Response.OutputStream));
             };
 
         }
