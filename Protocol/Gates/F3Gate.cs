@@ -37,7 +37,7 @@ namespace IPSCM.Protocol.Gates
                 Log.Error("Windows XP SP2 or Server 2003 or upper is required to use the HttpListener class.");
                 return;
             }
-            this.Config =  FileConfig.FindConfig("F3.cfg");
+            this.Config = FileConfig.FindConfig("F3.cfg");
             this.PortNumber = this.Config.GetUInt("Port");
             this.LocalHost = this.Config.GetString("LocalHost");
             this.ParkingUrl = this.Config.GetString("ParkingUrl");
@@ -115,8 +115,8 @@ namespace IPSCM.Protocol.Gates
         }
         public override void Start()
         {
-            Log.Info("F3 starting...");
             base.Start();
+            Log.Info("F3 starting...");
             this.ListenThread = new Thread(() =>
             {
 
@@ -162,8 +162,8 @@ namespace IPSCM.Protocol.Gates
 
         public override void Stop()
         {
-            Log.Info("F3 stoping...");
             base.Stop();
+            Log.Info("F3 stoping...");
             this.Listener.Stop();
             this.ListenThread.Interrupt();
             Log.Info("F3 stopped");

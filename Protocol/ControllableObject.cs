@@ -22,8 +22,8 @@ namespace IPSCM.Protocol
         {
             if (this.RunningStatus != GateStatus.Initialized)
             {
-                Log.Error("Trying to start a controllable object but did not initialized yet or has been stopped. I think this is a bug or logic mistake in code.");
-                return;
+                Log.Error("Trying to start a controllable object but did not initialized yet or has been strated. I think this is a bug or logic mistake in code.");
+                throw new InvalidOperationException(String.Format("Trying to start a {0} control object",this.RunningStatus));
             }
             this.RunningStatus = GateStatus.Started;
             var triger = this.OnStart;
@@ -35,6 +35,8 @@ namespace IPSCM.Protocol
             if (this.RunningStatus != GateStatus.Started)
             {
                 Log.Error("Trying to stop a controllable object but did not started yet. I think this is a bug or logic mistake in code.");
+                throw new InvalidOperationException(String.Format("Trying to stop a {0} control object", this.RunningStatus));
+          
                 return;
             }
             this.RunningStatus = GateStatus.Endded;
