@@ -37,22 +37,19 @@ namespace IPSCM.Core.Transactions
                         case ResultCode.Success:
                             {
                                 //Success
+                                Log.Info(String.Format("Cloud parking login successful. Preserved token{0}", result.Token));
                                 this.LoginSuccess();
-
-
                                 break;
                             }
                         default:
                             {
                                 //Fault
-                                Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = result.ErrorMessage;
+                                Log.Error(String.Format("Cloud parking failer. Cause:{0} Error code:{1}", result.ErrorMessage, result.ResultCode));
+                                this.LoginFailure(result.ResultCode, result.ErrorMessage);
                                 break;
                             }
                     }
-                    Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
-                    {
-                        Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
-                    }));
+
                 }
                 catch (Exception ex)
                 {
@@ -83,18 +80,20 @@ namespace IPSCM.Core.Transactions
             Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
             {
                 Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = "Success";
-                Engine.GetEngine().UiControl.LoginWindow.Close();
+                Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
+                Engine.GetEngine().UiControl.LoginWindow.Hide();
+
             }));
             Engine.GetEngine().F3Gate.Start();
         }
 
         private void LoginFailure(ResultCode code, String message)
         {
-           Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
-            {
-                Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = String.Format("Login failer!({0}){1}", code, message);
-         
-            }));
+            Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
+             {
+                 Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = String.Format("Login failer!({0}){1}", code, message);
+                 Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
+             }));
         }
     }
 }
