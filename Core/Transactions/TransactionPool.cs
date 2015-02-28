@@ -35,7 +35,7 @@ namespace IPSCM.Core.Transactions
 
 
                 }
-                catch (ThreadInterruptedException ex)
+                catch (ThreadInterruptedException)
                 {
                     return;
                 }

@@ -6,13 +6,28 @@ namespace IPSCM.Configuration
 {
     public class FileConfig : Configuration.Config
     {
-        public static LinkedList<FileConfig> FileConfigs = new LinkedList<FileConfig>();
+        public static Dictionary<String, FileConfig> FileConfigs = new Dictionary<String, FileConfig>();
 
-        private FileInfo configFile;
-        public FileConfig(FileInfo configFile)
+        public static FileConfig FindConfig(String name)
+        {
+            //TODO:Using better implantation
+            if (FileConfigs.ContainsKey(name))
+            {
+                return FileConfigs[name];
+            }
+            else
+            {
+                var file = new FileInfo("Configs\\" + name);
+                return new FileConfig(file);
+            }
+
+        }
+
+        private readonly FileInfo ConfigFile;
+        protected FileConfig(FileInfo configFile)
             : base()
         {
-            this.configFile = configFile;
+            this.ConfigFile = configFile;
             if (!configFile.Exists)
             {
                 throw new FileNotFoundException(String.Format("File {0} not exists!", configFile.Name));
@@ -23,7 +38,7 @@ namespace IPSCM.Configuration
             {
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (String.IsNullOrEmpty(line)||line[0]=='#') { continue; }
+                    if (String.IsNullOrEmpty(line) || line[0] == '#') { continue; }
                     var key = line.Substring(0, line.IndexOf(':'));
                     var value = line.Substring(line.IndexOf(':') + 1);
 
@@ -35,12 +50,12 @@ namespace IPSCM.Configuration
                 }
             }
 
-            FileConfigs.AddLast(this);
+            FileConfigs.Add(configFile.Name, this);
         }
 
         public void SaveToFile()
         {
-            using (var writer = new StreamWriter(this.configFile.OpenWrite()))
+            using (var writer = new StreamWriter(this.ConfigFile.OpenWrite()))
             {
                 foreach (var key in this.configs.Keys)
                 {

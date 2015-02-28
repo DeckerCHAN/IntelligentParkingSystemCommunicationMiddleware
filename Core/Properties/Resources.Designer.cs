@@ -59,14 +59,5 @@ namespace IPSCM.Core.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Success.
-        /// </summary>
-        internal static string LoginTransaction_LoginTransaction_Success {
-            get {
-                return ResourceManager.GetString("LoginTransaction_LoginTransaction_Success", resourceCulture);
-            }
-        }
     }
 }

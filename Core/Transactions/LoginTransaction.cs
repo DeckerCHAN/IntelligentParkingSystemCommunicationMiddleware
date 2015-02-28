@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading;
 using IPSCM.Core.Properties;
 using IPSCM.Logging;
+using IPSCM.Protocol.Entities;
 using IPSCM.Utils;
 
 namespace IPSCM.Core.Transactions
 {
     public class LoginTransaction : Transaction
     {
-        private Thread ProcessThread;
+        private readonly Thread ProcessThread;
 
         public LoginTransaction(String userName, String rowPassword)
             : base()
@@ -20,6 +21,12 @@ namespace IPSCM.Core.Transactions
             {
                 try
                 {
+                    Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
+                    {
+                        Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = "Processing";
+                        Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = false;
+                    }));
+
                     var name = userName.Clone().ToString();
                     //TODO:Temporarily do not encode
                     //var passEncoded = HashUtils.CalculateMD5Hash(rowPassword).Clone().ToString();
@@ -27,11 +34,12 @@ namespace IPSCM.Core.Transactions
                     var result = Engine.GetEngine().CloudParking.LogIn(name, passEncoded);
                     switch (result.ResultCode)
                     {
-                        case 200:
+                        case ResultCode.Success:
                             {
                                 //Success
-                                Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = Resources.LoginTransaction_LoginTransaction_Success;
-                                Engine.GetEngine().UiControl.LoginWindow.Close();
+                                this.LoginSuccess();
+
+
                                 break;
                             }
                         default:
@@ -41,6 +49,10 @@ namespace IPSCM.Core.Transactions
                                 break;
                             }
                     }
+                    Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
+                    {
+                        Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
+                    }));
                 }
                 catch (Exception ex)
                 {
@@ -64,6 +76,25 @@ namespace IPSCM.Core.Transactions
         {
             this.ProcessThread.Interrupt();
             base.Interrupt();
+        }
+
+        private void LoginSuccess()
+        {
+            Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
+            {
+                Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = "Success";
+                Engine.GetEngine().UiControl.LoginWindow.Close();
+            }));
+            Engine.GetEngine().F3Gate.Start();
+        }
+
+        private void LoginFailure(ResultCode code, String message)
+        {
+           Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
+            {
+                Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = String.Format("Login failer!({0}){1}", code, message);
+         
+            }));
         }
     }
 }

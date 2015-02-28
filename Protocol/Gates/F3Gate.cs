@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Logging;
@@ -15,12 +18,18 @@ namespace IPSCM.Protocol.Gates
     public class F3Gate : ControllableObject, IReceive
     {
         public event ReceiveEventHandler OnReceived;
+        public event ParkingEventHandler OnParking;
+        public event LeavingEventhandler OnLeaving;
 
         private readonly HttpListener Listener;
         private Thread ListenThread;
-        private FileConfig Config;
-        private UInt32 PortNumber;
-        private String LocalHost;
+        private FileConfig Config { get; set; }
+        private UInt32 PortNumber { get; set; }
+        private String LocalHost { get; set; }
+
+        private String ParkingUrl { get; set; }
+        private String LeavingUrl { get; set; }
+        private String CouponReceiveUrl { get; set; }
         public F3Gate()
         {
             if (!HttpListener.IsSupported)
@@ -28,12 +37,15 @@ namespace IPSCM.Protocol.Gates
                 Log.Error("Windows XP SP2 or Server 2003 or upper is required to use the HttpListener class.");
                 return;
             }
-            this.Config = new FileConfig(new FileInfo("F3.cfg"));
+            this.Config =  FileConfig.FindConfig("F3.cfg");
             this.PortNumber = this.Config.GetUInt("Port");
             this.LocalHost = this.Config.GetString("LocalHost");
+            this.ParkingUrl = this.Config.GetString("ParkingUrl");
+            this.LeavingUrl = this.Config.GetString("LeavingUrl");
+            this.CouponReceiveUrl = Config.GetString("CouponReceiveUrl");
             this.Listener = new HttpListener();
-            this.Listener.Prefixes.Add(String.Format("http://{0}:{1}/", LocalHost, this.PortNumber));
-            this.OnReceived += F3Gate_OnReceived;
+            this.Listener.Prefixes.Add(String.Format("http://{0}:{1}/", this.LocalHost, this.PortNumber));
+            this.OnReceived += this.F3Gate_OnReceived;
 
         }
 
@@ -46,19 +58,64 @@ namespace IPSCM.Protocol.Gates
             {
                 return;
             }
+            var stringContent = new Dictionary<string, string>();
+            var binaryContent = new Dictionary<string, byte[]>();
             using (Stream body = arg.Request.InputStream)
             {
-                using (StreamReader reader = new StreamReader(body, arg.Request.ContentEncoding))
+                using (new StreamReader(body, arg.Request.ContentEncoding))
                 {
-#if DEBUG
-                    Log.Info(reader.ReadToEnd());
-#endif
+                    var streamContent = new StreamContent(body);
+                    streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse(arg.Request.ContentType);
+
+                    var provider = streamContent.ReadAsMultipartAsync().Result;
+
+                    foreach (var httpContent in provider.Contents)
+                    {
+                        var name = httpContent.Headers.ContentDisposition.Name.Replace("\"", String.Empty);
+                        var fileName = httpContent.Headers.ContentDisposition.FileName;
+                        if (string.IsNullOrWhiteSpace(fileName))
+                        {
+                            var value = httpContent.ReadAsStringAsync().Result;
+                            stringContent.Add(name, value);
+                            continue;
+                        }
+                        var bytesValue = httpContent.ReadAsByteArrayAsync().Result;
+                        binaryContent.Add(name, bytesValue);
+                    }
+
                 }
             }
-            arg.Response.OutputStream.Close();
+            var url = arg.Request.RawUrl;
+            if (url.Equals(this.ParkingUrl))
+            {
+                var trigger = this.OnParking;
+                if (trigger != null) trigger(this,
+                    new ParkingEventArgs(
+                        arg.Request,
+                        arg.Response,
+                        stringContent[this.Config.GetString("PlateNumber")],
+                        DateTime.Parse(stringContent[this.Config.GetString("InTime")]),
+                        binaryContent[this.Config.GetString("InImage")])
+                        );
+            }
+            else if (url.Equals(this.LeavingUrl))
+            {
+
+            }
+            else if (url.Equals(this.CouponReceiveUrl))
+            {
+
+            }
+            else
+            {
+                arg.Response.OutputStream.Close();
+
+                throw new ArgumentException(String.Format("Can not find url {0}", arg.Request.Url));
+            }
         }
-        public void Start()
+        public override void Start()
         {
+            Log.Info("F3 starting...");
             base.Start();
             this.ListenThread = new Thread(() =>
             {
@@ -71,10 +128,11 @@ namespace IPSCM.Protocol.Gates
                     {
                         var context = this.Listener.GetContext();
                         Log.Info("F3 request received");
-                        OnReceived(this, new HttpDataEventArgs(context.Request, context.Response));
+                        var trigger = this.OnReceived;
+                        if (trigger != null) trigger(this, new HttpDataEventArgs(context.Request, context.Response));
 
                     }
-                    catch (ThreadInterruptedException ex)
+                    catch (ThreadInterruptedException)
                     {
                         Log.Info("Listener stopped");
                         return;
@@ -99,13 +157,16 @@ namespace IPSCM.Protocol.Gates
 
             });
             this.ListenThread.Start();
+            Log.Info("F3 started");
         }
 
-        public void Stop()
+        public override void Stop()
         {
+            Log.Info("F3 stoping...");
             base.Stop();
             this.Listener.Stop();
             this.ListenThread.Interrupt();
+            Log.Info("F3 stopped");
         }
     }
 }

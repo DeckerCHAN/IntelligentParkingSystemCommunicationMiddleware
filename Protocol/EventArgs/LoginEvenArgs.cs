@@ -9,11 +9,11 @@ namespace IPSCM.Protocol.EventArgs
 {
     public class LoginEvenArgs : System.EventArgs
     {
-        public LoginResult Result { get; private set; }
+        public LoginResult Entity { get; private set; }
 
-        public LoginEvenArgs(LoginResult result)
+        public LoginEvenArgs(LoginResult entity)
         {
-            this.Result = result;
+            this.Entity = entity;
         }
     }
 }

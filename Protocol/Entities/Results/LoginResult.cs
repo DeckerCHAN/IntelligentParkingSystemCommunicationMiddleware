@@ -1,26 +1,19 @@
 ﻿using System;
+using IPSCM.Configuration;
 using Newtonsoft.Json.Linq;
 
 namespace IPSCM.Protocol.Entities.Results
 {
-    public class LoginResult
+    public class LoginResult : Result
     {
-        public UInt16 ResultCode { get; private set; }
         public String Token { get; private set; }
-        public String ErrorMessage { get; private set; }
-        public LoginResult(UInt16 resultCode, String token, String errorMessage)
-        {
-            this.ResultCode = resultCode;
-            this.Token = token;
-            this.ErrorMessage = errorMessage;
-        }
 
-        public LoginResult(String gsonString)
+        public LoginResult(String jsonString)
+            : base(jsonString)
         {
-            var o = JObject.Parse(gsonString);
-            this.ResultCode =o.SelectToken("result_code", true).ToObject<UInt16>();
-            this.Token = o.SelectToken("info[0].token", true).ToString();
-            this.ErrorMessage = o.SelectToken("error_msg", false).ToString();
+            var o = JObject.Parse(jsonString);
+            var val = o[this.FieldConfig.GetString("Info")][this.FieldConfig.GetString("Token")];
+            this.Token = val != null ? o.ToString() : String.Empty;
         }
     }
 }

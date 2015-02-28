@@ -25,12 +25,14 @@ namespace IPSCM.Protocol.Gates
         public Thread TickThread { get; private set; }
         public String Token { get; private set; }
         public Config Config { get; private set; }
+        private Config FieldConfig { get; set; }
         private HttpClient Client { get; set; }
         private String SecurityKey { get; set; }
 
         public CloudParkingGate()
         {
-            this.Config = new FileConfig(new FileInfo("Parking.cfg"));
+            this.Config = FileConfig.FindConfig("Parking.cfg");
+            this.FieldConfig = FileConfig.FindConfig("Request.cfg");
             this.SecurityKey = Config.GetString("SecurityKey");
             this.Client = new HttpClient();
             this.Token = String.Empty;
@@ -54,11 +56,10 @@ namespace IPSCM.Protocol.Gates
 
         public LoginResult LogIn(String userName, String password)
         {
-            Dictionary<String, String> data = new Dictionary<string, string>();
-            data.Add("username", userName);
-            data.Add("password", password);
+            var data = new Dictionary<string, string>();
+            data.Add(FieldConfig.GetString("UserName"), userName);
+            data.Add(FieldConfig.GetString("Password"), password);
             var responseJson = this.Send(this.Config.GetString("LoginUrl"), data, new Dictionary<string, byte[]>());
-            //TODO:Using real data
             var loginRes = new LoginResult(responseJson);
             this.Token = loginRes.Token;
 
@@ -67,9 +68,17 @@ namespace IPSCM.Protocol.Gates
             return loginRes;
         }
 
-        public String Parking(String plateNumber, DateTime inTime, Byte[] inImg)
+        public ParkingResult Parking(String plateNumber, DateTime inTime, Byte[] inImg)
         {
-            throw new NotImplementedException();
+            var stringData = new Dictionary<string, string>();
+            var binaryData = new Dictionary<String, Byte[]>();
+            stringData.Add(FieldConfig.GetString("PlateNumber"), plateNumber);
+            stringData.Add(FieldConfig.GetString("InTime"), inTime.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            binaryData.Add(FieldConfig.GetString("InImage"), inImg);
+            var responseJson = this.Send(this.Config.GetString("ParkUrl"), stringData, binaryData);
+            var parkingRes = new ParkingResult(responseJson);
+            return parkingRes;
         }
 
         private String HeartBeat()
@@ -83,9 +92,9 @@ namespace IPSCM.Protocol.Gates
         public string Send(string url, Dictionary<string, string> textData, Dictionary<string, byte[]> rowData)
         {
             var sign = this.GetSign(textData);
-            textData.Add("sign", sign);
             var requestContent = new MultipartFormDataContent();
             requestContent.Headers.Add("sign", sign);
+            //requestContent.Add(new StringContent(sign), "sign");
             foreach (var key in textData.Keys)
             {
                 requestContent.Add(new StringContent(textData[key]), key);
@@ -94,8 +103,6 @@ namespace IPSCM.Protocol.Gates
             {
                 requestContent.Add(new ByteArrayContent(rowData[key]), key);
             }
-
-
 
             var response = this.Client.PostAsync(url, requestContent).Result;
             var result = response.Content.ReadAsStringAsync().Result;
@@ -111,7 +118,7 @@ namespace IPSCM.Protocol.Gates
                 sum.Append(datas[key]);
             }
             sum.Append(this.SecurityKey);
-            var sign = HashUtils.CalculateMD5Hash(sum.ToString());
+            var sign = HashUtils.CalculateMD5Hash(sum.ToString()).ToLower();
             return sign;
 
         }
