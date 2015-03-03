@@ -36,16 +36,18 @@ namespace IPSCM.Configuration
 
         public virtual UInt32 GetUInt(String key)
         {
-
             return Convert.ToUInt32(this.GetString(key));
         }
 
         public virtual Int32 GetInt(String key)
         {
-
             return Convert.ToInt32(this.GetString(key));
         }
 
+        public virtual Boolean GetBoolean(String key)
+        {
+            return Convert.ToBoolean(this.GetString(key));
+        }
 
     }
 }
