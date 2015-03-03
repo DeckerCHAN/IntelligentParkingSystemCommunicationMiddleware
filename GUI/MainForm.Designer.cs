@@ -42,6 +42,7 @@ namespace IPSCM.GUI
             this.ConsoleTextBox.ForeColor = System.Drawing.Color.Lime;
             this.ConsoleTextBox.Location = new System.Drawing.Point(0, 0);
             this.ConsoleTextBox.Name = "ConsoleTextBox";
+            this.ConsoleTextBox.ReadOnly = true;
             this.ConsoleTextBox.Size = new System.Drawing.Size(636, 388);
             this.ConsoleTextBox.TabIndex = 0;
             this.ConsoleTextBox.Text = "";
