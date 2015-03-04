@@ -30,6 +30,8 @@ namespace IPSCM.Protocol.Gates
         private String ParkingUrl { get; set; }
         private String LeavingUrl { get; set; }
         private String CouponReceiveUrl { get; set; }
+
+        public Boolean IsDebug { get; private set; }
         public F3Gate()
         {
             if (!HttpListener.IsSupported)
@@ -38,6 +40,7 @@ namespace IPSCM.Protocol.Gates
                 return;
             }
             this.Config = FileConfig.FindConfig("F3.cfg");
+            this.IsDebug = Config.GetBoolean("IsDebug");
             this.PortNumber = this.Config.GetUInt("Port");
             this.LocalHost = this.Config.GetString("LocalHost");
             this.ParkingUrl = this.Config.GetString("ParkingUrl");
@@ -51,16 +54,12 @@ namespace IPSCM.Protocol.Gates
 
         void F3Gate_OnReceived(object sender, HttpDataEventArgs arg)
         {
-            Log.Info(arg.Request.HttpMethod);
-            Log.Info(arg.Request.Url.ToString());
-            Log.Info(arg.Request.RawUrl);
-            if (!arg.Request.HasEntityBody)
-            {
-                return;
-            }
+
+            Log.Info(String.Format("F3 received a request form {0} through {1} method with url: {2}", arg.Request.RemoteEndPoint, arg.Request.HttpMethod, arg.Request.RawUrl));
+            if (!arg.Request.HasEntityBody) { return; }
             var stringContent = new Dictionary<string, string>();
             var binaryContent = new Dictionary<string, byte[]>();
-            using (Stream body = arg.Request.InputStream)
+            using (var body = arg.Request.InputStream)
             {
                 using (new StreamReader(body, arg.Request.ContentEncoding))
                 {
@@ -86,32 +85,52 @@ namespace IPSCM.Protocol.Gates
                 }
             }
             var url = arg.Request.RawUrl;
-            if (url.Equals(this.ParkingUrl))
+            try
             {
-                var trigger = this.OnParking;
-                if (trigger != null) trigger(this,
-                    new ParkingEventArgs(
-                        arg.Request,
-                        arg.Response,
-                        stringContent[this.Config.GetString("PlateNumber")],
-                        DateTime.Parse(stringContent[this.Config.GetString("InTime")]),
-                        binaryContent[this.Config.GetString("InImage")])
-                        );
-            }
-            else if (url.Equals(this.LeavingUrl))
-            {
+                if (url.Equals(this.ParkingUrl))
+                {
+                    var trigger = this.OnParking;
+                    if (trigger != null) trigger(this,
+                        new ParkingEventArgs(
+                            arg.Request,
+                            arg.Response,
+                           stringContent[this.Config.GetString("PlateNumber")],
+                            DateTime.Parse(stringContent[this.Config.GetString("InTime")]),
+                            binaryContent[this.Config.GetString("InImage")])
+                            );
+                }
+                else if (url.Equals(this.LeavingUrl))
+                {
+                    var trigger = this.OnLeaving;
+                    if (trigger != null) trigger(this, new LeavingEventArgs(
+                            arg.Request,
+                            arg.Response,
+                            stringContent[this.Config.GetString("PlateNumber")],
+                                DateTime.Parse(stringContent[this.Config.GetString("OutTime")]),
+                                 binaryContent[this.Config.GetString("OutImage")],
+                                 UInt32.Parse(stringContent[this.Config.GetString("CopeMoney")]),
+                                 UInt32.Parse(stringContent[this.Config.GetString("ActualMoney")]),
+                                 UInt64.Parse(stringContent[this.Config.GetString("TicketMoney")])
+                            ));
+                }
+                else if (url.Equals(this.CouponReceiveUrl))
+                {
 
-            }
-            else if (url.Equals(this.CouponReceiveUrl))
-            {
+                }
+                else
+                {
+                    arg.Response.OutputStream.Close();
 
+                    throw new ArgumentException(String.Format("Can not find url {0}", arg.Request.Url));
+                }
             }
-            else
+            catch (Exception ex)
             {
                 arg.Response.OutputStream.Close();
+                throw new ArgumentException("Can not process this request!", ex);
 
-                throw new ArgumentException(String.Format("Can not find url {0}", arg.Request.Url));
             }
+
         }
         public override void Start()
         {
@@ -127,7 +146,7 @@ namespace IPSCM.Protocol.Gates
                     try
                     {
                         var context = this.Listener.GetContext();
-                        Log.Info("F3 request received");
+                        if (context.Request.HttpMethod == "GET") { continue; }
                         var trigger = this.OnReceived;
                         if (trigger != null) trigger(this, new HttpDataEventArgs(context.Request, context.Response));
 
