@@ -39,13 +39,13 @@ namespace IPSCM.Core
 
         void Exit()
         {
-            this.F3Gate.Stop();
-            this.CloudParking.Stop();
-            this.TransactionPool.Dispose();
             foreach (var fileConfig in FileConfig.FileConfigs.Values)
             {
                 fileConfig.SaveToFile();
             }
+            this.F3Gate.Stop();
+            this.CloudParking.Stop();
+            this.TransactionPool.Dispose();
         }
 
         public void Run()
@@ -53,9 +53,6 @@ namespace IPSCM.Core
             this.UiControl.MainWindow.Show();
             this.RegisterEvent();
             Log.Info("Engine starting running...");
-#if DEBUG
-            this.F3Gate.Start();
-#endif
             //F3Gate would start after successful log in.
             this.CloudParking.Start();
             Log.Info("Engine started!");
@@ -86,7 +83,11 @@ namespace IPSCM.Core
             };
             this.F3Gate.OnParking += (i, o) =>
             {
-                this.TransactionPool.AddBeforeExecute(new ParkingTransaction(o.PlateNumber, o.InTime, o.InImg, o.Response.OutputStream));
+                this.TransactionPool.AddBeforeExecute(new ParkingTransaction(o.RecordId, o.PlateNumber, o.InTime, o.InImg, o.Response.OutputStream));
+            };
+            this.F3Gate.OnLeaving += (i, o) =>
+            {
+                this.TransactionPool.AddBeforeExecute(new LeavingTransaction(o.PlateNumber, o.OutTime, o.OutImg, o.copeMoney, o.actualMoney, o.TicketId, o.Response.OutputStream));
             };
 
         }

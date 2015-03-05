@@ -92,6 +92,7 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transactions\LeavingTransaction.cs" />
     <Compile Include="Transactions\ParkingTransaction.cs" />
     <Compile Include="Transactions\Transaction.cs" />
     <Compile Include="Transactions\TransactionPool.cs" />

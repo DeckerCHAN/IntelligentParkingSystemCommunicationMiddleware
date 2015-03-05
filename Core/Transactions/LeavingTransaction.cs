@@ -25,10 +25,11 @@ namespace IPSCM.Core.Transactions
         public UInt64 TicketId { get; private set; }
         private Config JsonConfig { get; set; }
 
-        public LeavingTransaction(UInt64 recordId, String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney, UInt32 actualMoney, UInt64 ticketId, Stream responseStream)
+        public LeavingTransaction(String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney, UInt32 actualMoney, UInt64 ticketId, Stream responseStream)
             : base()
         {
-            this.RecordId = recordId;
+            //TODO:Using record id which readed from db
+            this.RecordId = 0x00;
             this.PlateNumber = plateNumber;
             this.OutTime = outTime;
             this.OutImg = outImg;
@@ -42,19 +43,19 @@ namespace IPSCM.Core.Transactions
                 try
                 {
                     var result = Engine.GetEngine()
-                        .CloudParking.Leaving(recordId, plateNumber, outTime, outImg, copeMoney, actualMoney, ticketId);
+                        .CloudParking.Leaving(this.RecordId, this.PlateNumber, this.OutTime, this.OutImg, this.CopeMoney, this.ActualMoney, this.TicketId);
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                        {
-                            this.successful();
-                            break;
-                        }
+                            {
+                                this.successful();
+                                break;
+                            }
                         default:
-                        {
-                            this.failure(result);
-                            break;
-                        }
+                            {
+                                this.failure(result);
+                                break;
+                            }
                     }
                 }
                 catch (Exception ex)
@@ -96,7 +97,7 @@ namespace IPSCM.Core.Transactions
 
         private void failure(LeavingResult result)
         {
-            JObject o = new JObject {new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success)};
+            JObject o = new JObject { new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success) };
             if (!String.IsNullOrEmpty(result.ErrorMessage))
             {
                 o.Add(new JProperty(JsonConfig.GetString("ErrorMessage"), result.ErrorMessage));

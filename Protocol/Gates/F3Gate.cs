@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Logging;
@@ -40,12 +42,13 @@ namespace IPSCM.Protocol.Gates
                 return;
             }
             this.Config = FileConfig.FindConfig("F3.cfg");
-            this.IsDebug = Config.GetBoolean("IsDebug");
+            this.IsDebug = this.Config.GetBoolean("IsDebug");
             this.PortNumber = this.Config.GetUInt("Port");
             this.LocalHost = this.Config.GetString("LocalHost");
             this.ParkingUrl = this.Config.GetString("ParkingUrl");
             this.LeavingUrl = this.Config.GetString("LeavingUrl");
             this.CouponReceiveUrl = Config.GetString("CouponReceiveUrl");
+            this.RegisterHttp(this.LocalHost, this.PortNumber);
             this.Listener = new HttpListener();
             this.Listener.Prefixes.Add(String.Format("http://{0}:{1}/", this.LocalHost, this.PortNumber));
             this.OnReceived += this.F3Gate_OnReceived;
@@ -90,27 +93,29 @@ namespace IPSCM.Protocol.Gates
                 if (url.Equals(this.ParkingUrl))
                 {
                     var trigger = this.OnParking;
-                    if (trigger != null) trigger(this,
-                        new ParkingEventArgs(
-                            arg.Request,
-                            arg.Response,
-                           stringContent[this.Config.GetString("PlateNumber")],
-                            DateTime.Parse(stringContent[this.Config.GetString("InTime")]),
-                            binaryContent[this.Config.GetString("InImage")])
+                    if (trigger != null)
+                        trigger(this,
+                            new ParkingEventArgs(
+                                arg.Request,
+                                arg.Response,
+                                stringContent[this.Config.GetString("PlateNumber")],
+                                DateTime.Parse(stringContent[this.Config.GetString("InTime")]),
+                                binaryContent[this.Config.GetString("InImage")])
                             );
                 }
                 else if (url.Equals(this.LeavingUrl))
                 {
                     var trigger = this.OnLeaving;
-                    if (trigger != null) trigger(this, new LeavingEventArgs(
+                    if (trigger != null)
+                        trigger(this, new LeavingEventArgs(
                             arg.Request,
                             arg.Response,
                             stringContent[this.Config.GetString("PlateNumber")],
-                                DateTime.Parse(stringContent[this.Config.GetString("OutTime")]),
-                                 binaryContent[this.Config.GetString("OutImage")],
-                                 UInt32.Parse(stringContent[this.Config.GetString("CopeMoney")]),
-                                 UInt32.Parse(stringContent[this.Config.GetString("ActualMoney")]),
-                                 UInt64.Parse(stringContent[this.Config.GetString("TicketMoney")])
+                            DateTime.Parse(stringContent[this.Config.GetString("OutTime")]),
+                            binaryContent[this.Config.GetString("OutImage")],
+                            UInt32.Parse(stringContent[this.Config.GetString("CopeMoney")]),
+                            UInt32.Parse(stringContent[this.Config.GetString("ActualMoney")]),
+                            UInt64.Parse(stringContent[this.Config.GetString("TicketMoney")])
                             ));
                 }
                 else if (url.Equals(this.CouponReceiveUrl))
@@ -123,6 +128,11 @@ namespace IPSCM.Protocol.Gates
 
                     throw new ArgumentException(String.Format("Can not find url {0}", arg.Request.Url));
                 }
+            }
+            catch (KeyNotFoundException)
+            {
+                arg.Response.OutputStream.Close();
+                throw new ArgumentException("Request argument deficiency!");
             }
             catch (Exception ex)
             {
@@ -181,11 +191,33 @@ namespace IPSCM.Protocol.Gates
 
         public override void Stop()
         {
-            base.Stop();
+            if (this.RunningStatus != GateStatus.Started) return;
             Log.Info("F3 stoping...");
             this.Listener.Stop();
             this.ListenThread.Interrupt();
             Log.Info("F3 stopped");
+        }
+
+        private void RegisterHttp(String domain, UInt32 port)
+        {
+            string args = string.Format(@"http add urlacl url=http://{0}:{1}/ user={2}\{3}", domain, port,
+                Environment.UserDomainName, Environment.UserName);
+            Log.Info(String.Format(@"Trying register url:http://{0}:{1}/ as user user={2}\{3}", domain, port,
+                Environment.UserDomainName, Environment.UserName));
+            ProcessStartInfo psi = new ProcessStartInfo("netsh", args);
+            psi.Verb = "runas";
+            psi.CreateNoWindow = true;
+            psi.WindowStyle = ProcessWindowStyle.Hidden;
+            psi.UseShellExecute = true;
+            var process = Process.Start(psi);
+            //var output = new StringBuilder();
+            //while (!process.StandardOutput.EndOfStream)
+            //{
+            //    output.Append(process.StandardOutput.ReadLine());
+            //}
+            process.WaitForExit();
+            //Log.Info(String.Format("Register result:{0}", output));
+
         }
     }
 }

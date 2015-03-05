@@ -12,8 +12,7 @@ namespace IPSCM.Protocol.Entities.Results
             : base(jsonString)
         {
             var o = JObject.Parse(jsonString);
-            var val = o[this.FieldConfig.GetString("Info")][this.FieldConfig.GetString("Token")];
-            this.Token = val != null ? val.ToString() : String.Empty;
+            this.Token = (o.SelectToken(this.JsonConfig.GetString("TokenPath"), false) ?? String.Empty).ToString();
         }
     }
 }

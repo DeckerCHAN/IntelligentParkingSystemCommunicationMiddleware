@@ -20,28 +20,26 @@ namespace IPSCM.Protocol
 
         public virtual void Start()
         {
-            if (this.RunningStatus != GateStatus.Initialized)
-            {
-                Log.Error("Trying to start a controllable object but did not initialized yet or has been strated. I think this is a bug or logic mistake in code.");
-                throw new InvalidOperationException(String.Format("Trying to start a {0} control object",this.RunningStatus));
-            }
-            this.RunningStatus = GateStatus.Started;
             var triger = this.OnStart;
             if (triger != null) triger(this);
+            if (this.RunningStatus != GateStatus.Initialized)
+            {
+                throw new InvalidOperationException(String.Format("Trying to start a {0} control object", this.RunningStatus));
+            }
+            this.RunningStatus = GateStatus.Started;
         }
 
         public virtual void Stop()
         {
-            if (this.RunningStatus != GateStatus.Started)
-            {
-                Log.Error("Trying to stop a controllable object but did not started yet. I think this is a bug or logic mistake in code.");
-                throw new InvalidOperationException(String.Format("Trying to stop a {0} control object", this.RunningStatus));
-          
-                return;
-            }
-            this.RunningStatus = GateStatus.Endded;
             var triger = this.OnStop;
             if (triger != null) triger(this);
+            if (this.RunningStatus != GateStatus.Started)
+            {
+                throw new InvalidOperationException(String.Format("Trying to stop a {0} control object", this.RunningStatus));
+            }
+            this.RunningStatus = GateStatus.Endded;
+
+
         }
     }
 }

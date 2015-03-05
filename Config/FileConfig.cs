@@ -38,7 +38,7 @@ namespace IPSCM.Configuration
             {
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (String.IsNullOrEmpty(line) || line[0] == '#') { continue; }
+                    if (String.IsNullOrEmpty(line) || line[0] == '#'||!line.Contains(":")) { continue; }
                     var key = line.Substring(0, line.IndexOf(':'));
                     var value = line.Substring(line.IndexOf(':') + 1);
 

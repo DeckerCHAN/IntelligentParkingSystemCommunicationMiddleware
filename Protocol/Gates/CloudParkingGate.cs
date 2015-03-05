@@ -23,18 +23,16 @@ namespace IPSCM.Protocol.Gates
         public event HeartBeatEventHandler OnHeartBeat;
         public event LoginEventHandler OnLoggedin;
         public Thread TickThread { get; private set; }
+
         public String Token { get; private set; }
+
         public Config Config { get; private set; }
-        private Config FieldConfig { get; set; }
-        private HttpClient Client { get; set; }
         private String SecurityKey { get; set; }
 
         public CloudParkingGate()
         {
             this.Config = FileConfig.FindConfig("Parking.cfg");
-            this.FieldConfig = FileConfig.FindConfig("Request.cfg");
             this.SecurityKey = Config.GetString("SecurityKey");
-            this.Client = new HttpClient();
             this.Token = String.Empty;
             this.TickThread = new Thread(this.Tick);
         }
@@ -57,8 +55,8 @@ namespace IPSCM.Protocol.Gates
         public LoginResult LogIn(String userName, String password)
         {
             var data = new Dictionary<string, string>();
-            data.Add(FieldConfig.GetString("UserName"), userName);
-            data.Add(FieldConfig.GetString("Password"), password);
+            data.Add(Config.GetString("UserName"), userName);
+            data.Add(Config.GetString("Password"), password);
             var responseJson = this.Send(this.Config.GetString("LoginUrl"), data, new Dictionary<string, byte[]>());
             var loginRes = new LoginResult(responseJson);
             this.Token = loginRes.Token;
@@ -68,17 +66,35 @@ namespace IPSCM.Protocol.Gates
             return loginRes;
         }
 
-        public ParkingResult Parking(String plateNumber, DateTime inTime, Byte[] inImg)
+        public ParkingResult Parking(UInt64 recordId, String plateNumber, DateTime inTime, Byte[] inImg)
         {
             var stringData = new Dictionary<string, string>();
             var binaryData = new Dictionary<String, Byte[]>();
-            stringData.Add(FieldConfig.GetString("PlateNumber"), plateNumber);
-            stringData.Add(FieldConfig.GetString("InTime"), inTime.ToString("yyyy-MM-dd HH:mm:ss"));
-
-            binaryData.Add(FieldConfig.GetString("InImage"), inImg);
+            stringData.Add(Config.GetString("RecordId"), recordId.ToString());
+            stringData.Add(Config.GetString("PlateNumber"), plateNumber);
+            stringData.Add(Config.GetString("InTime"), inTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            binaryData.Add(Config.GetString("InImage"), inImg);
             var responseJson = this.Send(this.Config.GetString("ParkUrl"), stringData, binaryData);
             var parkingRes = new ParkingResult(responseJson);
             return parkingRes;
+        }
+
+        public LeavingResult Leaving(UInt64 recordId, String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney,
+            UInt32 actualMoney, UInt64 ticketId)
+        {
+            var stringData = new Dictionary<string, string>();
+            var binaryData = new Dictionary<String, Byte[]>();
+
+            stringData.Add(Config.GetString("RecordId"), recordId.ToString());
+            stringData.Add(Config.GetString("PlateNumber"), plateNumber);
+            stringData.Add(Config.GetString("OutTime"), outTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            binaryData.Add(Config.GetString("OutImage"), outImg);
+            stringData.Add(Config.GetString("CopeMoney"), copeMoney.ToString());
+            stringData.Add(Config.GetString("ActualMoney"), actualMoney.ToString());
+            stringData.Add(Config.GetString("TicketId"), ticketId.ToString());
+            var responseJson = this.Send(this.Config.GetString("LeaveUrl"), stringData, binaryData);
+            var leavingResult = new LeavingResult(responseJson);
+            return leavingResult;
         }
 
         private String HeartBeat()
@@ -93,29 +109,32 @@ namespace IPSCM.Protocol.Gates
         {
             var sign = this.GetSign(textData);
             var requestContent = new MultipartFormDataContent();
-            requestContent.Headers.Add("sign", sign);
-            //requestContent.Add(new StringContent(sign), "sign");
+            requestContent.Headers.Add(this.Config.GetString("Token"), this.Token);
+            requestContent.Headers.Add(Config.GetString("Sign"), sign);
             foreach (var key in textData.Keys)
             {
                 requestContent.Add(new StringContent(textData[key]), key);
             }
             foreach (var key in rowData.Keys)
             {
-                requestContent.Add(new ByteArrayContent(rowData[key]), key);
+                requestContent.Add(new ByteArrayContent(rowData[key]), key, key);
             }
-
-            var response = this.Client.PostAsync(url, requestContent).Result;
-            var result = response.Content.ReadAsStringAsync().Result;
+            String result;
+            using (var client = new HttpClient())
+            {
+                var response = client.PostAsync(url, requestContent).Result;
+                result = response.Content.ReadAsStringAsync().Result;
+            }
             return result;
         }
 
-        private String GetSign(Dictionary<String, String> datas)
+        private String GetSign(Dictionary<String, String> data)
         {
             var sum = new StringBuilder();
-            var sort = from key in datas.Keys orderby key select key;
+            var sort = from key in data.Keys orderby key select key;
             foreach (var key in sort)
             {
-                sum.Append(datas[key]);
+                sum.Append(data[key]);
             }
             sum.Append(this.SecurityKey);
             var sign = HashUtils.CalculateMD5Hash(sum.ToString()).ToLower();

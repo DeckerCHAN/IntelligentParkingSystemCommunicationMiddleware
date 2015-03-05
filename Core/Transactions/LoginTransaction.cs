@@ -37,7 +37,7 @@ namespace IPSCM.Core.Transactions
                         case ResultCode.Success:
                             {
                                 //Success
-                                Log.Info(String.Format("Cloud parking login successful. Preserved token{0}", result.Token));
+                                Log.Info(String.Format("Cloud parking login successful. Preserved token:{0}", result.Token));
                                 this.LoginSuccess();
                                 break;
                             }

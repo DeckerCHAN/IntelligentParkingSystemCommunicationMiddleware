@@ -11,14 +11,14 @@ namespace IPSCM.Protocol.Entities.Results
     {
         public ResultCode ResultCode { get; protected set; }
         public String ErrorMessage { get; protected set; }
-        protected FileConfig FieldConfig { get; private set; }
+        protected FileConfig JsonConfig { get; private set; }
 
         protected Result(String jsonString)
         {
-            this.FieldConfig = FileConfig.FindConfig("JsonXPath.cfg");
+            this.JsonConfig = FileConfig.FindConfig("Json.cfg");
             var o = JObject.Parse(jsonString);
-            this.ResultCode = (ResultCode)o[FieldConfig.GetString("ResultCode")].ToObject<UInt16>();
-            this.ErrorMessage = o[FieldConfig.GetString("ErrorMessage")]!=null?o[FieldConfig.GetString("ErrorMessage")].ToString():String.Empty;
+            this.ResultCode = (ResultCode)o[this.JsonConfig.GetString("ResultCode")].ToObject<UInt16>();
+            this.ErrorMessage = (o.SelectToken(this.JsonConfig.GetString("ErrorMessagePath"), false) ?? String.Empty).ToString();
         }
 
     }

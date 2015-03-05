@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace IPSCM.Core
@@ -13,7 +14,16 @@ namespace IPSCM.Core
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Engine.GetEngine().Run();
+            try
+            {
+                Engine.GetEngine().Run();
+            }
+            catch(Exception ex)
+            {
+                FileInfo report = new FileInfo(String.Format("crash-report-{0}.report", DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss-tt")));
+                File.WriteAllText(report.FullName, ex.ToString());
+            }
+
         }
     }
 }

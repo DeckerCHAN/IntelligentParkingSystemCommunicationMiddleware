@@ -1,16 +1,18 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Logging;
 using IPSCM.Protocol.Entities;
-using IPSCM.Protocol.Entities.Results;
+using IPSCM.Utils;
 using Newtonsoft.Json.Linq;
 
 namespace IPSCM.Core.Transactions
 {
     public class ParkingTransaction : Transaction
     {
+        public UInt64 RecordId { get; private set; }
         public String plateNumber { get; private set; }
         public DateTime InTime { get; private set; }
         public Byte[] InImage { get; private set; }
@@ -18,8 +20,10 @@ namespace IPSCM.Core.Transactions
         public Thread WorkThread { get; private set; }
         public Config JsonConfig { get; private set; }
 
-        public ParkingTransaction(String plateNum, DateTime inTime, Byte[] inImage, Stream responseStream)
+        public ParkingTransaction(UInt64 recordID, String plateNum, DateTime inTime, Byte[] inImage, Stream responseStream)
         {
+            this.JsonConfig = FileConfig.FindConfig("Json.cfg");
+            this.RecordId = recordID;
             this.plateNumber = plateNum;
             this.InTime = inTime;
             this.InImage = inImage;
@@ -28,43 +32,27 @@ namespace IPSCM.Core.Transactions
             {
                 try
                 {
-                    ParkingResult result;
-                    while (true)
-                    {
-                        try
-                        {
-                            result = Engine.GetEngine().CloudParking.Parking(plateNum, inTime, inImage);
-                            break;
+                    var result = Engine.GetEngine().CloudParking.Parking(recordID, plateNum, inTime, inImage);
 
-                        }
-                        catch (Exception ex)
-                        {
-                            //TODO:Catch network exception to re-send
-                            throw;
-                        }
-
-                    }
 
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
                             {
-                                JObject o = new JObject();
-                                o.Add(new JProperty(JsonConfig.GetString("ResultCode"), ResultCode.Success));
-                                new StreamWriter(this.ResponseStream).Write(o.ToString());
+                                this.ParkingSuccess();
                                 break;
                             }
                         case ResultCode.SuccessButNoBinding:
                             {
-                                JObject o = new JObject();
-                                o.Add(new JProperty(JsonConfig.GetString("ResultCode"), ResultCode.SuccessButNoBinding));
-                                new StreamWriter(this.ResponseStream).Write(o.ToString());
+                                this.ParkingSuccessButNoBinding();
                                 break;
                             }
                         default:
                             {
-                                JObject o = new JObject();
-                                o.Add(new JProperty(JsonConfig.GetString("ResultCode"), ResultCode.Success));
+                                JObject o = new JObject
+                                {
+                                    new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success)
+                                };
                                 if (!String.IsNullOrEmpty(result.ErrorMessage))
                                 {
                                     o.Add(new JProperty(JsonConfig.GetString("ErrorMessage"), result.ErrorMessage));
@@ -77,13 +65,29 @@ namespace IPSCM.Core.Transactions
                 catch (Exception ex)
                 {
                     Log.Error("Parking Transaction encountered a exception", ex);
-
+                    var o = new JObject { new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.ServerFailure) };
+                   // this.ResponseStream.Write(Encoding.UTF8.GetBytes(o.ToString()), 0, Encoding.UTF8.GetBytes(o.ToString()).Length);
+                     new StreamWriter(this.ResponseStream).Write(o.ToString());
                 }
                 finally
                 {
+                    this.ResponseStream.Flush();
                     this.ResponseStream.Close();
                 }
             });
+        }
+
+        private void ParkingSuccess()
+        {
+            JObject o = new JObject { new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success) };
+            StreamUtils.WriteToStreamWithUF8(this.ResponseStream,o.ToString());         
+        }
+
+        private void ParkingSuccessButNoBinding()
+        {
+            var o = new JObject { new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.SuccessButNoBinding) };
+            new StreamWriter(this.ResponseStream).Write(o.ToString());
+
         }
 
         public override void Execute()

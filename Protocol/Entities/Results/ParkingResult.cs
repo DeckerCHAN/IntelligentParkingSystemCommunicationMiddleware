@@ -21,9 +21,9 @@ namespace IPSCM.Protocol.Entities.Results
                 case ResultCode.Success:
                     {
 
-                        this.Money = o[this.FieldConfig.GetString("Info")][this.FieldConfig.GetString("Money")].ToObject<UInt32>();
-                        this.UserID = o[this.FieldConfig.GetString("Info")][this.FieldConfig.GetString("UserID")].ToObject<String>();
-                        this.PhoneNumber = o[this.FieldConfig.GetString("Info")][this.FieldConfig.GetString("PhoneNumber")].ToObject<String>();
+                        this.Money = (o.SelectToken("MoneyPath", false) ?? 0).ToObject<UInt32>();
+                        this.UserID = (o.SelectToken("UserIDPath", false) ?? String.Empty).ToObject<String>();
+                        this.PhoneNumber = (o.SelectToken("PhoneNumberPath", false) ?? String.Empty).ToObject<String>();
                         break;
                     }
                 case ResultCode.SuccessButNoBinding:
@@ -33,7 +33,7 @@ namespace IPSCM.Protocol.Entities.Results
                     }
                 default:
                     {
-                        throw new InvalidOperationException(String.Format("Parking operation not support resultcode{0}", this.ResultCode));
+                        throw new InvalidOperationException(String.Format("Parking operation not support resultcode:{0}", this.ResultCode));
                     }
             }
         }
