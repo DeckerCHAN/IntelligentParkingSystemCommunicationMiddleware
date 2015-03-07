@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using IPSCM.Logging;
 
 namespace IPSCM.Core.Transactions
 {
-    public class TransactionPool:IDisposable
+    public class TransactionPool : IDisposable
     {
         public List<Transaction> Transactions { get; private set; }
         public readonly Thread WipeThread;
@@ -13,7 +14,7 @@ namespace IPSCM.Core.Transactions
         public TransactionPool()
         {
             this.Transactions = new List<Transaction>();
-            this.WipeThread=new Thread(this.WipeOut);
+            this.WipeThread = new Thread(this.WipeOut);
         }
 
         public void AddBeforeExecute(Transaction transaction)
@@ -24,22 +25,25 @@ namespace IPSCM.Core.Transactions
 
         private void WipeOut()
         {
+            Log.Info("Transaction pool wipe thread started!");
             while (true)
             {
                 try
                 {
                     Thread.Sleep(60000);
-                    this.Transactions.RemoveAll(x => x.Status == TransactionStatus.Errored);
-
-
+                    Log.Info("Transaction pool wiping...");
+                    var wipeCount = this.Transactions.Count(x => x.Status == TransactionStatus.Errored || x.Status == TransactionStatus.Exhausted);
+                    this.Transactions.RemoveAll(x => x.Status == TransactionStatus.Errored || x.Status == TransactionStatus.Exhausted);
+                    Log.Info(String.Format("Transaction pool wiped {0} transactions!", wipeCount));
                 }
                 catch (ThreadInterruptedException)
                 {
+                    Log.Info("Transaction pool wipe thread stopped!");
                     return;
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Transaction pool wipe out error!",ex);
+                    Log.Error("Transaction pool wipe out error!", ex);
                 }
             }
         }

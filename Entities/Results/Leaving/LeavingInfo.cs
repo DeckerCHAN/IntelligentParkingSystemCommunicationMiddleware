@@ -1,6 +1,6 @@
 ﻿namespace IPSCM.Entities.Results.Leaving
 {
-    class LeavingInfo
+    public class LeavingInfo
     {
 
     }

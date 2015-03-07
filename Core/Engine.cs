@@ -31,10 +31,11 @@ namespace IPSCM.Core
         {
             this.UiControl = UiControl.GetUiControl();
             this.MainForm = this.UiControl.MainWindow;
-            this.TransactionPool = new TransactionPool();
             this.F3Gate = new F3Gate();
             this.CloudParking = new CloudParkingGate();
-            this.ThreadExit += (i, o) => { this.Exit(); };
+            this.RegisterEvents();
+            this.TransactionPool = new TransactionPool();
+
         }
 
         void Exit()
@@ -53,7 +54,7 @@ namespace IPSCM.Core
         public void Run()
         {
             this.UiControl.MainWindow.Show();
-            this.RegisterEvent();
+            this.TransactionPool.WipeThread.Start();
             Log.Info("Engine starting running...");
             //F3Gate would start after successful log in.
             this.CloudParking.Start();
@@ -63,18 +64,12 @@ namespace IPSCM.Core
         }
         public void TryOut(String text, Color color)
         {
-            try
-            {
-                this.UiControl.MainWindow.Invoke(new Action(() => { this.UiControl.MainWindow.Out(text, color); }));
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+            if (this.UiControl != null) this.UiControl.MainWindow.Invoke(new Action(() => { this.UiControl.MainWindow.Out(text, color); }));
         }
 
-        private void RegisterEvent()
+        private void RegisterEvents()
         {
+            this.ThreadExit += (i, o) => { this.Exit(); };
             Log.GetLogger().OnInfo += i => { this.TryOut(i.Messege, Color.Lime); };
             Log.GetLogger().OnError += i => { this.TryOut(i.Message, Color.Red); };
             this.UiControl.LoginWindow.LoginButton.Click += (i, o) =>

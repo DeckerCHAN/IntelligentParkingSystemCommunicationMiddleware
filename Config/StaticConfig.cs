@@ -14,8 +14,6 @@ namespace IPSCM.Configuration
         private StaticConfig()
         {
             this.Set("LogPath","Logs\\"+DateTime.Now.ToString("F").Replace(':','-')+".log");
-            this.Set("UserName","TestUser");
-            this.Set("UserPassword","defaultPassword");
             
         }
     }

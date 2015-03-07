@@ -7,6 +7,7 @@ using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Entities;
 using IPSCM.Entities.Results;
+using IPSCM.Entities.Results.Leaving;
 using IPSCM.Entities.Results.Parking;
 using IPSCM.Logging;
 using IPSCM.Protocol.EventArgs;

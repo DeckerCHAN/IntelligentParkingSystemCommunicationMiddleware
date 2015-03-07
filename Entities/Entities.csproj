@@ -50,7 +50,6 @@
     <Compile Include="Results\HeartBeatResult.cs" />
     <Compile Include="Results\Leaving\LeavingInfo.cs" />
     <Compile Include="Results\Leaving\LeavingResult.cs" />
-    <Compile Include="Results\Login\LeavingResult.cs" />
     <Compile Include="Results\Login\LoginInfo.cs" />
     <Compile Include="Results\Login\LoginResult.cs" />
     <Compile Include="Results\Parking\ParkingInfo.cs" />

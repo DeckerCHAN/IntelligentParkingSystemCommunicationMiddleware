@@ -47,6 +47,7 @@
     <None Include="Configs\F3.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Configs\GUI.cfg" />
     <None Include="Configs\Json.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

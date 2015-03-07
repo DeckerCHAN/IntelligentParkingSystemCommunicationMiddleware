@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Entities.Results;
+using IPSCM.Entities.Results.Leaving;
 using IPSCM.Logging;
 using Newtonsoft.Json.Linq;
 
