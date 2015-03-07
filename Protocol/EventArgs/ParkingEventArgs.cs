@@ -5,7 +5,6 @@ namespace IPSCM.Protocol.EventArgs
 {
     public class ParkingEventArgs : HttpDataEventArgs
     {
-        public UInt64 RecordId { get; private set; }
         public String PlateNumber { get; private set; }
         public DateTime InTime { get; private set; }
         public Byte[] InImg { get; private set; }

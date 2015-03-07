@@ -69,11 +69,10 @@ namespace IPSCM.Protocol.Gates
             return loginRes;
         }
 
-        public ParkingResult Parking(UInt64 recordId, String plateNumber, DateTime inTime, Byte[] inImg)
+        public ParkingResult Parking(String plateNumber, DateTime inTime, Byte[] inImg)
         {
             var stringData = new Dictionary<string, string>();
             var binaryData = new Dictionary<String, Byte[]>();
-            stringData.Add(Config.GetString("RecordId"), recordId.ToString());
             stringData.Add(Config.GetString("PlateNumber"), plateNumber);
             stringData.Add(Config.GetString("InTime"), inTime.ToString("yyyy-MM-dd HH:mm:ss"));
             binaryData.Add(Config.GetString("InImage"), inImg);
