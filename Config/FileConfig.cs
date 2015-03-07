@@ -1,25 +1,18 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.IO;
+
+#endregion
 
 namespace IPSCM.Configuration
 {
     public class FileConfig : Config
     {
         public static Dictionary<String, FileConfig> FileConfigs = new Dictionary<String, FileConfig>();
-
-        public static FileConfig FindConfig(String name)
-        {
-            //TODO:Using better implantation
-            if (FileConfigs.ContainsKey(name))
-            {
-                return FileConfigs[name];
-            }
-            var file = new FileInfo("Configs\\" + name);
-            return new FileConfig(file);
-        }
-
         private readonly FileInfo ConfigFile;
+
         protected FileConfig(FileInfo configFile)
         {
             this.ConfigFile = configFile;
@@ -33,7 +26,10 @@ namespace IPSCM.Configuration
             {
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (String.IsNullOrEmpty(line) || line[0] == '#'||!line.Contains(":")) { continue; }
+                    if (String.IsNullOrEmpty(line) || line[0] == '#' || !line.Contains(":"))
+                    {
+                        continue;
+                    }
                     var key = line.Substring(0, line.IndexOf(':'));
                     var value = line.Substring(line.IndexOf(':') + 1);
 
@@ -48,6 +44,17 @@ namespace IPSCM.Configuration
             FileConfigs.Add(configFile.Name, this);
         }
 
+        public static FileConfig FindConfig(String name)
+        {
+            //TODO:Using better implantation
+            if (FileConfigs.ContainsKey(name))
+            {
+                return FileConfigs[name];
+            }
+            var file = new FileInfo("Configs\\" + name);
+            return new FileConfig(file);
+        }
+
         public void SaveToFile()
         {
             using (var writer = new StreamWriter(this.ConfigFile.OpenWrite()))
@@ -58,7 +65,6 @@ namespace IPSCM.Configuration
                 }
                 writer.Flush();
             }
-
         }
     }
 }

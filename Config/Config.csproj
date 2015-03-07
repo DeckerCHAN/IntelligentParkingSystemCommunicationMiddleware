@@ -41,7 +41,7 @@
     <Compile Include="StaticConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Configs\Database.cfg">
+    <None Include="Configs\Storage.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Configs\F3.cfg">

@@ -1,18 +1,16 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Net;
+
+#endregion
 
 namespace IPSCM.Protocol.EventArgs
 {
     public class LeavingEventArgs : HttpDataEventArgs
     {
-        public String PlateNumber { get; private set; }
-        public DateTime OutTime { get; private set; }
-        public Byte[] OutImg { get; private set; }
-        public UInt32 copeMoney { get; private set; }
-        public UInt32 actualMoney { get; private set; }
-        public UInt64 TicketId { get; private set; }
-
-        public LeavingEventArgs(HttpListenerRequest request, HttpListenerResponse response, String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney, UInt32 actualMoney, UInt64 ticketId)
+        public LeavingEventArgs(HttpListenerRequest request, HttpListenerResponse response, String plateNumber,
+            DateTime outTime, Byte[] outImg, UInt32 copeMoney, UInt32 actualMoney, UInt64 ticketId)
             : base(request, response)
         {
             this.PlateNumber = plateNumber;
@@ -22,5 +20,12 @@ namespace IPSCM.Protocol.EventArgs
             this.actualMoney = actualMoney;
             this.TicketId = ticketId;
         }
+
+        public String PlateNumber { get; private set; }
+        public DateTime OutTime { get; private set; }
+        public Byte[] OutImg { get; private set; }
+        public UInt32 copeMoney { get; private set; }
+        public UInt32 actualMoney { get; private set; }
+        public UInt64 TicketId { get; private set; }
     }
 }

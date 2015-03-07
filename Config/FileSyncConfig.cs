@@ -1,8 +1,12 @@
-﻿using System.IO;
+﻿#region
+
+using System.IO;
+
+#endregion
 
 namespace IPSCM.Configuration
 {
-    class FileSyncConfig:FileConfig
+    internal class FileSyncConfig : FileConfig
     {
         public FileSyncConfig(FileInfo configFile) : base(configFile)
         {

@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Security.Cryptography;
 using System.Text;
+
+#endregion
 
 namespace IPSCM.Utils
 {

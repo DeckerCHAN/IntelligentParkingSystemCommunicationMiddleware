@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using IPSCM.Configuration;
@@ -7,25 +9,13 @@ using IPSCM.GUI;
 using IPSCM.Logging;
 using IPSCM.Protocol.Gates;
 
+#endregion
+
 namespace IPSCM.Core
 {
-    class Engine : ApplicationContext
+    internal class Engine : ApplicationContext
     {
         private static Engine _instance;
-
-        public static Engine GetEngine()
-        {
-            return _instance ?? (_instance = new Engine());
-        }
-
-        #region fields
-
-        public TransactionPool TransactionPool { get; private set; }
-        public UiControl UiControl { get; private set; }
-        public F3Gate F3Gate { get; set; }
-        public CloudParkingGate CloudParking { get; set; }
-
-        #endregion
 
         private Engine()
         {
@@ -35,10 +25,14 @@ namespace IPSCM.Core
             this.CloudParking = new CloudParkingGate();
             this.RegisterEvents();
             this.TransactionPool = new TransactionPool();
-
         }
 
-        void Exit()
+        public static Engine GetEngine()
+        {
+            return _instance ?? (_instance = new Engine());
+        }
+
+        private void Exit()
         {
             Log.Info("Stoping Engine");
             foreach (var fileConfig in FileConfig.FileConfigs.Values)
@@ -62,9 +56,11 @@ namespace IPSCM.Core
             this.UiControl.LoginWindow.ShowDialog(this.UiControl.MainWindow);
             Application.Run(this);
         }
+
         public void TryOut(String text, Color color)
         {
-            if (this.UiControl != null) this.UiControl.MainWindow.Invoke(new Action(() => { this.UiControl.MainWindow.Out(text, color); }));
+            if (this.UiControl != null)
+                this.UiControl.MainWindow.Invoke(new Action(() => { this.UiControl.MainWindow.Out(text, color); }));
         }
 
         private void RegisterEvents()
@@ -78,16 +74,27 @@ namespace IPSCM.Core
                 var password = this.UiControl.LoginWindow.PasswordTextBox.Text.Clone().ToString();
                 this.TransactionPool.AddBeforeExecute(new LoginTransaction(username, password));
             };
-            this.F3Gate.OnParking += (i, o) =>
-            {
-                this.TransactionPool.AddBeforeExecute(new ParkingTransaction(o.PlateNumber, o.InTime, o.InImg, o.Response.OutputStream));
-            };
-            this.F3Gate.OnLeaving += (i, o) =>
-            {
-                this.TransactionPool.AddBeforeExecute(new LeavingTransaction(o.PlateNumber, o.OutTime, o.OutImg, o.copeMoney, o.actualMoney, o.TicketId, o.Response.OutputStream));
-            };
-
+            this.F3Gate.OnParking +=
+                (i, o) =>
+                {
+                    this.TransactionPool.AddBeforeExecute(new ParkingTransaction(o.PlateNumber, o.InTime, o.InImg,
+                        o.Response.OutputStream));
+                };
+            this.F3Gate.OnLeaving +=
+                (i, o) =>
+                {
+                    this.TransactionPool.AddBeforeExecute(new LeavingTransaction(o.PlateNumber, o.OutTime, o.OutImg,
+                        o.copeMoney, o.actualMoney, o.TicketId, o.Response.OutputStream));
+                };
         }
 
+        #region fields
+
+        public TransactionPool TransactionPool { get; private set; }
+        public UiControl UiControl { get; private set; }
+        public F3Gate F3Gate { get; set; }
+        public CloudParkingGate CloudParking { get; set; }
+
+        #endregion
     }
 }

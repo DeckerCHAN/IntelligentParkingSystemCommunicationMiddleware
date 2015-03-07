@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,29 +12,21 @@ using IPSCM.Configuration;
 using IPSCM.Logging;
 using IPSCM.Protocol.EventArgs;
 
+#endregion
+
 namespace IPSCM.Protocol.Gates
 {
     public delegate void ParkingEventHandler(object sender, ParkingEventArgs arg);
+
     public delegate void CouponEventHandler(object sender, CouponEventArgs arg);
+
     public delegate void LeavingEventhandler(object sender, LeavingEventArgs arg);
 
     public class F3Gate : ControllableObject, IReceive
     {
-        public event ReceiveEventHandler OnReceived;
-        public event ParkingEventHandler OnParking;
-        public event LeavingEventhandler OnLeaving;
-
         private readonly HttpListener Listener;
         private Thread ListenThread;
-        private FileConfig Config { get; set; }
-        private UInt32 PortNumber { get; set; }
-        private String LocalHost { get; set; }
 
-        private String ParkingUrl { get; set; }
-        private String LeavingUrl { get; set; }
-        private String CouponReceiveUrl { get; set; }
-
-        public Boolean IsDebug { get; private set; }
         public F3Gate()
         {
             if (!HttpListener.IsSupported)
@@ -51,14 +45,27 @@ namespace IPSCM.Protocol.Gates
             this.Listener = new HttpListener();
             this.Listener.Prefixes.Add(String.Format("http://{0}:{1}/", this.LocalHost, this.PortNumber));
             this.OnReceived += this.F3Gate_OnReceived;
-
         }
 
-        void F3Gate_OnReceived(object sender, HttpDataEventArgs arg)
-        {
+        private FileConfig Config { get; set; }
+        private UInt32 PortNumber { get; set; }
+        private String LocalHost { get; set; }
+        private String ParkingUrl { get; set; }
+        private String LeavingUrl { get; set; }
+        private String CouponReceiveUrl { get; set; }
+        public Boolean IsDebug { get; private set; }
+        public event ReceiveEventHandler OnReceived;
+        public event ParkingEventHandler OnParking;
+        public event LeavingEventhandler OnLeaving;
 
-            Log.Info(String.Format("F3 received a request form {0} through {1} method with url: {2}", arg.Request.RemoteEndPoint, arg.Request.HttpMethod, arg.Request.RawUrl));
-            if (!arg.Request.HasEntityBody) { return; }
+        private void F3Gate_OnReceived(object sender, HttpDataEventArgs arg)
+        {
+            Log.Info(String.Format("F3 received a request form {0} through {1} method with url: {2}",
+                arg.Request.RemoteEndPoint, arg.Request.HttpMethod, arg.Request.RawUrl));
+            if (!arg.Request.HasEntityBody)
+            {
+                return;
+            }
             var stringContent = new Dictionary<string, string>();
             var binaryContent = new Dictionary<string, byte[]>();
             using (var body = arg.Request.InputStream)
@@ -83,7 +90,6 @@ namespace IPSCM.Protocol.Gates
                         var bytesValue = httpContent.ReadAsByteArrayAsync().Result;
                         binaryContent.Add(name, bytesValue);
                     }
-
                 }
             }
             var url = arg.Request.RawUrl;
@@ -114,12 +120,11 @@ namespace IPSCM.Protocol.Gates
                             binaryContent[this.Config.GetString("OutImage")],
                             UInt32.Parse(stringContent[this.Config.GetString("CopeMoney")]),
                             UInt32.Parse(stringContent[this.Config.GetString("ActualMoney")]),
-                            UInt64.Parse(stringContent[this.Config.GetString("TicketMoney")])
+                            UInt64.Parse(stringContent[this.Config.GetString("TicketId")])
                             ));
                 }
                 else if (url.Equals(this.CouponReceiveUrl))
                 {
-
                 }
                 else
                 {
@@ -137,17 +142,15 @@ namespace IPSCM.Protocol.Gates
             {
                 arg.Response.OutputStream.Close();
                 throw new ArgumentException("Can not process this request!", ex);
-
             }
-
         }
+
         public override void Start()
         {
             base.Start();
             Log.Info("F3 starting...");
             this.ListenThread = new Thread(() =>
             {
-
                 this.Listener.Start();
                 Log.Info(String.Format("F3 Binded on:{0}:{1}", this.LocalHost, this.PortNumber));
                 while (this.Listener.IsListening)
@@ -155,16 +158,17 @@ namespace IPSCM.Protocol.Gates
                     try
                     {
                         var context = this.Listener.GetContext();
-                        if (context.Request.HttpMethod == "GET") { continue; }
+                        if (context.Request.HttpMethod == "GET")
+                        {
+                            continue;
+                        }
                         var trigger = this.OnReceived;
                         if (trigger != null) trigger(this, new HttpDataEventArgs(context.Request, context.Response));
-
                     }
                     catch (ThreadInterruptedException)
                     {
                         Log.Info("Listener stopped");
                         return;
-
                     }
                     catch (HttpListenerException ex)
                     {
@@ -176,13 +180,10 @@ namespace IPSCM.Protocol.Gates
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Encounter in listen thread", ex);
+                        Log.Error("Encounter error in listen thread", ex);
                     }
                 }
                 this.Listener.Stop();
-
-
-
             });
             this.ListenThread.Start();
             Log.Info("F3 started");
@@ -216,7 +217,6 @@ namespace IPSCM.Protocol.Gates
             //}
             process.WaitForExit();
             //Log.Info(String.Format("Register result:{0}", output));
-
         }
     }
 }

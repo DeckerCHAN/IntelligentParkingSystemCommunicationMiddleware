@@ -1,23 +1,14 @@
-﻿using System;
+﻿#region
+
+using System;
+
+#endregion
 
 namespace IPSCM.Logging.EventArgs
 {
     public class LogErrorEventArgs : System.EventArgs
     {
         private string _message;
-        public Exception Exception { get;private set; }
-
-        public String Message
-        {
-            get
-            {
-                if (this.Exception != null)
-                {
-                    this._message += String.Format("{0}Caused by:{1}", Environment.NewLine, this.Exception);
-                }
-                return this._message;
-            }
-        }
 
         public LogErrorEventArgs(String message)
         {
@@ -35,6 +26,18 @@ namespace IPSCM.Logging.EventArgs
             this.Exception = exception;
         }
 
+        public Exception Exception { get; private set; }
 
+        public String Message
+        {
+            get
+            {
+                if (this.Exception != null)
+                {
+                    this._message += String.Format("{0}Caused by:{1}", Environment.NewLine, this.Exception);
+                }
+                return this._message;
+            }
+        }
     }
 }

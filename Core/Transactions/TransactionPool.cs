@@ -1,20 +1,34 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using IPSCM.Logging;
 
+#endregion
+
 namespace IPSCM.Core.Transactions
 {
     public class TransactionPool : IDisposable
     {
-        public List<Transaction> Transactions { get; private set; }
         public readonly Thread WipeThread;
 
         public TransactionPool()
         {
             this.Transactions = new List<Transaction>();
             this.WipeThread = new Thread(this.WipeOut);
+        }
+
+        public List<Transaction> Transactions { get; private set; }
+
+        public void Dispose()
+        {
+            this.WipeThread.Interrupt();
+            foreach (var transaction in Transactions)
+            {
+                transaction.Interrupt();
+            }
         }
 
         public void AddBeforeExecute(Transaction transaction)
@@ -32,8 +46,11 @@ namespace IPSCM.Core.Transactions
                 {
                     Thread.Sleep(60000);
                     Log.Info("Transaction pool wiping...");
-                    var wipeCount = this.Transactions.Count(x => x.Status == TransactionStatus.Errored || x.Status == TransactionStatus.Exhausted);
-                    this.Transactions.RemoveAll(x => x.Status == TransactionStatus.Errored || x.Status == TransactionStatus.Exhausted);
+                    var wipeCount =
+                        this.Transactions.Count(
+                            x => x.Status == TransactionStatus.Errored || x.Status == TransactionStatus.Exhausted);
+                    this.Transactions.RemoveAll(
+                        x => x.Status == TransactionStatus.Errored || x.Status == TransactionStatus.Exhausted);
                     Log.Info(String.Format("Transaction pool wiped {0} transactions!", wipeCount));
                 }
                 catch (ThreadInterruptedException)
@@ -45,15 +62,6 @@ namespace IPSCM.Core.Transactions
                 {
                     Log.Error("Transaction pool wipe out error!", ex);
                 }
-            }
-        }
-
-        public void Dispose()
-        {
-            this.WipeThread.Interrupt();
-            foreach (var transaction in Transactions)
-            {
-                transaction.Interrupt();
             }
         }
     }

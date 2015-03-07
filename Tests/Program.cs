@@ -1,12 +1,16 @@
-﻿using System;
+﻿#region
+
+using System;
 using IPSCM.Entities;
 using IPSCM.Entities.Results;
 
+#endregion
+
 namespace IPSCM.Tests
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             String json = "{\"result_code\": \"200\",\"info\": {\"token\": \"1234567890abcdefgh\"	}}";
             String json2 = "{\"result_code\": \"200\"}";

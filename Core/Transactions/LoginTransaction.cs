@@ -1,7 +1,11 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Threading;
 using IPSCM.Entities.Results;
 using IPSCM.Logging;
+
+#endregion
 
 namespace IPSCM.Core.Transactions
 {
@@ -29,21 +33,21 @@ namespace IPSCM.Core.Transactions
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                            {
-                                //Success
+                        {
+                            //Success
 
-                                this.LoginSuccess(result);
-                                break;
-                            }
+                            this.LoginSuccess(result);
+                            break;
+                        }
                         default:
-                            {
-                                //Fault
-                                Log.Error(String.Format("Cloud parking failer. Cause:{0} Error code:{1}", result.ErrorMessage, result.ResultCode));
-                                this.LoginFailure(result.ResultCode, result.ErrorMessage);
-                                break;
-                            }
+                        {
+                            //Fault
+                            Log.Error(String.Format("Cloud parking failer. Cause:{0} Error code:{1}",
+                                result.ErrorMessage, result.ResultCode));
+                            this.LoginFailure(result.ResultCode, result.ErrorMessage);
+                            break;
+                        }
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -52,8 +56,6 @@ namespace IPSCM.Core.Transactions
                 }
 
                 this.Status = TransactionStatus.Exhausted;
-
-
             });
         }
 
@@ -76,7 +78,6 @@ namespace IPSCM.Core.Transactions
                 Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = "Success";
                 Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
                 Engine.GetEngine().UiControl.LoginWindow.Hide();
-
             }));
             Engine.GetEngine().F3Gate.Start();
             Engine.GetEngine().CloudParking.TickThread.Start();
@@ -85,10 +86,11 @@ namespace IPSCM.Core.Transactions
         private void LoginFailure(ResultCode code, String message)
         {
             Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
-             {
-                 Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = String.Format("Login failer!({0}){1}", code, message);
-                 Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
-             }));
+            {
+                Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = String.Format("Login failer!({0}){1}", code,
+                    message);
+                Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
+            }));
         }
     }
 }

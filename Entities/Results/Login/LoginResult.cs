@@ -1,4 +1,8 @@
-﻿using IPSCM.Entities.Results.Login;
+﻿#region
+
+using IPSCM.Entities.Results.Login;
+
+#endregion
 
 namespace IPSCM.Entities.Results
 {

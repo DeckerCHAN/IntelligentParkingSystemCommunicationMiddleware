@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -13,20 +15,16 @@ using IPSCM.Logging;
 using IPSCM.Protocol.EventArgs;
 using IPSCM.Utils;
 
+#endregion
+
 namespace IPSCM.Protocol.Gates
 {
     public delegate void HeartBeatEventHandler(object sender, HeartBeatEventArgs arg);
 
     public delegate void LoginEventHandler(object sender, LoginEvenArgs arg);
+
     public class CloudParkingGate : ControllableObject, ISend
     {
-        public event HeartBeatEventHandler OnHeartBeat;
-        public event LoginEventHandler OnLoggedin;
-        public Thread TickThread { get; private set; }
-        public String Token { get; private set; }
-        public Config Config { get; private set; }
-        private String SecurityKey { get; set; }
-
         public CloudParkingGate()
         {
             this.Config = FileConfig.FindConfig("Parking.cfg");
@@ -34,6 +32,40 @@ namespace IPSCM.Protocol.Gates
             this.Token = String.Empty;
             this.TickThread = new Thread(this.Tick);
         }
+
+        public Thread TickThread { get; private set; }
+        public String Token { get; private set; }
+        public Config Config { get; private set; }
+        private String SecurityKey { get; set; }
+
+        public string Send(string url, Dictionary<string, string> textData, Dictionary<string, byte[]> rowData)
+        {
+            var sign = this.GetSign(textData);
+            var requestContent = new MultipartFormDataContent();
+            if (!String.IsNullOrEmpty(this.Token))
+            {
+                requestContent.Headers.Add(this.Config.GetString("Token"), this.Token);
+            }
+            requestContent.Headers.Add(Config.GetString("Sign"), sign);
+            foreach (var key in textData.Keys)
+            {
+                requestContent.Add(new StringContent(textData[key]), key);
+            }
+            foreach (var key in rowData.Keys)
+            {
+                requestContent.Add(new ByteArrayContent(rowData[key]), key, key);
+            }
+            String result;
+            using (var client = new HttpClient())
+            {
+                var response = client.PostAsync(url, requestContent).Result;
+                result = response.Content.ReadAsStringAsync().Result;
+            }
+            return result;
+        }
+
+        public event HeartBeatEventHandler OnHeartBeat;
+        public event LoginEventHandler OnLoggedin;
 
         public override void Start()
         {
@@ -81,7 +113,8 @@ namespace IPSCM.Protocol.Gates
             return parkingRes;
         }
 
-        public LeavingResult Leaving(UInt64 recordId, String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney,
+        public LeavingResult Leaving(UInt64 recordId, String plateNumber, DateTime outTime, Byte[] outImg,
+            UInt32 copeMoney,
             UInt32 actualMoney, UInt64 ticketId)
         {
             var stringData = new Dictionary<string, string>();
@@ -99,35 +132,19 @@ namespace IPSCM.Protocol.Gates
             return leavingResult;
         }
 
-        private String HeartBeat()
+        private HeartBeatResult HeartBeat()
         {
-            String data = String.Empty;
-            var trigger = this.OnHeartBeat;
-            if (trigger != null) trigger(this, new HeartBeatEventArgs(data));
-            throw new NotImplementedException();
-        }
+            var response = this.Send
+                (
+                    this.Config.GetString("HEARTBEATURL"),
+                    new Dictionary<string, string>(),
+                    new Dictionary<string, byte[]>()
+                );
+            var heartBeatResult = IPSCMJsonConvert.Parse<HeartBeatResult>(response);
 
-        public string Send(string url, Dictionary<string, string> textData, Dictionary<string, byte[]> rowData)
-        {
-            var sign = this.GetSign(textData);
-            var requestContent = new MultipartFormDataContent();
-            requestContent.Headers.Add(this.Config.GetString("Token"), this.Token);
-            requestContent.Headers.Add(Config.GetString("Sign"), sign);
-            foreach (var key in textData.Keys)
-            {
-                requestContent.Add(new StringContent(textData[key]), key);
-            }
-            foreach (var key in rowData.Keys)
-            {
-                requestContent.Add(new ByteArrayContent(rowData[key]), key, key);
-            }
-            String result = String.Empty;
-            using (var client = new HttpClient())
-            {
-                var response = client.PostAsync(url, requestContent).Result;
-                result = response.Content.ReadAsStringAsync().Result;
-            }
-            return result;
+            var trigger = this.OnHeartBeat;
+            if (trigger != null) trigger(this, new HeartBeatEventArgs(heartBeatResult));
+            return heartBeatResult;
         }
 
         private String GetSign(Dictionary<String, String> data)
@@ -141,7 +158,6 @@ namespace IPSCM.Protocol.Gates
             sum.Append(this.SecurityKey);
             var sign = HashUtils.CalculateMD5Hash(sum.ToString()).ToLower();
             return sign;
-
         }
 
         private void Tick()

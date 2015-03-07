@@ -1,12 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿#region
+
+using Newtonsoft.Json;
+
+#endregion
 
 namespace IPSCM.Entities
 {
-    public class IPSCMJsonSerializerSettings : JsonSerializerSettings 
+    public class IPSCMJsonSerializerSettings : JsonSerializerSettings
     {
         public IPSCMJsonSerializerSettings()
         {
-            this.ContractResolver=new IPSCMContractResolver();
+            this.ContractResolver = new IPSCMContractResolver();
         }
     }
 }

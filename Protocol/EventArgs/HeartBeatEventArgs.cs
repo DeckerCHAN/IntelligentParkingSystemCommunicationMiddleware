@@ -1,14 +1,18 @@
-﻿using System;
+﻿#region
+
+using IPSCM.Entities.Results;
+
+#endregion
 
 namespace IPSCM.Protocol.EventArgs
 {
     public class HeartBeatEventArgs : System.EventArgs
     {
-        public String Data { get; private set; }
-
-        public HeartBeatEventArgs(String data)
+        public HeartBeatEventArgs(HeartBeatResult result)
         {
-
+            this.Result = result;
         }
+
+        public HeartBeatResult Result { get; private set; }
     }
 }

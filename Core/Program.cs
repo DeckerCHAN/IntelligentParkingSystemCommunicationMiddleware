@@ -1,16 +1,20 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.IO;
 using System.Windows.Forms;
 
+#endregion
+
 namespace IPSCM.Core
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -18,12 +22,13 @@ namespace IPSCM.Core
             {
                 Engine.GetEngine().Run();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                FileInfo report = new FileInfo(String.Format("crash-report-{0}.report", DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss-tt")));
+                FileInfo report =
+                    new FileInfo(String.Format("crash-report-{0}.report",
+                        DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss-tt")));
                 File.WriteAllText(report.FullName, ex.ToString());
             }
-
         }
     }
 }

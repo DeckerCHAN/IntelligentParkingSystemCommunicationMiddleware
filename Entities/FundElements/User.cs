@@ -1,8 +1,12 @@
-﻿using System;
+﻿#region
+
+using System;
+
+#endregion
 
 namespace IPSCM.Entities
 {
-    class User
+    internal class User
     {
         public UInt32 UserId { get; protected set; }
         public String PlateNumber { get; protected set; }

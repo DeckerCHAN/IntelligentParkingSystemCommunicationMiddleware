@@ -1,17 +1,20 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
+
+#endregion
 
 namespace IPSCM.Configuration
 {
-
     public abstract class Config
     {
-        protected Dictionary<String, String> configs { get; set; }
-
         protected Config()
         {
             this.configs = new Dictionary<string, String>();
         }
+
+        protected Dictionary<String, String> configs { get; set; }
 
         public virtual void Set(String key, String value)
         {
@@ -22,7 +25,6 @@ namespace IPSCM.Configuration
             }
             this.configs.Add(key, value);
         }
-
 
         public virtual String GetString(String key)
         {
@@ -48,6 +50,5 @@ namespace IPSCM.Configuration
         {
             return Convert.ToBoolean(this.GetString(key));
         }
-
     }
 }

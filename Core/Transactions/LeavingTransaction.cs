@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.IO;
 using System.Threading;
 using IPSCM.Configuration;
@@ -7,22 +9,14 @@ using IPSCM.Entities.Results.Leaving;
 using IPSCM.Logging;
 using Newtonsoft.Json.Linq;
 
+#endregion
+
 namespace IPSCM.Core.Transactions
 {
     public class LeavingTransaction : Transaction
     {
-        public Thread WorkThread { get; private set; }
-        public Stream ResponseStream { get; private set; }
-        public UInt64 RecordId { get; private set; }
-        public String PlateNumber { get; private set; }
-        public DateTime OutTime { get; private set; }
-        public Byte[] OutImg { get; private set; }
-        public UInt32 CopeMoney { get; private set; }
-        public UInt32 ActualMoney { get; private set; }
-        public UInt64 TicketId { get; private set; }
-        private Config JsonConfig { get; set; }
-
-        public LeavingTransaction(String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney, UInt32 actualMoney, UInt64 ticketId, Stream responseStream)
+        public LeavingTransaction(String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney,
+            UInt32 actualMoney, UInt64 ticketId, Stream responseStream)
         {
             //TODO:Using record id which readed from db
             this.RecordId = 0x00;
@@ -39,19 +33,20 @@ namespace IPSCM.Core.Transactions
                 try
                 {
                     var result = Engine.GetEngine()
-                        .CloudParking.Leaving(this.RecordId, this.PlateNumber, this.OutTime, this.OutImg, this.CopeMoney, this.ActualMoney, this.TicketId);
+                        .CloudParking.Leaving(this.RecordId, this.PlateNumber, this.OutTime, this.OutImg, this.CopeMoney,
+                            this.ActualMoney, this.TicketId);
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                            {
-                                this.successful();
-                                break;
-                            }
+                        {
+                            this.successful();
+                            break;
+                        }
                         default:
-                            {
-                                this.failure(result);
-                                break;
-                            }
+                        {
+                            this.failure(result);
+                            break;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -67,10 +62,19 @@ namespace IPSCM.Core.Transactions
                 {
                     this.ResponseStream.Close();
                 }
-
-
             });
         }
+
+        public Thread WorkThread { get; private set; }
+        public Stream ResponseStream { get; private set; }
+        public UInt64 RecordId { get; private set; }
+        public String PlateNumber { get; private set; }
+        public DateTime OutTime { get; private set; }
+        public Byte[] OutImg { get; private set; }
+        public UInt32 CopeMoney { get; private set; }
+        public UInt32 ActualMoney { get; private set; }
+        public UInt64 TicketId { get; private set; }
+        private Config JsonConfig { get; set; }
 
         public override void Execute()
         {
@@ -86,14 +90,13 @@ namespace IPSCM.Core.Transactions
 
         private void successful()
         {
-            JObject o = new JObject { new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success) };
+            JObject o = new JObject {new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success)};
             new StreamWriter(this.ResponseStream).Write(o.ToString());
-
         }
 
         private void failure(LeavingResult result)
         {
-            JObject o = new JObject { new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success) };
+            JObject o = new JObject {new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success)};
             if (!String.IsNullOrEmpty(result.ErrorMessage))
             {
                 o.Add(new JProperty(JsonConfig.GetString("ErrorMessage"), result.ErrorMessage));
