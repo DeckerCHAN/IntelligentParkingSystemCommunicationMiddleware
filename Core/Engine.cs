@@ -80,7 +80,7 @@ namespace IPSCM.Core
             };
             this.F3Gate.OnParking += (i, o) =>
             {
-                this.TransactionPool.AddBeforeExecute(new ParkingTransaction(o.RecordId, o.PlateNumber, o.InTime, o.InImg, o.Response.OutputStream));
+                this.TransactionPool.AddBeforeExecute(new ParkingTransaction(o.PlateNumber, o.InTime, o.InImg, o.Response.OutputStream));
             };
             this.F3Gate.OnLeaving += (i, o) =>
             {
