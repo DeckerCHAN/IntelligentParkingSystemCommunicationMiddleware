@@ -11,7 +11,6 @@ namespace IPSCM.Core.Transactions
 {
     public class ParkingTransaction : Transaction
     {
-        public UInt64 RecordId { get; private set; }
         public String plateNumber { get; private set; }
         public DateTime InTime { get; private set; }
         public Byte[] InImage { get; private set; }
@@ -19,10 +18,9 @@ namespace IPSCM.Core.Transactions
         public Thread WorkThread { get; private set; }
         public Config JsonConfig { get; private set; }
 
-        public ParkingTransaction(UInt64 recordID, String plateNum, DateTime inTime, Byte[] inImage, Stream responseStream)
+        public ParkingTransaction( String plateNum, DateTime inTime, Byte[] inImage, Stream responseStream)
         {
             this.JsonConfig = FileConfig.FindConfig("Json.cfg");
-            this.RecordId = recordID;
             this.plateNumber = plateNum;
             this.InTime = inTime;
             this.InImage = inImage;
@@ -31,7 +29,7 @@ namespace IPSCM.Core.Transactions
             {
                 try
                 {
-                    var result = Engine.GetEngine().CloudParking.Parking(recordID, plateNum, inTime, inImage);
+                    var result = Engine.GetEngine().CloudParking.Parking( plateNum, inTime, inImage);
 
 
                     switch (result.ResultCode)
