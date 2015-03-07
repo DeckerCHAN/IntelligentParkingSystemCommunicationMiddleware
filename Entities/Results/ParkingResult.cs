@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IPSCM.Entities.Results
 {
-    class ParkingResult : Result
+    public class ParkingResult : Result
     {
     }
 }

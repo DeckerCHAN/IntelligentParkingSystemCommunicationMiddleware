@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IPSCM.Entities.Results
 {
-    class HeartBeatResult:Result
+    public class HeartBeatResult : Result
     {
     }
 }
