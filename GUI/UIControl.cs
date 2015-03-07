@@ -7,8 +7,9 @@
 
         public static UiControl GetUiControl()
         {
-            return _instance ?? (new UiControl());
+            return _instance ?? (_instance = new UiControl());
         }
+
         public MainForm MainWindow { get; private set; }
         public LoginForm LoginWindow { get; private set; }
 
