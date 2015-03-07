@@ -1,6 +1,6 @@
 ﻿namespace IPSCM.Entities.Results
 {
-    public class HeartBeatResult : Result
+    public class LeavingResult : Result
     {
     }
 }

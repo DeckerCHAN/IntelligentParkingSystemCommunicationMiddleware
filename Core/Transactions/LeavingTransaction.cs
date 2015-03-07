@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using IPSCM.Configuration;
+using IPSCM.Entities.Results;
 using IPSCM.Logging;
-using IPSCM.Protocol.Entities;
-using IPSCM.Protocol.Entities.Results;
 using Newtonsoft.Json.Linq;
 
 namespace IPSCM.Core.Transactions
@@ -26,7 +22,6 @@ namespace IPSCM.Core.Transactions
         private Config JsonConfig { get; set; }
 
         public LeavingTransaction(String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney, UInt32 actualMoney, UInt64 ticketId, Stream responseStream)
-            : base()
         {
             //TODO:Using record id which readed from db
             this.RecordId = 0x00;

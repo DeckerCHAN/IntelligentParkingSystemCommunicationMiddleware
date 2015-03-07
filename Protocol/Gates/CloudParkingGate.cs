@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using IPSCM.Configuration;
+using IPSCM.Entities;
+using IPSCM.Entities.Results;
+using IPSCM.Entities.Results.Parking;
 using IPSCM.Logging;
-using IPSCM.Protocol.Entities;
-using IPSCM.Protocol.Entities.Results;
 using IPSCM.Protocol.EventArgs;
 using IPSCM.Utils;
 
@@ -23,9 +22,7 @@ namespace IPSCM.Protocol.Gates
         public event HeartBeatEventHandler OnHeartBeat;
         public event LoginEventHandler OnLoggedin;
         public Thread TickThread { get; private set; }
-
         public String Token { get; private set; }
-
         public Config Config { get; private set; }
         private String SecurityKey { get; set; }
 
@@ -36,11 +33,11 @@ namespace IPSCM.Protocol.Gates
             this.Token = String.Empty;
             this.TickThread = new Thread(this.Tick);
         }
+
         public override void Start()
         {
             Log.Info("CloudParking Starting...");
             base.Start();
-            this.TickThread.Start();
             Log.Info("CloudParking Started");
         }
 
@@ -58,8 +55,13 @@ namespace IPSCM.Protocol.Gates
             data.Add(Config.GetString("UserName"), userName);
             data.Add(Config.GetString("Password"), password);
             var responseJson = this.Send(this.Config.GetString("LoginUrl"), data, new Dictionary<string, byte[]>());
-            var loginRes = new LoginResult(responseJson);
-            this.Token = loginRes.Token;
+            var loginRes = IPSCMJsonConvert.Parse<LoginResult>(responseJson);
+            if (loginRes.ResultCode == ResultCode.Success)
+            {
+                Log.Info(String.Format("Cloud parking login successful. Preserved token:{0}", loginRes.Info.Token));
+                this.Token = loginRes.Info.Token;
+            }
+
 
             var trigger = this.OnLoggedin;
             if (trigger != null) trigger(this, new LoginEvenArgs(loginRes));
@@ -75,7 +77,7 @@ namespace IPSCM.Protocol.Gates
             stringData.Add(Config.GetString("InTime"), inTime.ToString("yyyy-MM-dd HH:mm:ss"));
             binaryData.Add(Config.GetString("InImage"), inImg);
             var responseJson = this.Send(this.Config.GetString("ParkUrl"), stringData, binaryData);
-            var parkingRes = new ParkingResult(responseJson);
+            var parkingRes = IPSCMJsonConvert.Parse<ParkingResult>(responseJson);
             return parkingRes;
         }
 
@@ -93,7 +95,7 @@ namespace IPSCM.Protocol.Gates
             stringData.Add(Config.GetString("ActualMoney"), actualMoney.ToString());
             stringData.Add(Config.GetString("TicketId"), ticketId.ToString());
             var responseJson = this.Send(this.Config.GetString("LeaveUrl"), stringData, binaryData);
-            var leavingResult = new LeavingResult(responseJson);
+            var leavingResult = IPSCMJsonConvert.Parse<LeavingResult>(responseJson);
             return leavingResult;
         }
 
@@ -119,7 +121,7 @@ namespace IPSCM.Protocol.Gates
             {
                 requestContent.Add(new ByteArrayContent(rowData[key]), key, key);
             }
-            String result;
+            String result = String.Empty;
             using (var client = new HttpClient())
             {
                 var response = client.PostAsync(url, requestContent).Result;
@@ -144,6 +146,7 @@ namespace IPSCM.Protocol.Gates
 
         private void Tick()
         {
+            Log.Info("Cloud parking start heart beat");
             while (true)
             {
                 try

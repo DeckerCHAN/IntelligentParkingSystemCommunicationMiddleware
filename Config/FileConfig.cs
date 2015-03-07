@@ -4,7 +4,7 @@ using System.IO;
 
 namespace IPSCM.Configuration
 {
-    public class FileConfig : Configuration.Config
+    public class FileConfig : Config
     {
         public static Dictionary<String, FileConfig> FileConfigs = new Dictionary<String, FileConfig>();
 
@@ -15,17 +15,12 @@ namespace IPSCM.Configuration
             {
                 return FileConfigs[name];
             }
-            else
-            {
-                var file = new FileInfo("Configs\\" + name);
-                return new FileConfig(file);
-            }
-
+            var file = new FileInfo("Configs\\" + name);
+            return new FileConfig(file);
         }
 
         private readonly FileInfo ConfigFile;
         protected FileConfig(FileInfo configFile)
-            : base()
         {
             this.ConfigFile = configFile;
             if (!configFile.Exists)

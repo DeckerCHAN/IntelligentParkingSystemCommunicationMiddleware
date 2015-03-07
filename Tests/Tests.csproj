@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{18F4D8B0-F6EF-4610-9A5F-01215942972C}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{33231EF8-868E-478A-BF52-0B26924D7D89}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IPSCM.Entities</RootNamespace>
-    <AssemblyName>IPSCM.Entities</AssemblyName>
+    <RootNamespace>IPSCM.Tests</RootNamespace>
+    <AssemblyName>IPSCM.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,7 +23,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -30,10 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,31 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IPSCMContractResolver.cs" />
-    <Compile Include="IPSCMJsonConvert.cs" />
-    <Compile Include="IPSCMJsonSerializerSettings.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Results\HeartBeatResult.cs" />
-    <Compile Include="Results\Leaving\LeavingInfo.cs" />
-    <Compile Include="Results\Leaving\LeavingResult.cs" />
-    <Compile Include="Results\Login\LeavingResult.cs" />
-    <Compile Include="Results\Login\LoginInfo.cs" />
-    <Compile Include="Results\Login\LoginResult.cs" />
-    <Compile Include="Results\Parking\ParkingInfo.cs" />
-    <Compile Include="Results\Parking\ParkingResult.cs" />
-    <Compile Include="Results\Result.cs" />
-    <Compile Include="Results\ResultCode.cs" />
-    <Compile Include="FundElements\Surplus.cs" />
-    <Compile Include="FundElements\Ticket.cs" />
-    <Compile Include="FundElements\User.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Config\Config.csproj">
-      <Project>{7e808700-eaca-4fe5-80de-3b9811a2c67a}</Project>
-      <Name>Config</Name>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{18f4d8b0-f6ef-4610-9a5f-01215942972c}</Project>
+      <Name>Entities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

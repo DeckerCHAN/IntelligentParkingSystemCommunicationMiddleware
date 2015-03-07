@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using IPSCM.Core.Properties;
+using IPSCM.Entities.Results;
 using IPSCM.Logging;
-using IPSCM.Protocol.Entities;
-using IPSCM.Utils;
 
 namespace IPSCM.Core.Transactions
 {
@@ -15,7 +10,6 @@ namespace IPSCM.Core.Transactions
         private readonly Thread ProcessThread;
 
         public LoginTransaction(String userName, String rowPassword)
-            : base()
         {
             this.ProcessThread = new Thread(() =>
             {
@@ -37,8 +31,8 @@ namespace IPSCM.Core.Transactions
                         case ResultCode.Success:
                             {
                                 //Success
-                                Log.Info(String.Format("Cloud parking login successful. Preserved token:{0}", result.Token));
-                                this.LoginSuccess();
+
+                                this.LoginSuccess(result);
                                 break;
                             }
                         default:
@@ -75,7 +69,7 @@ namespace IPSCM.Core.Transactions
             base.Interrupt();
         }
 
-        private void LoginSuccess()
+        private void LoginSuccess(LoginResult result)
         {
             Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
             {
@@ -85,6 +79,7 @@ namespace IPSCM.Core.Transactions
 
             }));
             Engine.GetEngine().F3Gate.Start();
+            Engine.GetEngine().CloudParking.TickThread.Start();
         }
 
         private void LoginFailure(ResultCode code, String message)

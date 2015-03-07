@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Threading;
 using IPSCM.Configuration;
+using IPSCM.Entities.Results;
 using IPSCM.Logging;
-using IPSCM.Protocol.Entities;
 using IPSCM.Utils;
 using Newtonsoft.Json.Linq;
 

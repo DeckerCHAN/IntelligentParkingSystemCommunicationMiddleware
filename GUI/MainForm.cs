@@ -25,6 +25,10 @@ namespace IPSCM.GUI
 
         private void AppendText(string text, Color color)
         {
+            if ((this.ConsoleTextBox.MaxLength - this.ConsoleTextBox.TextLength) <= (this.ConsoleTextBox.MaxLength / 5))
+            {
+                this.ConsoleTextBox.Clear();
+            }
             this.ConsoleTextBox.SelectionStart = this.ConsoleTextBox.TextLength;
             this.ConsoleTextBox.SelectionLength = 0;
 

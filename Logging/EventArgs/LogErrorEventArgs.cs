@@ -13,7 +13,7 @@ namespace IPSCM.Logging.EventArgs
             {
                 if (this.Exception != null)
                 {
-                    this._message += String.Format("{0}Caused by:{1}", Environment.NewLine, this.Exception.ToString());
+                    this._message += String.Format("{0}Caused by:{1}", Environment.NewLine, this.Exception);
                 }
                 return this._message;
             }

@@ -1,5 +1,4 @@
-﻿using System;
-using IPSCM.Protocol.EventArgs;
+﻿using IPSCM.Protocol.EventArgs;
 
 namespace IPSCM.Protocol
 {

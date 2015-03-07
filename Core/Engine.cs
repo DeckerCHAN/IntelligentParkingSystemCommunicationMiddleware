@@ -39,6 +39,7 @@ namespace IPSCM.Core
 
         void Exit()
         {
+            Log.Info("Stoping Engine");
             foreach (var fileConfig in FileConfig.FileConfigs.Values)
             {
                 fileConfig.SaveToFile();
@@ -46,6 +47,7 @@ namespace IPSCM.Core
             this.F3Gate.Stop();
             this.CloudParking.Stop();
             this.TransactionPool.Dispose();
+            Log.Info("Engine stopped");
         }
 
         public void Run()
