@@ -2,6 +2,7 @@
 
 using System;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using IPSCM.Configuration;
 using IPSCM.Core.Transactions;
@@ -49,7 +50,7 @@ namespace IPSCM.Core
         {
             this.UiControl.MainWindow.Show();
             this.TransactionPool.WipeThread.Start();
-            Log.Info("Engine starting running...");
+            Log.Info(String.Format("Engine starting running(version:{0})...", Assembly.GetEntryAssembly().GetName().Version.ToString()));
             //F3Gate would start after successful log in.
             this.CloudParking.Start();
             Log.Info("Engine started!");
