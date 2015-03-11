@@ -47,7 +47,10 @@
     <Compile Include="IPSCMJsonConvert.cs" />
     <Compile Include="IPSCMJsonSerializerSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Results\HeartBeatResult.cs" />
+    <Compile Include="Results\Coupon\CouponInfo.cs" />
+    <Compile Include="Results\Coupon\CouponResult.cs" />
+    <Compile Include="Results\HeartBeat\HeartBeatInfo.cs" />
+    <Compile Include="Results\HeartBeat\HeartBeatResult.cs" />
     <Compile Include="Results\Leaving\LeavingInfo.cs" />
     <Compile Include="Results\Leaving\LeavingResult.cs" />
     <Compile Include="Results\Login\LoginInfo.cs" />
@@ -69,6 +72,7 @@
       <Name>Config</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

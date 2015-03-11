@@ -6,7 +6,7 @@ using System;
 
 namespace IPSCM.Entities
 {
-    internal class User
+    public class User
     {
         public UInt32 UserId { get; protected set; }
         public String PlateNumber { get; protected set; }

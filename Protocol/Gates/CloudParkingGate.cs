@@ -9,6 +9,7 @@ using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Entities;
 using IPSCM.Entities.Results;
+using IPSCM.Entities.Results.HeartBeat;
 using IPSCM.Entities.Results.Leaving;
 using IPSCM.Entities.Results.Parking;
 using IPSCM.Logging;
@@ -47,19 +48,35 @@ namespace IPSCM.Protocol.Gates
                 requestContent.Headers.Add(this.Config.GetString("Token"), this.Token);
             }
             requestContent.Headers.Add(Config.GetString("Sign"), sign);
-            foreach (var key in textData.Keys)
-            {
-                requestContent.Add(new StringContent(textData[key]), key);
-            }
-            foreach (var key in rowData.Keys)
-            {
-                requestContent.Add(new ByteArrayContent(rowData[key]), key, key);
-            }
+            if (textData != null)
+                foreach (var key in textData.Keys)
+                {
+                    requestContent.Add(new StringContent(textData[key]), key);
+                }
+            if (rowData != null)
+                foreach (var key in rowData.Keys)
+                {
+                    requestContent.Add(new ByteArrayContent(rowData[key]), key, key);
+                }
             String result;
             using (var client = new HttpClient())
             {
-                var response = client.PostAsync(url, requestContent).Result;
-                result = response.Content.ReadAsStringAsync().Result;
+                while (true)
+                {
+                    try
+                    {
+                        var response = client.PostAsync(url, requestContent).Result;
+                        result = response.Content.ReadAsStringAsync().Result;
+                        break;
+                    }
+                    catch (Exception)
+                    {
+                        //ignore
+                        Thread.Sleep(1000);
+                    }
+                }
+
+
             }
             return result;
         }
@@ -132,7 +149,7 @@ namespace IPSCM.Protocol.Gates
             return leavingResult;
         }
 
-        private HeartBeatResult HeartBeat()
+        public HeartBeatResult HeartBeat()
         {
             var response = this.Send
                 (
@@ -145,6 +162,17 @@ namespace IPSCM.Protocol.Gates
             var trigger = this.OnHeartBeat;
             if (trigger != null) trigger(this, new HeartBeatEventArgs(heartBeatResult));
             return heartBeatResult;
+        }
+
+        public Result SurplusSpaceUpdate(UInt16 surplusSpace)
+        {
+            var stringData = new Dictionary<string, string>
+            {
+                {this.Config.GetString("SURPLUSSPACE"), surplusSpace.ToString()}
+            };
+            var response = this.Send(this.Config.GetString("UPDATEURL"), stringData, null);
+            var result = IPSCMJsonConvert.Parse<Result>(response);
+            return result;
         }
 
         private String GetSign(Dictionary<String, String> data)
@@ -167,8 +195,8 @@ namespace IPSCM.Protocol.Gates
             {
                 try
                 {
-                    Thread.Sleep(this.Config.GetInt("HeartBeatInterval"));
                     this.HeartBeat();
+                    Thread.Sleep(this.Config.GetInt("HeartBeatInterval"));
                 }
                 catch (ThreadInterruptedException)
                 {

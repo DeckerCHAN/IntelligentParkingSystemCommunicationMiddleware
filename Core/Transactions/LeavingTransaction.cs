@@ -4,9 +4,11 @@ using System;
 using System.IO;
 using System.Threading;
 using IPSCM.Configuration;
+using IPSCM.Entities;
 using IPSCM.Entities.Results;
 using IPSCM.Entities.Results.Leaving;
 using IPSCM.Logging;
+using IPSCM.Utils;
 using Newtonsoft.Json.Linq;
 
 #endregion
@@ -32,35 +34,53 @@ namespace IPSCM.Core.Transactions
             {
                 try
                 {
+                    //Storage messages
+                    Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, this.OutTime);
+                    //Response F3!
+                    var json = String.Empty;
+                    if (Engine.GetEngine().Storage.TryDeductBalance(this.PlateNumber, this.ActualMoney))
+                    {
+                        json =
+                            IPSCMJsonConvert.ConvertToJson(new Result()
+                            {
+                                ResultCode = ResultCode.Success
+                            });
+                    }
+                    else
+                    {
+                        json =
+                            IPSCMJsonConvert.ConvertToJson(new Result()
+                            {
+                                ResultCode = ResultCode.SuccessButInsufficientFunds
+                            });
+
+                    }
+                    StreamUtils.WriteToStreamWithUF8(this.ResponseStream, json);
+
+                    //Send message to cloud
+                    Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, OutTime);
                     var result = Engine.GetEngine()
                         .CloudParking.Leaving(this.RecordId, this.PlateNumber, this.OutTime, this.OutImg, this.CopeMoney,
                             this.ActualMoney, this.TicketId);
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                        {
-                            this.successful();
-                            break;
-                        }
+                            {
+                                Engine.GetEngine().Storage.PostCarLeaved(this.PlateNumber, result);
+                                break;
+                            }
                         default:
-                        {
-                            this.failure(result);
-                            break;
-                        }
+                            {
+                                Log.Error("Leaving transaction do not support Result code" + result.ResultCode);
+                                break;
+                            }
                     }
+                    this.Status = TransactionStatus.Exhausted;
                 }
                 catch (Exception ex)
                 {
-                    var o = new JObject
-                    {
-                        new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.ServerFailure),
-                        new JProperty(this.JsonConfig.GetString("ErrorMessagePath"), ex.Message)
-                    };
-                    new StreamWriter(this.ResponseStream).Write(o.ToString());
-                }
-                finally
-                {
-                    this.ResponseStream.Close();
+                    this.Status = TransactionStatus.Errored;
+                    Log.Error("Leaving transtraction encountered a bad error!", ex);
                 }
             });
         }
@@ -86,22 +106,6 @@ namespace IPSCM.Core.Transactions
         {
             this.WorkThread.Interrupt();
             base.Interrupt();
-        }
-
-        private void successful()
-        {
-            JObject o = new JObject {new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success)};
-            new StreamWriter(this.ResponseStream).Write(o.ToString());
-        }
-
-        private void failure(LeavingResult result)
-        {
-            JObject o = new JObject {new JProperty(this.JsonConfig.GetString("ResultCode"), ResultCode.Success)};
-            if (!String.IsNullOrEmpty(result.ErrorMessage))
-            {
-                o.Add(new JProperty(JsonConfig.GetString("ErrorMessage"), result.ErrorMessage));
-            }
-            Log.Error(String.Format("Unexpected result code:{0}", result.ResultCode));
         }
     }
 }

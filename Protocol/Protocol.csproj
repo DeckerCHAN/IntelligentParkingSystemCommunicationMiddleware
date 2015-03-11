@@ -71,6 +71,7 @@
     <Compile Include="EventArgs\LeavingEventArgs.cs" />
     <Compile Include="EventArgs\LoginEvenArgs.cs" />
     <Compile Include="EventArgs\ParkingEventArgs.cs" />
+    <Compile Include="EventArgs\UpdateSurplusSpaceEventArgs.cs" />
     <Compile Include="GateStatus.cs" />
     <Compile Include="Gates\CloudParkingGate.cs" />
     <Compile Include="EventArgs\HttpDataEventArgs.cs" />

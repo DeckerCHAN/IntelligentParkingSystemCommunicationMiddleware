@@ -22,6 +22,8 @@ namespace IPSCM.Protocol.Gates
 
     public delegate void LeavingEventhandler(object sender, LeavingEventArgs arg);
 
+    public delegate void UpdateSurplusSpaceEventhandler(object sender, UpdateSurplusSpaceEventArgs arg);
+
     public class F3Gate : ControllableObject, IReceive
     {
         private readonly HttpListener Listener;
@@ -41,6 +43,7 @@ namespace IPSCM.Protocol.Gates
             this.ParkingUrl = this.Config.GetString("ParkingUrl");
             this.LeavingUrl = this.Config.GetString("LeavingUrl");
             this.CouponReceiveUrl = Config.GetString("CouponReceiveUrl");
+            this.UpdateUrl = Config.GetString("UpdateUrl");
             this.RegisterHttp(this.LocalHost, this.PortNumber);
             this.Listener = new HttpListener();
             this.Listener.Prefixes.Add(String.Format("http://{0}:{1}/", this.LocalHost, this.PortNumber));
@@ -53,10 +56,13 @@ namespace IPSCM.Protocol.Gates
         private String ParkingUrl { get; set; }
         private String LeavingUrl { get; set; }
         private String CouponReceiveUrl { get; set; }
+        private String UpdateUrl { get; set; }
         public Boolean IsDebug { get; private set; }
         public event ReceiveEventHandler OnReceived;
         public event ParkingEventHandler OnParking;
         public event LeavingEventhandler OnLeaving;
+        public event CouponEventHandler OnCouponNeed;
+        public event UpdateSurplusSpaceEventhandler OnSurplusSpaceUpdate;
 
         private void F3Gate_OnReceived(object sender, HttpDataEventArgs arg)
         {
@@ -125,6 +131,13 @@ namespace IPSCM.Protocol.Gates
                 }
                 else if (url.Equals(this.CouponReceiveUrl))
                 {
+                    var trigger = this.OnCouponNeed;
+                    if (trigger != null) trigger(this, new CouponEventArgs(arg.Request, arg.Response, stringContent[this.Config.GetString("PlateNumber")]));
+                }
+                else if (url.Equals(this.UpdateUrl))
+                {
+                    var trigger = this.OnSurplusSpaceUpdate;
+                    if (trigger != null) trigger(this, new UpdateSurplusSpaceEventArgs(arg.Request, arg.Response, UInt16.Parse(stringContent[this.Config.GetString("SURPLUSSPACE")])));
                 }
                 else
                 {

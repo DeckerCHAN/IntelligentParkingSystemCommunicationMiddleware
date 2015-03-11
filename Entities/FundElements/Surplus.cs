@@ -6,9 +6,9 @@ using System;
 
 namespace IPSCM.Entities
 {
-    internal class Surplus
+    public class Surplus
     {
-        protected UInt32 UserId { get; private set; }
-        protected UInt64 Money { get; private set; }
+        public UInt32 UserId { get; set; }
+        public UInt64 Money { get; set; }
     }
 }

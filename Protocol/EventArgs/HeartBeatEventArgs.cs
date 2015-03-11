@@ -1,6 +1,7 @@
 ﻿#region
 
 using IPSCM.Entities.Results;
+using IPSCM.Entities.Results.HeartBeat;
 
 #endregion
 
@@ -8,11 +9,11 @@ namespace IPSCM.Protocol.EventArgs
 {
     public class HeartBeatEventArgs : System.EventArgs
     {
-        public HeartBeatEventArgs(HeartBeatResult result)
+        public HeartBeatEventArgs(HeartBeatResult heartBeatResult)
         {
-            this.Result = result;
+            this.HeartBeatResult = heartBeatResult;
         }
 
-        public HeartBeatResult Result { get; private set; }
+        public HeartBeatResult HeartBeatResult { get; private set; }
     }
 }

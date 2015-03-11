@@ -75,12 +75,15 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\DataPool.cs" />
+    <Compile Include="Transactions\ExtractCouponTransaction.cs" />
+    <Compile Include="Transactions\HeartBeatTransaction.cs" />
     <Compile Include="Transactions\LeavingTransaction.cs" />
     <Compile Include="Transactions\ParkingTransaction.cs" />
     <Compile Include="Transactions\Transaction.cs" />
     <Compile Include="Transactions\TransactionPool.cs" />
     <Compile Include="Transactions\LoginTransaction.cs" />
     <Compile Include="Transactions\TransactionStatus.cs" />
+    <Compile Include="Transactions\SurplusSpaceUpdateTransaction.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using IPSCM.Configuration;
+using IPSCM.Core.Storage;
 using IPSCM.Core.Transactions;
 using IPSCM.GUI;
 using IPSCM.Logging;
@@ -25,6 +26,7 @@ namespace IPSCM.Core
             this.F3Gate = new F3Gate();
             this.CloudParking = new CloudParkingGate();
             this.RegisterEvents();
+            this.Storage = new DataPool();
             this.TransactionPool = new TransactionPool();
         }
 
@@ -49,6 +51,7 @@ namespace IPSCM.Core
         public void Run()
         {
             this.UiControl.MainWindow.Show();
+            this.Storage.Initialize();
             this.TransactionPool.WipeThread.Start();
             Log.Info(String.Format("Engine starting running(version:{0})...", Assembly.GetEntryAssembly().GetName().Version.ToString()));
             //F3Gate would start after successful log in.
@@ -69,12 +72,13 @@ namespace IPSCM.Core
             this.ThreadExit += (i, o) => { this.Exit(); };
             Log.GetLogger().OnInfo += i => { this.TryOut(i.Messege, Color.Lime); };
             Log.GetLogger().OnError += i => { this.TryOut(i.Message, Color.Red); };
-            this.UiControl.LoginWindow.LoginButton.Click += (i, o) =>
-            {
-                var username = this.UiControl.LoginWindow.UserNameTextBox.Text.Clone().ToString();
-                var password = this.UiControl.LoginWindow.PasswordTextBox.Text.Clone().ToString();
-                this.TransactionPool.AddBeforeExecute(new LoginTransaction(username, password));
-            };
+            this.UiControl.LoginWindow.LoginButton.Click +=
+                (i, o) =>
+                {
+                    var username = this.UiControl.LoginWindow.UserNameTextBox.Text.Clone().ToString();
+                    var password = this.UiControl.LoginWindow.PasswordTextBox.Text.Clone().ToString();
+                    this.TransactionPool.AddBeforeExecute(new LoginTransaction(username, password));
+                };
             this.F3Gate.OnParking +=
                 (i, o) =>
                 {
@@ -87,6 +91,21 @@ namespace IPSCM.Core
                     this.TransactionPool.AddBeforeExecute(new LeavingTransaction(o.PlateNumber, o.OutTime, o.OutImg,
                         o.copeMoney, o.actualMoney, o.TicketId, o.Response.OutputStream));
                 };
+            this.F3Gate.OnSurplusSpaceUpdate +=
+                (i, o) =>
+                {
+                    this.TransactionPool.AddBeforeExecute(new SurplusSpaceUpdateTransaction(o.SurplusSpace));
+                };
+            this.CloudParking.OnHeartBeat +=
+                (i, o) =>
+                {
+                    this.TransactionPool.AddBeforeExecute(new HeartBeatTransaction(o.HeartBeatResult));
+                };
+            this.F3Gate.OnCouponNeed +=
+                (i, o) =>
+                {
+                    this.TransactionPool.AddBeforeExecute(new ExtractCouponTransaction(o.PlateNumber, o.Response.OutputStream));
+                };
         }
 
         #region fields
@@ -95,6 +114,7 @@ namespace IPSCM.Core
         public UiControl UiControl { get; private set; }
         public F3Gate F3Gate { get; set; }
         public CloudParkingGate CloudParking { get; set; }
+        public DataPool Storage { get; set; }
 
         #endregion
     }

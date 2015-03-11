@@ -11,6 +11,7 @@ namespace IPSCM.Entities
         public IPSCMJsonSerializerSettings()
         {
             this.ContractResolver = new IPSCMContractResolver();
+            this.NullValueHandling = NullValueHandling.Ignore;
         }
     }
 }
