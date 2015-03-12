@@ -31,12 +31,15 @@ namespace IPSCM.Core.Transactions
                     }
                     else
                     {
-                        result.Info = new CouponInfo();
-                        result.Info.TicketId = ticket.TicketId;
-                        result.Info.Type = ticket.Type;
-                        result.Info.Value = ticket.Value;
+                        result.Info = new CouponInfo
+                        {
+                            TicketId = ticket.TicketId,
+                            Type = ticket.Type,
+                            Value = ticket.Value
+                        };
                         StreamUtils.WriteToStreamWithUF8(responseStream, IPSCMJsonConvert.ConvertToJson(result));
                     }
+                    responseStream.Flush();
                     responseStream.Close();
                     this.Status = TransactionStatus.Exhausted;
                 }

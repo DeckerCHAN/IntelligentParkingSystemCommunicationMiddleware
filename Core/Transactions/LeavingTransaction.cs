@@ -53,7 +53,8 @@ namespace IPSCM.Core.Transactions
                             });
                     }
                     StreamUtils.WriteToStreamWithUF8(this.ResponseStream, json);
-
+                    this.ResponseStream.Flush();
+                    this.ResponseStream.Close();
                     //Send message to cloud
                     Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, OutTime);
                     var result = Engine.GetEngine()
