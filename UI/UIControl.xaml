@@ -1,4 +1,4 @@
-﻿<Application x:Class="UI.UIControl"
+﻿<Application x:Class="IPSCM.UI.UIControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">

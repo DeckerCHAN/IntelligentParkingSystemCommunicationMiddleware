@@ -6,11 +6,11 @@
 
         private UiControl()
         {
-            this.MainWindow = new MainForm();
+            this.MainWindow = new MainConsoleForm();
             this.LoginWindow = new LoginForm();
         }
 
-        public MainForm MainWindow { get; private set; }
+        public MainConsoleForm MainWindow { get; private set; }
         public LoginForm LoginWindow { get; private set; }
 
         public static UiControl GetUiControl()

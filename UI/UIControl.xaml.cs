@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 
-namespace UI
+namespace IPSCM.UI
 {
     /// <summary>
-    /// Interaction logic for UIControl.xaml
+    /// Interaction logic for App.xaml
     /// </summary>
     public partial class UIControl : Application
     {
         public UIControl()
         {
-            MainWindow mainWindow = new MainWindow();
-            throw new Exception();
+            this.MainWindow = new MainWindow();
+            this.Startup += App_Startup;
+        }
+
+        void App_Startup(object sender, StartupEventArgs e)
+        {
+            this.MainWindow.Show();
         }
     }
 }

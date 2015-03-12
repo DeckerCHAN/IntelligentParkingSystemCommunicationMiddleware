@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace IPSCM.GUI
 {
-    partial class MainForm
+    partial class MainConsoleForm
     {
         /// <summary>
         /// Required designer variable.

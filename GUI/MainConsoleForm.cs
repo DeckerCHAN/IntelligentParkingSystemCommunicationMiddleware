@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace IPSCM.GUI
 {
-    public partial class MainForm : Form
+    public partial class MainConsoleForm : Form
     {
-        public MainForm()
+        public MainConsoleForm()
         {
             InitializeComponent();
         }
