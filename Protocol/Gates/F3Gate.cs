@@ -98,6 +98,19 @@ namespace IPSCM.Protocol.Gates
                     }
                 }
             }
+            //If debug output all message
+            if (this.IsDebug)
+            {
+                foreach (var key in stringContent.Keys)
+                {
+                    Log.Info(String.Format("Key:{0} Value:{1}",key,stringContent[key]));
+                }
+                foreach (var key in binaryContent.Keys)
+                {
+                    Log.Info(String.Format("Key:{0} BinaryLength:{1}",key,binaryContent[key].Length));
+                }
+            }
+            //Switch urls
             var url = arg.Request.RawUrl;
             try
             {
