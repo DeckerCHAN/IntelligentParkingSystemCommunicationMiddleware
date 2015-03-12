@@ -7,22 +7,21 @@ using System.Windows.Forms;
 using IPSCM.Configuration;
 using IPSCM.Core.Storage;
 using IPSCM.Core.Transactions;
-using IPSCM.GUI;
 using IPSCM.Logging;
 using IPSCM.Protocol.Gates;
+using IPSCM.UI;
 
 #endregion
 
 namespace IPSCM.Core
 {
-    internal class Engine : ApplicationContext
+    public class Engine 
     {
         private static Engine _instance;
 
         private Engine()
         {
-            this.UiControl = UiControl.GetUiControl();
-            this.MainForm = this.UiControl.MainWindow;
+            this.UiControl = new UIControl();
             this.F3Gate = new F3Gate();
             this.CloudParking = new CloudParkingGate();
             this.RegisterEvents();
@@ -59,12 +58,6 @@ namespace IPSCM.Core
             Log.Info("Engine started!");
             this.UiControl.LoginWindow.ShowDialog(this.UiControl.MainWindow);
             Application.Run(this);
-        }
-
-        public void TryOut(String text, Color color)
-        {
-            if (this.UiControl != null)
-                this.UiControl.MainWindow.Invoke(new Action(() => { this.UiControl.MainWindow.Out(text, color); }));
         }
 
         private void RegisterEvents()
@@ -111,7 +104,7 @@ namespace IPSCM.Core
         #region fields
 
         public TransactionPool TransactionPool { get; private set; }
-        public UiControl UiControl { get; private set; }
+        public UIControl UiControl { get; private set; }
         public F3Gate F3Gate { get; set; }
         public CloudParkingGate CloudParking { get; set; }
         public DataPool Storage { get; set; }

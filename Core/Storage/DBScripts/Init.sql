@@ -31,7 +31,7 @@ CREATE TABLE [Tickets]
 	[Type] VARCHAR(30) NOT NULL, 
 	[Value] INT NOT NULL,
 	[UserId] INT NOT NULL, 
-	[StorageName] NVARCHAR(50) NOT NULL
+	[StoreName] NVARCHAR(50) NOT NULL
 )
 END
 GO
