@@ -22,12 +22,12 @@ namespace IPSCM.Core.Transactions
             {
                 try
                 {
-                    var result = new CouponResult();
+                    var result = new CouponResult { ResultCode = ResultCode.Success };
                     var ticket = Engine.GetEngine().Storage.GetTicketByPlateNumber(plateNumber);
                     if (ticket == null)
                     {
                         StreamUtils.WriteToStreamWithUF8(responseStream,
-                            IPSCMJsonConvert.ConvertToJson(new Result {ResultCode = ResultCode.SuccessButNoBinding}));
+                            IPSCMJsonConvert.ConvertToJson(new Result { ResultCode = ResultCode.SuccessButNoBinding }));
                     }
                     else
                     {
