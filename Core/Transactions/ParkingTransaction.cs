@@ -2,14 +2,12 @@
 
 using System;
 using System.IO;
-using System.Text;
 using System.Threading;
 using IPSCM.Configuration;
+using IPSCM.Entities;
 using IPSCM.Entities.Results;
-using IPSCM.Entities.Results.Parking;
 using IPSCM.Logging;
 using IPSCM.Utils;
-using Newtonsoft.Json.Linq;
 
 #endregion
 
@@ -28,7 +26,7 @@ namespace IPSCM.Core.Transactions
             {
                 try
                 {
-                    var json = Entities.IPSCMJsonConvert.ConvertToJson(new Result() { ResultCode = ResultCode.Success });
+                    var json = IPSCMJsonConvert.ConvertToJson(new Result {ResultCode = ResultCode.Success});
                     StreamUtils.WriteToStreamWithUF8(this.ResponseStream, json);
                     this.ResponseStream.Flush();
                     this.ResponseStream.Close();
@@ -39,19 +37,19 @@ namespace IPSCM.Core.Transactions
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                            {
-                                Engine.GetEngine().Storage.PostCarParked(Id, this.plateNumber, result);
-                                break;
-                            }
+                        {
+                            Engine.GetEngine().Storage.PostCarParked(Id, this.plateNumber, result);
+                            break;
+                        }
                         case ResultCode.SuccessButNoBinding:
-                            {
-                                break;
-                            }
+                        {
+                            break;
+                        }
                         default:
-                            {
-                                Log.Error(String.Format("Unexpected result code:{0}", result.ResultCode));
-                                break;
-                            }
+                        {
+                            Log.Error(String.Format("Unexpected result code:{0}", result.ResultCode));
+                            break;
+                        }
                     }
                     this.Status = TransactionStatus.Exhausted;
                 }

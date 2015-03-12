@@ -6,10 +6,8 @@ using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Entities;
 using IPSCM.Entities.Results;
-using IPSCM.Entities.Results.Leaving;
 using IPSCM.Logging;
 using IPSCM.Utils;
-using Newtonsoft.Json.Linq;
 
 #endregion
 
@@ -41,7 +39,7 @@ namespace IPSCM.Core.Transactions
                     if (Engine.GetEngine().Storage.TryDeductBalance(this.PlateNumber, this.ActualMoney))
                     {
                         json =
-                            IPSCMJsonConvert.ConvertToJson(new Result()
+                            IPSCMJsonConvert.ConvertToJson(new Result
                             {
                                 ResultCode = ResultCode.Success
                             });
@@ -49,11 +47,10 @@ namespace IPSCM.Core.Transactions
                     else
                     {
                         json =
-                            IPSCMJsonConvert.ConvertToJson(new Result()
+                            IPSCMJsonConvert.ConvertToJson(new Result
                             {
                                 ResultCode = ResultCode.SuccessButInsufficientFunds
                             });
-
                     }
                     StreamUtils.WriteToStreamWithUF8(this.ResponseStream, json);
 
@@ -65,15 +62,15 @@ namespace IPSCM.Core.Transactions
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                            {
-                                Engine.GetEngine().Storage.PostCarLeaved(this.PlateNumber, result);
-                                break;
-                            }
+                        {
+                            Engine.GetEngine().Storage.PostCarLeaved(this.PlateNumber, result);
+                            break;
+                        }
                         default:
-                            {
-                                Log.Error("Leaving transaction do not support Result code" + result.ResultCode);
-                                break;
-                            }
+                        {
+                            Log.Error("Leaving transaction do not support Result code" + result.ResultCode);
+                            break;
+                        }
                     }
                     this.Status = TransactionStatus.Exhausted;
                 }

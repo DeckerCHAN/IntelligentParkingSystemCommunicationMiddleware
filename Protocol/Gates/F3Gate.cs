@@ -132,12 +132,18 @@ namespace IPSCM.Protocol.Gates
                 else if (url.Equals(this.CouponReceiveUrl))
                 {
                     var trigger = this.OnCouponNeed;
-                    if (trigger != null) trigger(this, new CouponEventArgs(arg.Request, arg.Response, stringContent[this.Config.GetString("PlateNumber")]));
+                    if (trigger != null)
+                        trigger(this,
+                            new CouponEventArgs(arg.Request, arg.Response,
+                                stringContent[this.Config.GetString("PlateNumber")]));
                 }
                 else if (url.Equals(this.UpdateUrl))
                 {
                     var trigger = this.OnSurplusSpaceUpdate;
-                    if (trigger != null) trigger(this, new UpdateSurplusSpaceEventArgs(arg.Request, arg.Response, UInt16.Parse(stringContent[this.Config.GetString("SURPLUSSPACE")])));
+                    if (trigger != null)
+                        trigger(this,
+                            new UpdateSurplusSpaceEventArgs(arg.Request, arg.Response,
+                                UInt16.Parse(stringContent[this.Config.GetString("SURPLUSSPACE")])));
                 }
                 else
                 {

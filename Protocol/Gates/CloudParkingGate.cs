@@ -75,8 +75,6 @@ namespace IPSCM.Protocol.Gates
                         Thread.Sleep(1000);
                     }
                 }
-
-
             }
             return result;
         }

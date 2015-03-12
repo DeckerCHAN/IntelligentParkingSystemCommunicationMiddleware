@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region
+
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using IPSCM.Entities;
 using IPSCM.Entities.Results;
 using IPSCM.Entities.Results.Coupon;
+using IPSCM.Logging;
 using IPSCM.Utils;
+
+#endregion
 
 namespace IPSCM.Core.Transactions
 {
-    class ExtractCouponTransaction : Transaction
+    internal class ExtractCouponTransaction : Transaction
     {
-        public Thread ProcessThread { get; private set; }
-        public String PlateNumber { get; private set; }
         public ExtractCouponTransaction(String plateNumber, Stream responseStream)
         {
             this.PlateNumber = plateNumber;
@@ -26,8 +26,8 @@ namespace IPSCM.Core.Transactions
                     var ticket = Engine.GetEngine().Storage.GetTicketByPlateNumber(plateNumber);
                     if (ticket == null)
                     {
-                        StreamUtils.WriteToStreamWithUF8(responseStream, IPSCMJsonConvert.ConvertToJson(new Result() { ResultCode = ResultCode.SuccessButNoBinding }));
-
+                        StreamUtils.WriteToStreamWithUF8(responseStream,
+                            IPSCMJsonConvert.ConvertToJson(new Result {ResultCode = ResultCode.SuccessButNoBinding}));
                     }
                     else
                     {
@@ -36,7 +36,6 @@ namespace IPSCM.Core.Transactions
                         result.Info.Type = ticket.Type;
                         result.Info.Value = ticket.Value;
                         StreamUtils.WriteToStreamWithUF8(responseStream, IPSCMJsonConvert.ConvertToJson(result));
-
                     }
                     responseStream.Close();
                     this.Status = TransactionStatus.Exhausted;
@@ -44,12 +43,14 @@ namespace IPSCM.Core.Transactions
                 catch (Exception ex)
                 {
                     this.Status = TransactionStatus.Errored;
-                    Logging.Log.Error("Extract Coupon Transaction encountered a bad error!", ex);
+                    Log.Error("Extract Coupon Transaction encountered a bad error!", ex);
                 }
-
-
             });
         }
+
+        public Thread ProcessThread { get; private set; }
+        public String PlateNumber { get; private set; }
+
         public override void Execute()
         {
             this.ProcessThread.Start();

@@ -1,6 +1,5 @@
 ﻿#region
 
-using IPSCM.Entities.Results;
 using IPSCM.Entities.Results.HeartBeat;
 
 #endregion
