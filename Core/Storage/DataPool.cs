@@ -71,7 +71,7 @@ namespace IPSCM.Core.Storage
                 this.DbExecuteScalar(String.Format("select [Money] from IPSCM.dbo.Users where PlateNumber='{0}'",
                     plateNumber));
             var currentBal = remblaObj as ulong? ?? 0;
-            if (currentBal >= deductBalance)
+            if (currentBal > deductBalance)
             {
                 this.DbExecuteNonQuery(
                     String.Format("update IPSCM.dbo.Users set [Money]=[Money]-{0} where PlateNumber='{1}'",
