@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using IPSCM.UI.Pages;
 
 namespace IPSCM.UI
 {
@@ -18,9 +19,32 @@ namespace IPSCM.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Page MainPage { get; set; }
+        private Page AboutPage { get; set; }
+
         public MainWindow()
         {
+            this.MainPage = new MainPage();
+            this.AboutPage = new AboutPage();
             InitializeComponent();
+            this.DataStatistics.IsChecked = true;
+            this.ContentFrame.Content = this.MainPage;
+
+        }
+
+        private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
+        private void DataStatistics_Click(object sender, RoutedEventArgs e)
+        {
+            this.ContentFrame.Content = this.MainPage;
+        }
+
+        private void AboutUsRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.ContentFrame.Content = this.AboutPage;
         }
     }
 }

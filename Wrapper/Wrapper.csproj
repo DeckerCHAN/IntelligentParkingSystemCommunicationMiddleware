@@ -49,6 +49,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{8820ec10-65f9-406b-b612-ceca2f2e9827}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UI\UI.csproj">
       <Project>{643ee4b5-7d96-4dd7-8626-64ad7d742670}</Project>
       <Name>UI</Name>
