@@ -93,7 +93,7 @@ namespace IPSCM.Core
                         o.copeMoney, o.actualMoney, o.TicketId, o.Response.OutputStream));
                 };
             this.F3Gate.OnSurplusSpaceUpdate +=
-                (i, o) => { this.TransactionPool.AddBeforeExecute(new SurplusSpaceUpdateTransaction(o.SurplusSpace)); };
+                (i, o) => { this.TransactionPool.AddBeforeExecute(new SurplusSpaceUpdateTransaction(o.SurplusSpace,o.Response.OutputStream)); };
             this.CloudParking.OnHeartBeat +=
                 (i, o) => { this.TransactionPool.AddBeforeExecute(new HeartBeatTransaction(o.HeartBeatResult)); };
             this.F3Gate.OnCouponNeed +=

@@ -129,8 +129,8 @@ namespace IPSCM.Protocol.Gates
         }
 
         public LeavingResult Leaving(UInt64 recordId, String plateNumber, DateTime outTime, Byte[] outImg,
-            UInt32 copeMoney,
-            UInt32 actualMoney, UInt64 ticketId)
+            Decimal copeMoney,
+            Decimal actualMoney, UInt64 ticketId)
         {
             var stringData = new Dictionary<string, string>();
             var binaryData = new Dictionary<String, Byte[]>();

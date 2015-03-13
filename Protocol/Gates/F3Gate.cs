@@ -137,9 +137,9 @@ namespace IPSCM.Protocol.Gates
                             stringContent[this.Config.GetString("PlateNumber")],
                             DateTime.Parse(stringContent[this.Config.GetString("OutTime")]),
                             binaryContent[this.Config.GetString("OutImage")],
-                            UInt32.Parse(stringContent[this.Config.GetString("CopeMoney")]),
-                            UInt32.Parse(stringContent[this.Config.GetString("ActualMoney")]),
-                            UInt64.Parse(stringContent[this.Config.GetString("TicketId")])
+                            Decimal.Parse(stringContent[this.Config.GetString("CopeMoney")]),
+                            Decimal.Parse(stringContent[this.Config.GetString("ActualMoney")]),
+                            UInt32.Parse(stringContent[this.Config.GetString("TicketId")])
                             ));
                 }
                 else if (url.Equals(this.CouponReceiveUrl))

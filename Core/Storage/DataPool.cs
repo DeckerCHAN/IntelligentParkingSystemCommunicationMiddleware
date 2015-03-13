@@ -5,6 +5,7 @@ using System.Data;
 using System.IO;
 using IPSCM.Configuration;
 using IPSCM.Entities;
+using IPSCM.Entities.FundElements;
 using IPSCM.Entities.Results.Leaving;
 using IPSCM.Entities.Results.Parking;
 using IPSCM.Logging;
@@ -65,12 +66,12 @@ namespace IPSCM.Core.Storage
                     , result.Info.UserId, result.Info.Money, result.Info.PhoneNumber, plateNumber));
         }
 
-        public Boolean TryDeductBalance(String plateNumber, UInt64 deductBalance)
+        public Boolean TryDeductBalance(String plateNumber, Decimal deductBalance)
         {
             var remblaObj =
-                this.DbExecuteScalar(String.Format("select [Money] from IPSCM.dbo.Users where PlateNumber='{0}'",
+                this.DbExecuteScalar(String.Format("select [Money] from IPSCM.dbo.Users where PlateNumber=N'{0}'",
                     plateNumber));
-            var currentBal = remblaObj as ulong? ?? 0;
+            var currentBal = remblaObj as Decimal? ?? 0;
             if (currentBal > deductBalance)
             {
                 this.DbExecuteNonQuery(
@@ -81,17 +82,31 @@ namespace IPSCM.Core.Storage
             return false;
         }
 
-        public void PreCarLeave(String plateNumber, DateTime leaveTime)
+        public void UsedTicket(UInt32 ticketId, DateTime useTime)
         {
-            this.DbExecuteNonQuery(String.Format(
-                @"if exists (select * from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL )
+            try
+            {
+                this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.Tickets set [UsedTime] = '{0}' where [TicketId]='{1}'",useTime,ticketId));
+            }
+            catch (Exception)
+            {
+                Log.Error(String.Format("Can not set ticket {0} as used.",ticketId));
+            }
+        }
+
+        public UInt32 PreCarLeave(String plateNumber, DateTime leaveTime)
+        {
+           var record= this.DbExecuteScalar(String.Format(
+            @"if exists (select * from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL )
             begin
-            update IPSCM.dbo.ParkRecord set OutTime='{1}'
+            select [RecordId] from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL
+            update IPSCM.dbo.ParkRecord set OutTime='{1}' where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL
             end
             else
             begin
             insert into IPSCM.dbo.ParkRecord values ('{2}',NULL,'{0}',NULL,'{1}')
             end", plateNumber, leaveTime.ToString("yyyy-MM-dd HH:mm:ss"), Guid.NewGuid().ToString("D")));
+            return record != null ? UInt32.Parse(record.ToString()) : 0;
         }
 
         public void PostCarLeaved(String plateNumber, LeavingResult result)
@@ -123,11 +138,11 @@ namespace IPSCM.Core.Storage
             this.DbExecuteNonQuery(String.Format(
                 @"if exists (select * from IPSCM.dbo.Tickets where [TicketId] = '{0}')
                 begin
-                update IPSCM.dbo.Tickets set [Type]='{1}',[Value]='{2}',[UserId]='{3}',[StorageName]=N'{4}'
+                update IPSCM.dbo.Tickets set [Type]='{1}',[Value]='{2}',[UserId]='{3}',[StoreName]=N'{4}'
                 end
                 else
                 begin
-                insert into IPSCM.dbo.Tickets ([TicketId],[Type],[Value],[UserId],[StorageName]) values ('{0}','{1}','{2}','{3}',N'{4}')
+                insert into IPSCM.dbo.Tickets ([TicketId],[Type],[Value],[UserId],[StoreName]) values ('{0}','{1}','{2}','{3}',N'{4}')
                 end",
                 ticket.TicketId, ticket.Type, ticket.Value, ticket.UserId, ticket.StoreName
                 ));
@@ -137,7 +152,7 @@ namespace IPSCM.Core.Storage
         {
             var table = this.DbExecuteDataSet(
                 String.Format(
-                    "select top 1 [TicketId],[Type],[Value],[UserId],[StoreName] from IPSCM.dbo.Tickets where [UserId] in (select [UserId] from IPSCM.dbo.Users where [PlateNumber] = '{0}' )",
+                    "select top 1 [TicketId],[Type],[Value],[UserId],[StoreName] from IPSCM.dbo.Tickets where [UserId] in (select [UserId] from IPSCM.dbo.Users where [PlateNumber] = '{0}') and [UsedTime] is NULL",
                     plateNumber)).Tables[0];
             if (table.Rows.Count <= 0) return null;
             if (table.Rows.Count >= 1)

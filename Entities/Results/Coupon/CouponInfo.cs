@@ -10,6 +10,6 @@ namespace IPSCM.Entities.Results.Coupon
     {
         public UInt32 TicketId { get; set; }
         public String Type { get; set; }
-        public Int32 Value { get; set; }
+        public Decimal Value { get; set; }
     }
 }

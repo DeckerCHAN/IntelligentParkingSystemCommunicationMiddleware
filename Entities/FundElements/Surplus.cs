@@ -4,11 +4,11 @@ using System;
 
 #endregion
 
-namespace IPSCM.Entities
+namespace IPSCM.Entities.FundElements
 {
     public class Surplus
     {
         public UInt32 UserId { get; set; }
-        public UInt64 Money { get; set; }
+        public Decimal Money { get; set; }
     }
 }
