@@ -4,7 +4,6 @@ using System;
 using System.Data;
 using System.IO;
 using IPSCM.Configuration;
-using IPSCM.Entities;
 using IPSCM.Entities.FundElements;
 using IPSCM.Entities.Results.Leaving;
 using IPSCM.Entities.Results.Parking;

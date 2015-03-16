@@ -1,9 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
-using System.Resources;
 using System.Windows;
-using System.Windows.Controls;
 using IPSCM.UI.Annotations;
 
 namespace IPSCM.UI.Pages

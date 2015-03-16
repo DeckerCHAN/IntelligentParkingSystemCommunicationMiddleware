@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using IPSCM.Core;
 using IPSCM.Logging;
-using IPSCM.UI;
+using IPSCM.Logging.EventArgs;
 
 namespace Wrapper
 {
@@ -32,12 +29,12 @@ namespace Wrapper
 
         }
 
-        static void Program_OnError(IPSCM.Logging.EventArgs.LogErrorEventArgs e)
+        static void Program_OnError(LogErrorEventArgs e)
         {
             Console.WriteLine("[Error]" + e.Message);
         }
 
-        static void Program_OnInfo(IPSCM.Logging.EventArgs.LogInfoEventArgs e)
+        static void Program_OnInfo(LogInfoEventArgs e)
         {
             Console.WriteLine("[Info]"+e.Messege);
         }
