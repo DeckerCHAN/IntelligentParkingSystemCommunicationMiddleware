@@ -56,19 +56,18 @@ namespace IPSCM.Core
             //F3Gate would start after successful log in.
             this.CloudParking.Start();
             Log.Info("Engine started!");
-            this.UiControl.LoginWindow.ShowDialog(this.UiControl.MainWindow);
-            Application.Run(this);
+            this.UiControl.LoginWindow.Owner = this.UiControl.MainWindow;
+            this.UiControl.LoginWindow.ShowDialog();
+            this.UiControl.Run();
         }
 
         private void RegisterEvents()
         {
-            this.ThreadExit += (i, o) => { this.Exit(); };
-            Log.GetLogger().OnInfo += i => { this.TryOut(i.Messege, Color.Lime); };
-            Log.GetLogger().OnError += i => { this.TryOut(i.Message, Color.Red); };
+            this.UiControl.Exit += (i, o) => { this.Exit(); };
             this.UiControl.LoginWindow.LoginButton.Click +=
                 (i, o) =>
                 {
-                    var username = this.UiControl.LoginWindow.UserNameTextBox.Text.Clone().ToString();
+                    var username = this.UiControl.LoginWindow.UserName.Clone().ToString();
                     var password = this.UiControl.LoginWindow.PasswordTextBox.Text.Clone().ToString();
                     this.TransactionPool.AddBeforeExecute(new LoginTransaction(username, password));
                 };

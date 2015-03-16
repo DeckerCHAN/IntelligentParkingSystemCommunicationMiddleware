@@ -10,6 +10,6 @@
 
     <Canvas>
         <Label Content="{x:Static local:Resources.AboutUsTitle}" Canvas.Left="136" Canvas.Top="32" FontSize="14" FontWeight="Bold" FontFamily="NSimSun"/>
-        <TextBlock TextWrapping="WrapWithOverflow" Text="{x:Static local:Resources.AboutUsContent}" Canvas.Top="94" Canvas.Left="166" Height="471" Width="788" FontFamily="NSimSun"></TextBlock>
+        <TextBlock FontSize="14" TextWrapping="WrapWithOverflow" LineStackingStrategy="BlockLineHeight" Text="{x:Static local:Resources.AboutUsContent}" Canvas.Top="94" Canvas.Left="166" Height="471" Width="788" FontFamily="NSimSun" LineHeight="30"/>
     </Canvas>
 </Page>

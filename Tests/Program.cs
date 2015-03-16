@@ -13,9 +13,8 @@ namespace IPSCM.Tests
         private static void Main(string[] args)
         {
             var c = new UIControl();
-            c.MainWindow.Show();
+            c.LoginWindow.Show();
             c.Run();
-            Console.ReadKey();
         }
     }
 }

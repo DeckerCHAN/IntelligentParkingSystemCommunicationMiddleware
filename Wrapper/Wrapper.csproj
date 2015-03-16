@@ -53,6 +53,10 @@
       <Project>{8820ec10-65f9-406b-b612-ceca2f2e9827}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Logging\Logging.csproj">
+      <Project>{73fde06b-e56a-4df5-b2a7-05b780e5aa21}</Project>
+      <Name>Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UI\UI.csproj">
       <Project>{643ee4b5-7d96-4dd7-8626-64ad7d742670}</Project>
       <Name>UI</Name>

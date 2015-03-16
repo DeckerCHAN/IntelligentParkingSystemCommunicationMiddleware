@@ -2,7 +2,8 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:IPSCM.UI.Properties"
       mc:Ignorable="d" 
       d:DesignWidth="804" d:DesignHeight="594"
 	Title="TicketUsageStatisticsPage">
@@ -10,11 +11,33 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/IPSCM.UI;component/Styles/BootStrapButton.xaml"/>
-                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeButton.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeButton.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeDataGrid.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeTextbox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
-    <Grid>
+    <Canvas>
+        <Button x:Name="SearchButton" Content="{x:Static local:Resources.Search}" Style="{StaticResource NativeListButton}" FontSize="14" Canvas.Left="684" Canvas.Top="27" Height="31" Width="96" Click="SearchButton_OnClick"/>
+        <Border BorderBrush="{DynamicResource NativeLineColorBrush}" BorderThickness="1" CornerRadius="8,8,8,8" Canvas.Left="30" Canvas.Top="100" Width="750" Height="420"  ClipToBounds="True">
+            <DataGrid x:Name="StatisticsData" Style="{StaticResource NativeDataGridStyle}" IsReadOnly="True" AutoGenerateColumns="True" ItemsSource="{Binding ParkingStatistics}"  Background="{x:Null}"/>
 
-    </Grid>
+        </Border>
+        <TextBox Height="32" Canvas.Left="447" Canvas.Top="27" Width="222"  Style="{DynamicResource NativeSearchBoxStyle}"/>
+        <Label  Canvas.Left="30" Canvas.Top="54" FontSize="14" FontWeight="Bold">
+            <Label.Content>
+                <Binding Path="PageTitle"></Binding>
+            </Label.Content>
+        </Label>
+        <Button x:Name="JumpToPageButton" Content="{x:Static local:Resources.JumpTo}" Style="{StaticResource NativeListButton}" FontSize="14" Canvas.Left="684" Canvas.Top="534" Height="31" Width="96"/>
+        <TextBox Height="32" Width="40" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderThickness="0"  TextWrapping="Wrap" Text="3"  Canvas.Left="577" Canvas.Top="534">
+            <TextBox.Background>
+                <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/page_input.png"></ImageBrush>
+            </TextBox.Background>
+        </TextBox>
+        <Label Content="{x:Static local:Resources.JumpToThatPage}" Canvas.Left="494" Canvas.Top="536" Foreground="#FF4B5469" FontSize="15"/>
+        <Label Content="{Binding Path=MaxPage}" ContentStringFormat="{x:Static local:Resources.MaxPageFormater}" Canvas.Left="623" Canvas.Top="536" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF4B5469"/>
+
+
+    </Canvas>
 </Page>

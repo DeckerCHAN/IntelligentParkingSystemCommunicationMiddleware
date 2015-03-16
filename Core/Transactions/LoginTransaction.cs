@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading;
+using System.Windows;
 using IPSCM.Entities.Results;
 using IPSCM.Logging;
 
@@ -19,11 +20,9 @@ namespace IPSCM.Core.Transactions
             {
                 try
                 {
-                    Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
-                    {
-                        Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = "Processing";
-                        Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = false;
-                    }));
+
+                        Engine.GetEngine().UiControl.LoginWindow.ResultString = "Processing";
+                        Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = false;
 
                     var name = userName.Clone().ToString();
                     //TODO:Temporarily do not encode
@@ -73,24 +72,29 @@ namespace IPSCM.Core.Transactions
 
         private void LoginSuccess(LoginResult result)
         {
-            Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
+
+
+            Engine.GetEngine().UiControl.LoginWindow.Dispatcher.Invoke(new Action(() =>
             {
-                Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = "Success";
-                Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
-                Engine.GetEngine().UiControl.LoginWindow.Hide();
+                Engine.GetEngine().UiControl.LoginWindow.ResultString = "Success";
+                Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = true;
+                Engine.GetEngine().UiControl.LoginWindow.Visibility=Visibility.Collapsed;
             }));
+
             Engine.GetEngine().F3Gate.Start();
             Engine.GetEngine().CloudParking.TickThread.Start();
         }
 
         private void LoginFailure(ResultCode code, String message)
         {
-            Engine.GetEngine().UiControl.LoginWindow.Invoke(new Action(() =>
+            Engine.GetEngine().UiControl.LoginWindow.Dispatcher.Invoke(new Action(() =>
             {
-                Engine.GetEngine().UiControl.LoginWindow.Resultlabel.Text = String.Format("Login failer!({0}){1}", code,
-                    message);
-                Engine.GetEngine().UiControl.LoginWindow.LoginButton.Enabled = true;
+                Engine.GetEngine().UiControl.LoginWindow.ResultString =
+                    String.Format("Login failer!({0}){1}", code,
+                        message);
+                Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = true;
             }));
+
         }
     }
 }

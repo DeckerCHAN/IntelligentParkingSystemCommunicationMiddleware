@@ -161,11 +161,66 @@
     <value>退出</value>
   </data>
   <data name="AboutUsContent" xml:space="preserve">
-    <value>测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试
-
-测试测试</value>
+    <value>“云停车”智慧城市停车管理系统是由北京智慧星停车软件科技有限公司面向国际国内市场研发打造的世界一流的智慧停车系统平台。“云停车”系统采用了目前最先进的软硬件技术，运用“云平台”“大数据分析”的科学手段，致力于解决国际国内的大中城市存在的“停车难”的现状，为广大驾驶人解决了所有停车难题。开启了优雅驾车停车的新时代生活方式。</value>
   </data>
   <data name="AboutUsTitle" xml:space="preserve">
     <value>关于我们</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="TodayParkingSummaryFormater" xml:space="preserve">
+    <value>今日共进出{0}辆车，收取停车费{1}元</value>
+  </data>
+  <data name="search_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\search_01.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="search_02" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\search_02.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="interface_close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\interface_close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="interface_smallest" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\interface_smallest.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JumpTo" xml:space="preserve">
+    <value>跳转</value>
+  </data>
+  <data name="login_close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\login_close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_input" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\page_input.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_last" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\page_last.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="page_next" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\page_next.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="refresh_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refresh_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JumpToThatPage" xml:space="preserve">
+    <value>跳转到第</value>
+  </data>
+  <data name="MaxPageFormater" xml:space="preserve">
+    <value>/{0}页</value>
+  </data>
+  <data name="TodayTicketUseSummaryFormater" xml:space="preserve">
+    <value>今日共使用停车券{0}张</value>
+  </data>
+  <data name="LoginAccount" xml:space="preserve">
+    <value>登录帐号</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确定</value>
   </data>
 </root>

@@ -70,9 +70,7 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试
-        ///
-        ///测试测试.
+        ///   Looks up a localized string similar to “云停车”智慧城市停车管理系统是由北京智慧星停车软件科技有限公司面向国际国内市场研发打造的世界一流的智慧停车系统平台。“云停车”系统采用了目前最先进的软硬件技术，运用“云平台”“大数据分析”的科学手段，致力于解决国际国内的大中城市存在的“停车难”的现状，为广大驾驶人解决了所有停车难题。开启了优雅驾车停车的新时代生活方式。.
         /// </summary>
         public static string AboutUsContent {
             get {
@@ -157,11 +155,58 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 确定.
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 退出.
         /// </summary>
         public static string Exit {
             get {
                 return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap interface_close {
+            get {
+                object obj = ResourceManager.GetObject("interface_close", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap interface_smallest {
+            get {
+                object obj = ResourceManager.GetObject("interface_smallest", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 跳转.
+        /// </summary>
+        public static string JumpTo {
+            get {
+                return ResourceManager.GetString("JumpTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 跳转到第.
+        /// </summary>
+        public static string JumpToThatPage {
+            get {
+                return ResourceManager.GetString("JumpToThatPage", resourceCulture);
             }
         }
         
@@ -186,12 +231,40 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 登录.
+        /// </summary>
+        public static string Login {
+            get {
+                return ResourceManager.GetString("Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap login_close {
+            get {
+                object obj = ResourceManager.GetObject("login_close", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap login_logo {
             get {
                 object obj = ResourceManager.GetObject("login_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 登录帐号.
+        /// </summary>
+        public static string LoginAccount {
+            get {
+                return ResourceManager.GetString("LoginAccount", resourceCulture);
             }
         }
         
@@ -206,11 +279,116 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /{0}页.
+        /// </summary>
+        public static string MaxPageFormater {
+            get {
+                return ResourceManager.GetString("MaxPageFormater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap page_input {
+            get {
+                object obj = ResourceManager.GetObject("page_input", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap page_last {
+            get {
+                object obj = ResourceManager.GetObject("page_last", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap page_next {
+            get {
+                object obj = ResourceManager.GetObject("page_next", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 密码.
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap refresh_icon {
+            get {
+                object obj = ResourceManager.GetObject("refresh_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 搜索.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap search_01 {
+            get {
+                object obj = ResourceManager.GetObject("search_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap search_02 {
+            get {
+                object obj = ResourceManager.GetObject("search_02", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 数据统计.
         /// </summary>
         public static string Statistics {
             get {
                 return ResourceManager.GetString("Statistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 今日共进出{0}辆车，收取停车费{1}元.
+        /// </summary>
+        public static string TodayParkingSummaryFormater {
+            get {
+                return ResourceManager.GetString("TodayParkingSummaryFormater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 今日共使用停车券{0}张.
+        /// </summary>
+        public static string TodayTicketUseSummaryFormater {
+            get {
+                return ResourceManager.GetString("TodayTicketUseSummaryFormater", resourceCulture);
             }
         }
     }

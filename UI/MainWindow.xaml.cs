@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -29,7 +30,7 @@ namespace IPSCM.UI
             InitializeComponent();
             this.DataStatistics.IsChecked = true;
             this.ContentFrame.Content = this.MainPage;
-
+            
         }
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -45,6 +46,12 @@ namespace IPSCM.UI
         private void AboutUsRadioButton_Checked(object sender, RoutedEventArgs e)
         {
             this.ContentFrame.Content = this.AboutPage;
+        }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            this.Visibility=Visibility.Hidden;
+            e.Cancel = true;
         }
     }
 }

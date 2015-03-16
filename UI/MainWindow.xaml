@@ -6,33 +6,24 @@
     xmlns:local="clr-namespace:IPSCM.UI.Properties"
     mc:Ignorable="d" 
     x:Class="IPSCM.UI.MainWindow"
-    WindowStyle="None" 
-    AllowsTransparency="True" Background="Transparent"
-    ResizeMode="NoResize"
+    Closing="MainWindow_OnClosing"
     WindowStartupLocation="CenterScreen"
     Title="MainWindow" 
     Height="694" 
-    Width="1028">
+    Width="1028"
+    Style="{DynamicResource NativeWindowStyle}"
+    >
     <Window.Resources>
-        <Style x:Key="PageSelectButon" TargetType="RadioButton">
-            <Setter Property="Focusable" Value="False"></Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RadioButton">
-                        <StackPanel Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Margin="0,0,0,2" >
-                            <Label FontSize="{TemplateBinding Content}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" Margin="0,-2,0,0" ></Label>
-                            <Rectangle Name="Line" Height="2" Fill="White" Visibility="Hidden"></Rectangle>
-                        </StackPanel>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Line" Property="Rectangle.Visibility" Value="Visible"></Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
+    <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/BootStrapButton.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeButton.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeDataGrid.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeTextBox.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeWindowStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
 
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
     <Border Margin="10">
         <Border.Effect>

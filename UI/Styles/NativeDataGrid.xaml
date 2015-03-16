@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="DataGridCell" x:Key="NativeDataGridCellStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border BorderBrush="{DynamicResource NativeLineColorBrush}" BorderThickness="0.5">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="DataGridColumnHeader" x:Key="NativeDataGridColumnHeaderStyle">
+        <Setter Property="BorderBrush" Value="{DynamicResource NativeLineColorBrush}"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridColumnHeader">
+                    <Border BorderBrush="{DynamicResource NativeLineColorBrush}" BorderThickness="0.5">
+                        <Grid Background="{TemplateBinding Background}">
+                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="DataGrid" x:Key="NativeDataGridStyle">
+       <Setter Property="Focusable" Value="False" />
+        <Setter Property="CanUserResizeRows" Value="False"></Setter>
+        <Setter Property="CanUserResizeColumns" Value="False"></Setter>
+         <Setter Property="BorderThickness" Value="0"></Setter>
+        <Setter Property="HeadersVisibility" Value="Column"></Setter>
+        <Setter Property="CellStyle" Value="{DynamicResource NativeDataGridCellStyle}"></Setter>
+        <Setter Property="ColumnWidth" Value="*"></Setter>
+        <Setter Property="ColumnHeaderStyle" Value="{DynamicResource NativeDataGridColumnHeaderStyle}"></Setter>
+        <Setter Property="RowHeight" Value="38"></Setter>
+        <Setter Property="ColumnHeaderHeight" Value="38"></Setter>
+        <Setter Property="FontSize" Value="14"></Setter>
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled"></Setter>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"></Setter>
+        <Setter Property="GridLinesVisibility" Value="None"></Setter>
+        <Setter Property="Background" Value="#FFF9F9F9"></Setter>
+        <Setter Property="AlternatingRowBackground" Value="#FFFFFFFF"></Setter>
+        <Setter Property="AlternationCount" Value="0"></Setter>
+    </Style>
+    <SolidColorBrush x:Key="NativeLineColorBrush" Color="#FFDDDDDD">
+    </SolidColorBrush>
+   
+</ResourceDictionary> 
