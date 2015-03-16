@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace IPSCM.Entities.Results.Coupon
+﻿namespace IPSCM.Entities.Results.Coupon
 {
     public class CouponResult : Result
     {

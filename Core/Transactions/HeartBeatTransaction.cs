@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿#region
+
+using System;
 using System.Threading;
-using IPSCM.Entities.Results;
 using IPSCM.Entities.Results.HeartBeat;
+using IPSCM.Logging;
+
+#endregion
 
 namespace IPSCM.Core.Transactions
 {
     public sealed class HeartBeatTransaction : Transaction
     {
-        public Thread ProcessThread { get; private set; }
-        public HeartBeatResult Result { get; private set; }
-
         public HeartBeatTransaction(HeartBeatResult result)
         {
             this.Result = result;
@@ -43,7 +41,7 @@ namespace IPSCM.Core.Transactions
                                 Engine.GetEngine().Storage.InsertOrUpdateTicket(ticket);
                             }
                         }
-                        Logging.Log.Info(
+                        Log.Info(
                             String.Format("Heart beated. Updated or inserted {0} users, {1} surpluses, {2} tickets.",
                                 result.Info.Users != null ? result.Info.Users.Count : 0,
                                 result.Info.Surpluses != null ? result.Info.Surpluses.Count : 0,
@@ -54,11 +52,13 @@ namespace IPSCM.Core.Transactions
                 catch (Exception ex)
                 {
                     this.Status = TransactionStatus.Errored;
-                    Logging.Log.Error(String.Format("Heart beat encountered a bad error!", ex));
+                    Log.Error(String.Format("Heart beat encountered a bad error!", ex));
                 }
-
             });
         }
+
+        public Thread ProcessThread { get; private set; }
+        public HeartBeatResult Result { get; private set; }
 
         public override void Execute()
         {

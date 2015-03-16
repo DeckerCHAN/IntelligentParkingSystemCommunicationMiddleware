@@ -1,7 +1,9 @@
-﻿using System;
+﻿#region
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using IPSCM.Entities.FundElements;
+
+#endregion
 
 namespace IPSCM.Entities.Results.HeartBeat
 {

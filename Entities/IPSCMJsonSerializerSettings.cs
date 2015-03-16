@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace IPSCM.Entities
 {
-    public class IPSCMJsonSerializerSettings : JsonSerializerSettings
+    internal class IPSCMJsonSerializerSettings : JsonSerializerSettings
     {
         public IPSCMJsonSerializerSettings()
         {

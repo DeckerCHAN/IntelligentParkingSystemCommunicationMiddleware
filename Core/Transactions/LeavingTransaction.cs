@@ -6,10 +6,8 @@ using System.Threading;
 using IPSCM.Configuration;
 using IPSCM.Entities;
 using IPSCM.Entities.Results;
-using IPSCM.Entities.Results.Leaving;
 using IPSCM.Logging;
 using IPSCM.Utils;
-using Newtonsoft.Json.Linq;
 
 #endregion
 
@@ -17,8 +15,8 @@ namespace IPSCM.Core.Transactions
 {
     public class LeavingTransaction : Transaction
     {
-        public LeavingTransaction(String plateNumber, DateTime outTime, Byte[] outImg, UInt32 copeMoney,
-            UInt32 actualMoney, UInt64 ticketId, Stream responseStream)
+        public LeavingTransaction(String plateNumber, DateTime outTime, Byte[] outImg, Decimal copeMoney,
+            Decimal actualMoney, UInt32 ticketId, Stream responseStream)
         {
             //TODO:Using record id which readed from db
             this.RecordId = 0x00;
@@ -35,13 +33,13 @@ namespace IPSCM.Core.Transactions
                 try
                 {
                     //Storage messages
-                    Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, this.OutTime);
+                    this.RecordId = Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, this.OutTime);
                     //Response F3!
                     var json = String.Empty;
                     if (Engine.GetEngine().Storage.TryDeductBalance(this.PlateNumber, this.ActualMoney))
                     {
                         json =
-                            IPSCMJsonConvert.ConvertToJson(new Result()
+                            IPSCMJsonConvert.ConvertToJson(new Result
                             {
                                 ResultCode = ResultCode.Success
                             });
@@ -49,16 +47,18 @@ namespace IPSCM.Core.Transactions
                     else
                     {
                         json =
-                            IPSCMJsonConvert.ConvertToJson(new Result()
+                            IPSCMJsonConvert.ConvertToJson(new Result
                             {
                                 ResultCode = ResultCode.SuccessButInsufficientFunds
                             });
-
                     }
                     StreamUtils.WriteToStreamWithUF8(this.ResponseStream, json);
-
+                    this.ResponseStream.Flush();
+                    this.ResponseStream.Close();
+                    //Used ticket
+                    Engine.GetEngine().Storage.UsedTicket(ticketId, outTime);
                     //Send message to cloud
-                    Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, OutTime);
+                    // Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, OutTime);
                     var result = Engine.GetEngine()
                         .CloudParking.Leaving(this.RecordId, this.PlateNumber, this.OutTime, this.OutImg, this.CopeMoney,
                             this.ActualMoney, this.TicketId);
@@ -91,8 +91,8 @@ namespace IPSCM.Core.Transactions
         public String PlateNumber { get; private set; }
         public DateTime OutTime { get; private set; }
         public Byte[] OutImg { get; private set; }
-        public UInt32 CopeMoney { get; private set; }
-        public UInt32 ActualMoney { get; private set; }
+        public Decimal CopeMoney { get; private set; }
+        public Decimal ActualMoney { get; private set; }
         public UInt64 TicketId { get; private set; }
         private Config JsonConfig { get; set; }
 

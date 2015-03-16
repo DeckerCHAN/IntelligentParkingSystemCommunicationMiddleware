@@ -52,7 +52,8 @@ namespace IPSCM.Core
             this.UiControl.MainWindow.Show();
             this.Storage.Initialize();
             this.TransactionPool.WipeThread.Start();
-            Log.Info(String.Format("Engine starting running(version:{0})...", Assembly.GetEntryAssembly().GetName().Version.ToString()));
+            Log.Info(String.Format("Engine starting running(version:{0})...",
+                Assembly.GetEntryAssembly().GetName().Version));
             //F3Gate would start after successful log in.
             this.CloudParking.Start();
             Log.Info("Engine started!");
@@ -84,19 +85,14 @@ namespace IPSCM.Core
                         o.copeMoney, o.actualMoney, o.TicketId, o.Response.OutputStream));
                 };
             this.F3Gate.OnSurplusSpaceUpdate +=
-                (i, o) =>
-                {
-                    this.TransactionPool.AddBeforeExecute(new SurplusSpaceUpdateTransaction(o.SurplusSpace));
-                };
+                (i, o) => { this.TransactionPool.AddBeforeExecute(new SurplusSpaceUpdateTransaction(o.SurplusSpace,o.Response.OutputStream)); };
             this.CloudParking.OnHeartBeat +=
-                (i, o) =>
-                {
-                    this.TransactionPool.AddBeforeExecute(new HeartBeatTransaction(o.HeartBeatResult));
-                };
+                (i, o) => { this.TransactionPool.AddBeforeExecute(new HeartBeatTransaction(o.HeartBeatResult)); };
             this.F3Gate.OnCouponNeed +=
                 (i, o) =>
                 {
-                    this.TransactionPool.AddBeforeExecute(new ExtractCouponTransaction(o.PlateNumber, o.Response.OutputStream));
+                    this.TransactionPool.AddBeforeExecute(new ExtractCouponTransaction(o.PlateNumber,
+                        o.Response.OutputStream));
                 };
         }
 

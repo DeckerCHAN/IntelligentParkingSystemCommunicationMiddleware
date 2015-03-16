@@ -98,6 +98,19 @@ namespace IPSCM.Protocol.Gates
                     }
                 }
             }
+            //If debug output all message
+            if (this.IsDebug)
+            {
+                foreach (var key in stringContent.Keys)
+                {
+                    Log.Info(String.Format("Key:{0} Value:{1}",key,stringContent[key]));
+                }
+                foreach (var key in binaryContent.Keys)
+                {
+                    Log.Info(String.Format("Key:{0} BinaryLength:{1}",key,binaryContent[key].Length));
+                }
+            }
+            //Switch urls
             var url = arg.Request.RawUrl;
             try
             {
@@ -124,20 +137,26 @@ namespace IPSCM.Protocol.Gates
                             stringContent[this.Config.GetString("PlateNumber")],
                             DateTime.Parse(stringContent[this.Config.GetString("OutTime")]),
                             binaryContent[this.Config.GetString("OutImage")],
-                            UInt32.Parse(stringContent[this.Config.GetString("CopeMoney")]),
-                            UInt32.Parse(stringContent[this.Config.GetString("ActualMoney")]),
-                            UInt64.Parse(stringContent[this.Config.GetString("TicketId")])
+                            Decimal.Parse(stringContent[this.Config.GetString("CopeMoney")]),
+                            Decimal.Parse(stringContent[this.Config.GetString("ActualMoney")]),
+                            UInt32.Parse(stringContent[this.Config.GetString("TicketId")])
                             ));
                 }
                 else if (url.Equals(this.CouponReceiveUrl))
                 {
                     var trigger = this.OnCouponNeed;
-                    if (trigger != null) trigger(this, new CouponEventArgs(arg.Request, arg.Response, stringContent[this.Config.GetString("PlateNumber")]));
+                    if (trigger != null)
+                        trigger(this,
+                            new CouponEventArgs(arg.Request, arg.Response,
+                                stringContent[this.Config.GetString("PlateNumber")]));
                 }
                 else if (url.Equals(this.UpdateUrl))
                 {
                     var trigger = this.OnSurplusSpaceUpdate;
-                    if (trigger != null) trigger(this, new UpdateSurplusSpaceEventArgs(arg.Request, arg.Response, UInt16.Parse(stringContent[this.Config.GetString("SURPLUSSPACE")])));
+                    if (trigger != null)
+                        trigger(this,
+                            new UpdateSurplusSpaceEventArgs(arg.Request, arg.Response,
+                                UInt16.Parse(stringContent[this.Config.GetString("SURPLUSSPACE")])));
                 }
                 else
                 {
