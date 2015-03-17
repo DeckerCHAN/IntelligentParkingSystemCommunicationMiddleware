@@ -64,7 +64,7 @@ namespace IPSCM.Protocol.Gates
         public event CouponEventHandler OnCouponNeed;
         public event UpdateSurplusSpaceEventhandler OnSurplusSpaceUpdate;
 
-        private void F3Gate_OnReceived(object sender, HttpDataEventArgs arg)
+        public void F3Gate_OnReceived(object sender, HttpDataEventArgs arg)
         {
             Log.Info(String.Format("F3 received a request form {0} through {1} method with url: {2}",
                 arg.Request.RemoteEndPoint, arg.Request.HttpMethod, arg.Request.RawUrl));

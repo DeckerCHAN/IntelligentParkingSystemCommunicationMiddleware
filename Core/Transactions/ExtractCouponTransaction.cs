@@ -48,6 +48,11 @@ namespace IPSCM.Core.Transactions
                     this.Status = TransactionStatus.Errored;
                     Log.Error("Extract Coupon Transaction encountered a bad error!", ex);
                 }
+                finally
+                {
+                    responseStream.Flush();
+                    responseStream.Close();
+                }
             });
         }
 

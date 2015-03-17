@@ -42,8 +42,8 @@ namespace IPSCM.Core.Transactions
                         {
                             //Fault
                             Log.Error(String.Format("Cloud parking failer. Cause:{0} Error code:{1}",
-                                result.ErrorMessage, result.ResultCode));
-                            this.LoginFailure(result.ResultCode, result.ErrorMessage);
+                                result.ErrorMsg, result.ResultCode));
+                            this.LoginFailure(result.ResultCode, result.ErrorMsg);
                             break;
                         }
                     }

@@ -37,16 +37,16 @@ namespace IPSCM.Persistence.Storage
             Log.Info(String.Format("{0} DB initial script executed.", scriptSegment.Length));
         }
 
-        public Guid PreCarParked(String plateNumber, DateTime parkTime)
+        public Guid PreCarPark(String plateNumber, DateTime parkTime)
         {
             var g = Guid.NewGuid();
             this.DbExecuteNonQuery(String.Format(
-                "insert into IPSCM.dbo.ParkRecord values('{0}',NULL,N'{1}','{2}',NULL)", g.ToString("D"), plateNumber,
+                "insert into IPSCM.dbo.ParkRecord([Id],[RecordId],[PlateNumber],[InTime],[OutTime]) values('{0}',NULL,N'{1}','{2}',NULL)", g.ToString("D"), plateNumber,
                 parkTime.ToString("yyyy-MM-dd HH:mm:ss")));
             return g;
         }
 
-        public void PostCarParked(Guid Id, String plateNumber, ParkingResult result)
+        public void PostCarPark(Guid Id, String plateNumber, ParkingResult result)
         {
             this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.ParkRecord set RecordId='{0}' where Id='{1}'",
                 result.Info.RecordId, Id));
@@ -73,7 +73,7 @@ namespace IPSCM.Persistence.Storage
             if (currentBal > deductBalance)
             {
                 this.DbExecuteNonQuery(
-                    String.Format("update IPSCM.dbo.Users set [Money]=[Money]-{0} where PlateNumber='{1}'",
+                    String.Format("update IPSCM.dbo.Users set [Money]=[Money]-{0} where PlateNumber=N'{1}'",
                         deductBalance, plateNumber));
                 return true;
             }
@@ -84,27 +84,34 @@ namespace IPSCM.Persistence.Storage
         {
             try
             {
-                this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.Tickets set [UsedTime] = '{0}' where [TicketId]='{1}'",useTime,ticketId));
+                this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.Tickets set [UsedTime] = '{0}' where [TicketId]='{1}'", useTime.ToString("yyyy-MM-dd HH:mm:ss"), ticketId));
             }
             catch (Exception)
             {
-                Log.Error(String.Format("Can not set ticket {0} as used.",ticketId));
+                Log.Error(String.Format("Can not set ticket {0} as used.", ticketId));
             }
         }
 
         public UInt32 PreCarLeave(String plateNumber, DateTime leaveTime)
         {
-           var record= this.DbExecuteScalar(String.Format(
-            @"if exists (select * from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL )
+            var record = this.DbExecuteScalar(String.Format(
+             @"if exists (select * from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL )
             begin
-            select [RecordId] from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL
-            update IPSCM.dbo.ParkRecord set OutTime='{1}' where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL
+            
+            select Top 1 [RecordId] from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL order by [InTime] desc
+            update IPSCM.dbo.ParkRecord set OutTime='{1}' where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL and [RecordId] in (select Top 1 [RecordId] from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL order by [InTime] desc) 
             end
             else
             begin
-            insert into IPSCM.dbo.ParkRecord values ('{2}',NULL,'{0}',NULL,'{1}')
+            insert into IPSCM.dbo.ParkRecord([Id],[RecordId],[PlateNumber],[InTime],[OutTime]) values ('{2}',NULL,N'{0}',NULL,'{1}')
+            select '0'
             end", plateNumber, leaveTime.ToString("yyyy-MM-dd HH:mm:ss"), Guid.NewGuid().ToString("D")));
-            return record != null ? UInt32.Parse(record.ToString()) : 0;
+            UInt32 result;
+            if (!UInt32.TryParse(record.ToString(), out result))
+            {
+                result = 0;
+            }
+            return result;
         }
 
         public void PostCarLeaved(String plateNumber, LeavingResult result)
@@ -150,10 +157,10 @@ namespace IPSCM.Persistence.Storage
         {
             var table = this.DbExecuteDataSet(
                 String.Format(
-                    "select top 1 [TicketId],[Type],[Value],[UserId],[StoreName] from IPSCM.dbo.Tickets where [UserId] in (select [UserId] from IPSCM.dbo.Users where [PlateNumber] = '{0}') and [UsedTime] is NULL",
+                    "select top 1 [TicketId],[Type],[Value],[UserId],[StoreName] from IPSCM.dbo.Tickets where [UserId] in (select [UserId] from IPSCM.dbo.Users where [PlateNumber] = N'{0}') and [UsedTime] is NULL",
                     plateNumber)).Tables[0];
             if (table.Rows.Count <= 0) return null;
-            if (table.Rows.Count >= 1)
+            if (table.Rows.Count > 1)
             {
                 Log.Info("Queried more than one tickets, using first one.");
             }
@@ -162,11 +169,19 @@ namespace IPSCM.Persistence.Storage
             {
                 TicketId = UInt32.Parse(items[0].ToString()),
                 Type = items[1].ToString(),
-                Value = Int32.Parse(items[2].ToString()),
+                Value = Decimal.Parse(items[2].ToString()),
                 UserId = UInt32.Parse(items[3].ToString()),
                 StoreName = items[4].ToString()
             };
             return ticket;
+        }
+
+        public DataTable GetTenParkingHistory(UInt32 start)
+        {
+            var data =
+                this.DbExecuteDataSet(
+                    String.Format("select [PlateNumber],[InTime],[OutTime],[CopeMoney],[ActualMoney],[TicketId] from  ( SELECT *, ROW_NUMBER() OVER (ORDER BY [InTime]) as row FROM IPSCM.dbo.ParkRecord ) a where row>={0} and row<{1}", start, start + 10)).Tables[0];
+            return data;
         }
 
         private void DbExecuteNonQuery(String sql)

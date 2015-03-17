@@ -8,6 +8,8 @@
       mc:Ignorable="d" 
 	  Title="PageTitlearkingStatisticsPageTitleage"
       d:DesignWidth="804" d:DesignHeight="594"
+      Loaded="ParkingStatisticsPage_OnLoaded"
+      DataContext="{Binding RelativeSource={RelativeSource Self}}"
       >
     <Page.Resources>
         <ResourceDictionary>
@@ -30,8 +32,8 @@
             <Label.Content>
                 <Binding Path="PageTitle"></Binding></Label.Content>
         </Label>
-        <Button x:Name="JumpToPageButton" Content="{x:Static properties:Resources.JumpTo}" Style="{StaticResource NativeListButton}" FontSize="14" Canvas.Left="684" Canvas.Top="534" Height="31" Width="96"/>
-        <TextBox Height="32" Width="40" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderThickness="0"  TextWrapping="Wrap" Text="3"  Canvas.Left="577" Canvas.Top="534">
+        <Button x:Name="JumpToPageButton" Content="{x:Static properties:Resources.JumpTo}" Style="{StaticResource NativeListButton}" FontSize="14" Canvas.Left="684" Canvas.Top="534" Height="31" Width="96" Click="JumpToPageButton_OnClick"/>
+        <TextBox Text="{Binding CurrentPage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="32" Width="40" FontSize="14" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderThickness="0"  TextWrapping="Wrap"   Canvas.Left="577" Canvas.Top="534">
             <TextBox.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/page_input.png"></ImageBrush>
             </TextBox.Background>

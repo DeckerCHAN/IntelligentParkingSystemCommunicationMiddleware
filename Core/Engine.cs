@@ -47,7 +47,6 @@ namespace IPSCM.Core
 
         public void Run()
         {
-            this.UiControl.MainWindow.Show();
             this.Storage.Initialize();
             this.TransactionPool.WipeThread.Start();
             Log.Info(String.Format("Engine starting running(version:{0})...",
@@ -55,8 +54,12 @@ namespace IPSCM.Core
             //F3Gate would start after successful log in.
             this.CloudParking.Start();
             Log.Info("Engine started!");
-            this.UiControl.LoginWindow.Owner = this.UiControl.MainWindow;
-            this.UiControl.LoginWindow.ShowDialog();
+            this.UiControl.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                this.UiControl.MainWindow.Show();
+                this.UiControl.LoginWindow.Owner = this.UiControl.MainWindow;
+                this.UiControl.LoginWindow.ShowDialog();
+            }));
             this.UiControl.Run();
         }
 

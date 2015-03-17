@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Data;
 using System.Windows;
+using System.Timers;
 using IPSCM.UI.Annotations;
 
 namespace IPSCM.UI.Pages
@@ -16,6 +17,22 @@ namespace IPSCM.UI.Pages
         private UInt32 MaxPageValue;
         private UInt64 ParkingCountValue;
         private ulong ParkingIncomeValue;
+
+        public ParkingStatisticsPage()
+        {
+            this.Config=Configuration.FileConfig.FindConfig("GUI.cfg");
+            this.DataUpdateTimer = new Timer(Config.GetDouble("DataUpdateInterval"));
+            this.ParkingStatistics = new DataTable();
+            this.DataContext = this;
+            this.InitializeComponent();
+            this.StatisticsData.ItemsSource = this.ParkingStatistics.AsDataView();
+            this.CurrentPage = 1;
+            this.ParkingCount = 3;
+            this.ParkingIncome = 15;
+           // this.DataUpdateTimer.Start();
+        }
+        private Timer DataUpdateTimer;
+        private Configuration.Config Config;
 
         public String PageTitle
         {
@@ -69,16 +86,6 @@ namespace IPSCM.UI.Pages
 
         public DataTable ParkingStatistics { get; set; }
 
-        public ParkingStatisticsPage()
-        {
-            this.ParkingStatistics = new DataTable();
-            this.DataContext = this;
-            this.InitializeComponent();
-            this.StatisticsData.ItemsSource = this.ParkingStatistics.AsDataView();
-            this.ParkingCount = 3;
-            this.ParkingIncome = 15;
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.MaxPage += 1;
@@ -91,6 +98,16 @@ namespace IPSCM.UI.Pages
         {
             var handler = this.PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void ParkingStatisticsPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void JumpToPageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+
+            new PopupWindow(Window.GetWindow(this), "Current_page", this.CurrentPage.ToString()).ShowDialog();
         }
     }
 }

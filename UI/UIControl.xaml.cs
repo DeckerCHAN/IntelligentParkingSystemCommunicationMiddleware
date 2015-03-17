@@ -10,15 +10,12 @@ namespace IPSCM.UI
         public LoginWindow LoginWindow { get;private set; }
         public UIControl()
         {
-            this.Startup += this.UIControl_Startup;
             this.MainWindow = new MainWindow();
             this.LoginWindow=new LoginWindow();
-
         }
 
-        void UIControl_Startup(object sender, StartupEventArgs e)
+        private void UIControl_OnStartup(object sender, StartupEventArgs e)
         {
-            this.MainWindow.Show();
 
         }
     }

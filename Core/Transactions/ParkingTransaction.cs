@@ -30,7 +30,7 @@ namespace IPSCM.Core.Transactions
                     StreamUtils.WriteToStreamWithUF8(this.ResponseStream, json);
                     this.ResponseStream.Flush();
                     this.ResponseStream.Close();
-                    var Id = Engine.GetEngine().Storage.PreCarParked(this.plateNumber, this.InTime);
+                    var Id = Engine.GetEngine().Storage.PreCarPark(this.plateNumber, this.InTime);
                     var result = Engine.GetEngine().CloudParking.Parking(plateNum, inTime, inImage);
 
 
@@ -38,7 +38,7 @@ namespace IPSCM.Core.Transactions
                     {
                         case ResultCode.Success:
                         {
-                            Engine.GetEngine().Storage.PostCarParked(Id, this.plateNumber, result);
+                            Engine.GetEngine().Storage.PostCarPark(Id, this.plateNumber, result);
                             break;
                         }
                         case ResultCode.SuccessButNoBinding:
