@@ -41,11 +41,14 @@ USE [IPSCM]
 IF  NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ParkRecord]') AND type in (N'U'))
 BEGIN
 CREATE TABLE [dbo].[ParkRecord] (
-    [Id] UNIQUEIDENTIFIER NOT NULL, 
-    [RecordId]    INT           NULL,
-    [PlateNumber] NVARCHAR (30) NOT NULL,
-    [InTime]      DATETIME      NULL,
-    [OutTime]     DATETIME      NULL,
+    [Id]          UNIQUEIDENTIFIER NOT NULL,
+    [RecordId]    INT              NULL,
+    [PlateNumber] NVARCHAR (30)    NOT NULL,
+    [InTime]      DATETIME         NULL,
+    [OutTime]     DATETIME         NULL,
+    [CopeMoney] MONEY NULL, 
+    [ActualMoney] MONEY NULL, 
+    [TicketId] INT NULL, 
     PRIMARY KEY CLUSTERED ([Id] ASC)
-)
+);
 END
