@@ -25,15 +25,17 @@ USE [IPSCM]
 --Create Ticket if ticket not exists
 IF  NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Tickets]') AND type in (N'U'))
 BEGIN
-CREATE TABLE [Tickets]
+CREATE TABLE [dbo].[Tickets] 
 (
-	[TicketId] INT NOT NULL PRIMARY KEY, 
-	[Type] VARCHAR(30) NOT NULL, 
-	[Value] INT NOT NULL,
-	[UserId] INT NOT NULL, 
-	[StoreName] NVARCHAR(50) NOT NULL,
-	[UsedTime] DATETIME NULL, 
-)
+    [TicketId]  INT           NOT NULL,
+    [Type]      VARCHAR (30)  NOT NULL,
+    [Value]     FLOAT           NOT NULL,
+    [UserId]    INT           NOT NULL,
+    [StoreName] NVARCHAR (50) NOT NULL,
+    [UsedTime]  DATETIME      NULL,
+    PRIMARY KEY CLUSTERED ([TicketId] ASC)
+);
+
 END
 GO
 USE [IPSCM] 
