@@ -8,12 +8,11 @@ using IPSCM.Entities.FundElements;
 using IPSCM.Entities.Results.Leaving;
 using IPSCM.Entities.Results.Parking;
 using IPSCM.Logging;
-using IPSCM.Persistence;
 using IPSCM.Utils;
 
 #endregion
 
-namespace IPSCM.Core.Storage
+namespace IPSCM.Persistence.Storage
 {
     public class DataPool
     {
@@ -28,7 +27,7 @@ namespace IPSCM.Core.Storage
 
         public void Initialize()
         {
-            var initScript = File.ReadAllText(Config.GetString("DBInitializeScript"));
+            var initScript = File.ReadAllText(this.Config.GetString("DBInitializeScript"));
 
             var scriptSegment = SqlUtils.SplitSqlFile(initScript);
             foreach (var segment in scriptSegment)
