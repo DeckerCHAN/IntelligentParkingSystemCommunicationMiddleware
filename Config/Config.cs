@@ -50,5 +50,10 @@ namespace IPSCM.Configuration
         {
             return Convert.ToBoolean(this.GetString(key));
         }
+
+        public virtual Double GetDouble(String key)
+        {
+            return Convert.ToDouble(this.GetString(key));
+        }
     }
 }

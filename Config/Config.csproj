@@ -41,19 +41,26 @@
     <Compile Include="StaticConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Configs\Storage.cfg">
+    <Content Include="Configs\Storage.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Configs\F3.cfg">
+    </Content>
+    <Content Include="Configs\F3.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Configs\GUI.cfg" />
-    <None Include="Configs\Json.cfg">
+    </Content>
+    <Content Include="Configs\GUI.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Configs\Parking.cfg">
+    </Content>
+    <Content Include="Configs\Json.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Content Include="Configs\Parking.cfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configs\Transaction.cfg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
