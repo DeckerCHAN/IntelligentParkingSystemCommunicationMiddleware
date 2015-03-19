@@ -8,9 +8,11 @@ namespace IPSCM.UI
     public partial class UIControl : Application
     {
         public LoginWindow LoginWindow { get;private set; }
+        public MainWindow MajorWindow { get; private set; }
+
         public UIControl()
         {
-            this.MainWindow = new MainWindow();
+            this.MajorWindow = new MainWindow();
             this.LoginWindow=new LoginWindow();
         }
 

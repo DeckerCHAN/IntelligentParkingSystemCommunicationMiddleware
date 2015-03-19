@@ -50,6 +50,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Persistence\Persistence.csproj">
+      <Project>{3a8cfc2e-35f6-4f15-a58a-26458b6ae244}</Project>
+      <Name>Persistence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UI\UI.csproj">
       <Project>{643ee4b5-7d96-4dd7-8626-64ad7d742670}</Project>
       <Name>UI</Name>

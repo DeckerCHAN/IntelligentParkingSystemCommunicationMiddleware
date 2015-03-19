@@ -183,7 +183,16 @@ namespace IPSCM.Protocol.Gates
             Log.Info("F3 starting...");
             this.ListenThread = new Thread(() =>
             {
-                this.Listener.Start();
+                try
+                {
+                    this.Listener.Start();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Can not start F3 gate!",ex);
+                    return;
+                }
+
                 Log.Info(String.Format("F3 Binded on:{0}:{1}", this.LocalHost, this.PortNumber));
                 while (this.Listener.IsListening)
                 {

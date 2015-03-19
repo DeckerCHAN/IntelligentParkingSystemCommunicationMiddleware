@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using IPSCM.Persistence.Storage;
 using IPSCM.UI;
 
 
@@ -9,9 +11,17 @@ namespace Tests
         [STAThread]
         private static void Main(string[] args)
         {
-            var c = new UIControl();
-            c.LoginWindow.Show();
-            c.Run();
+            DataPool dp=new DataPool();
+            var res = dp.GetParkingHistoryOrderByTime(5);
+            foreach (DataRow row in res.Rows)
+            {
+                foreach (DataColumn column in res.Columns)
+                {
+                    Console.Write(row[column]+"||");
+                }
+                Console.WriteLine();
+            }
+            //Console.ReadKey();
         }
     }
 }

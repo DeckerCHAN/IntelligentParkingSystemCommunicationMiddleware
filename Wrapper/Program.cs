@@ -22,9 +22,13 @@ namespace Wrapper
             {
 
                 FileInfo report =
-     new FileInfo(String.Format("crash-report-{0}.report",
-         DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss-tt")));
+                    new FileInfo(String.Format("crash-report-{0}.report",
+                        DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss-tt")));
                 File.WriteAllText(report.FullName, ex.ToString());
+            }
+            finally
+            {
+                Console.WriteLine("Programme returned...Press any key to exit.");
             }
 
         }

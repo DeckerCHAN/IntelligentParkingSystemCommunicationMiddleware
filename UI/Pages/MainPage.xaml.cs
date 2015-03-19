@@ -8,8 +8,8 @@ namespace IPSCM.UI.Pages
     /// </summary>
     public partial class MainPage : Page
     {
-        private Page ParkPage { get; set; }
-        private Page TicketPage { get; set; }
+        public ParkingStatisticsPage ParkPage { get; private set; }
+        public TicketUsageStatisticsPage TicketPage { get; private set; }
 
         public MainPage()
         {

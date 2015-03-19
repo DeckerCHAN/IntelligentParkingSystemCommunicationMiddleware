@@ -176,11 +176,11 @@ namespace IPSCM.Persistence.Storage
             return ticket;
         }
 
-        public DataTable GetTenParkingHistory(UInt32 start)
+        public DataTable GetParkingHistoryOrderByTime(UInt32 start,UInt32 end)
         {
             var data =
                 this.DbExecuteDataSet(
-                    String.Format("select [PlateNumber],[InTime],[OutTime],[CopeMoney],[ActualMoney],[TicketId] from  ( SELECT *, ROW_NUMBER() OVER (ORDER BY [InTime]) as row FROM IPSCM.dbo.ParkRecord ) a where row>={0} and row<{1}", start, start + 10)).Tables[0];
+                    String.Format("select [PlateNumber],[InTime],[OutTime],[CopeMoney],[ActualMoney],[TicketId] from  ( SELECT *, ROW_NUMBER() OVER (ORDER BY [InTime]) as row FROM IPSCM.dbo.ParkRecord ) a where row>{0} and row<={1}", start, end)).Tables[0];
             return data;
         }
 

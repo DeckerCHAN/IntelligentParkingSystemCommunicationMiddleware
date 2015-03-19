@@ -12,6 +12,7 @@
     Height="694" 
     Width="1028"
     Style="{DynamicResource NativeWindowStyle}"
+    Icon="pack://siteoforigin:,,,/Resources/logo_icon.ico"
     >
     <Window.Resources>
     <ResourceDictionary>

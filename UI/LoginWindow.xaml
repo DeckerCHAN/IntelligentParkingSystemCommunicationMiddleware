@@ -5,6 +5,7 @@
         Title="LoginWindow" Height="350" Width="548"
         WindowStartupLocation="CenterOwner"
         Style="{DynamicResource NativeWindowStyle}"
+        Icon="pack://siteoforigin:,,,/Resources/logo_icon.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <ResourceDictionary>

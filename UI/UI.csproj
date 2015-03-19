@@ -187,6 +187,9 @@
     <Content Include="Resources\logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\logo_icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\page_input.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

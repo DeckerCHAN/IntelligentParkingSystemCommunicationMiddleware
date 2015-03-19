@@ -21,17 +21,15 @@ namespace IPSCM.UI.Pages
         public ParkingStatisticsPage()
         {
             this.Config=Configuration.FileConfig.FindConfig("GUI.cfg");
-            this.DataUpdateTimer = new Timer(Config.GetDouble("DataUpdateInterval"));
-            this.ParkingStatistics = new DataTable();
+             this.ParkingStatistics = new DataTable();
             this.DataContext = this;
             this.InitializeComponent();
             this.StatisticsData.ItemsSource = this.ParkingStatistics.AsDataView();
             this.CurrentPage = 1;
             this.ParkingCount = 3;
             this.ParkingIncome = 15;
-           // this.DataUpdateTimer.Start();
         }
-        private Timer DataUpdateTimer;
+
         private Configuration.Config Config;
 
         public String PageTitle
@@ -102,12 +100,7 @@ namespace IPSCM.UI.Pages
 
         private void ParkingStatisticsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-        }
 
-        private void JumpToPageButton_OnClick(object sender, RoutedEventArgs e)
-        {
-
-            new PopupWindow(Window.GetWindow(this), "Current_page", this.CurrentPage.ToString()).ShowDialog();
         }
     }
 }

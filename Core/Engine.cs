@@ -13,7 +13,7 @@ using IPSCM.UI;
 
 namespace IPSCM.Core
 {
-    public class Engine 
+    public class Engine
     {
         private static Engine _instance;
 
@@ -56,8 +56,10 @@ namespace IPSCM.Core
             Log.Info("Engine started!");
             this.UiControl.Dispatcher.BeginInvoke(new Action(() =>
             {
-                this.UiControl.MainWindow.Show();
-                this.UiControl.LoginWindow.Owner = this.UiControl.MainWindow;
+                this.UiControl.MajorWindow.Show();
+                this.UiControl.MajorWindow.MainPage.ParkPage.StatisticsData.ItemsSource =
+                    this.Storage.GetParkingHistoryOrderByTime(0,10).DefaultView;
+                this.UiControl.LoginWindow.Owner = this.UiControl.MajorWindow;
                 this.UiControl.LoginWindow.ShowDialog();
             }));
             this.UiControl.Run();
@@ -86,7 +88,7 @@ namespace IPSCM.Core
                         o.copeMoney, o.actualMoney, o.TicketId, o.Response.OutputStream));
                 };
             this.F3Gate.OnSurplusSpaceUpdate +=
-                (i, o) => { this.TransactionPool.AddBeforeExecute(new SurplusSpaceUpdateTransaction(o.SurplusSpace,o.Response.OutputStream)); };
+                (i, o) => { this.TransactionPool.AddBeforeExecute(new SurplusSpaceUpdateTransaction(o.SurplusSpace, o.Response.OutputStream)); };
             this.CloudParking.OnHeartBeat +=
                 (i, o) => { this.TransactionPool.AddBeforeExecute(new HeartBeatTransaction(o.HeartBeatResult)); };
             this.F3Gate.OnCouponNeed +=
@@ -95,6 +97,13 @@ namespace IPSCM.Core
                     this.TransactionPool.AddBeforeExecute(new ExtractCouponTransaction(o.PlateNumber,
                         o.Response.OutputStream));
                 };
+            this.UiControl.MajorWindow.MainPage.ParkPage.JumpToPageButton.Click+= (i, o) =>
+            {
+                var page = this.UiControl.MajorWindow.MainPage.ParkPage.CurrentPage;
+                var start = page*10 - 10;
+                this.UiControl.MajorWindow.MainPage.ParkPage.StatisticsData.ItemsSource =
+    this.Storage.GetParkingHistoryOrderByTime(start,start+10).DefaultView;
+            };
         }
 
         #region fields

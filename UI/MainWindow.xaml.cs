@@ -11,8 +11,8 @@ namespace IPSCM.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Page MainPage { get; set; }
-        private Page AboutPage { get; set; }
+        public MainPage MainPage { get;private set; }
+        public AboutPage AboutPage { get; private set; }
 
         public MainWindow()
         {
