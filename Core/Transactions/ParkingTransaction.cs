@@ -56,6 +56,12 @@ namespace IPSCM.Core.Transactions
                 catch (Exception ex)
                 {
                     Log.Error("Parking Transaction encountered a exception", ex);
+                    this.Status=TransactionStatus.Errored;
+                }
+                finally
+                {
+                    this.ResponseStream.Flush();
+                    this.ResponseStream.Close();
                 }
             });
         }

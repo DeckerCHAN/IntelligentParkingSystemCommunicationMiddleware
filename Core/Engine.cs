@@ -58,7 +58,7 @@ namespace IPSCM.Core
             {
                 this.UiControl.MajorWindow.Show();
                 this.UiControl.MajorWindow.MainPage.ParkPage.StatisticsData.ItemsSource =
-                    this.Storage.GetParkingHistoryOrderByTime(0,10).DefaultView;
+                    this.Storage.GetParkingHistoryOrderByTime(0, 10).DefaultView;
                 this.UiControl.LoginWindow.Owner = this.UiControl.MajorWindow;
                 this.UiControl.LoginWindow.ShowDialog();
             }));
@@ -97,12 +97,17 @@ namespace IPSCM.Core
                     this.TransactionPool.AddBeforeExecute(new ExtractCouponTransaction(o.PlateNumber,
                         o.Response.OutputStream));
                 };
-            this.UiControl.MajorWindow.MainPage.ParkPage.JumpToPageButton.Click+= (i, o) =>
+            this.F3Gate.OnImageUpdate +=
+                (i, o) =>
+                {
+                    this.TransactionPool.AddBeforeExecute(new ImageUpdateTransaction(o.PlateNumber, o.Time, o.Type, o.Image, o.Response.OutputStream));
+                };
+            this.UiControl.MajorWindow.MainPage.ParkPage.JumpToPageButton.Click += (i, o) =>
             {
                 var page = this.UiControl.MajorWindow.MainPage.ParkPage.CurrentPage;
-                var start = page*10 - 10;
+                var start = page * 10 - 10;
                 this.UiControl.MajorWindow.MainPage.ParkPage.StatisticsData.ItemsSource =
-    this.Storage.GetParkingHistoryOrderByTime(start,start+10).DefaultView;
+    this.Storage.GetParkingHistoryOrderByTime(start, start + 10).DefaultView;
             };
         }
 

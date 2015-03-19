@@ -24,6 +24,7 @@ namespace IPSCM.Protocol.Gates
 
     public delegate void UpdateSurplusSpaceEventhandler(object sender, UpdateSurplusSpaceEventArgs arg);
 
+    public delegate void ImageUpdateEventhandler(object sender, ImageUpdateEventArgs args);
     public class F3Gate : ControllableObject, IReceive
     {
         private readonly HttpListener Listener;
@@ -40,10 +41,13 @@ namespace IPSCM.Protocol.Gates
             this.IsDebug = this.Config.GetBoolean("IsDebug");
             this.PortNumber = this.Config.GetUInt("Port");
             this.LocalHost = this.Config.GetString("LocalHost");
+            //Init urls
             this.ParkingUrl = this.Config.GetString("ParkingUrl");
             this.LeavingUrl = this.Config.GetString("LeavingUrl");
             this.CouponReceiveUrl = Config.GetString("CouponReceiveUrl");
             this.UpdateUrl = Config.GetString("UpdateUrl");
+            this.ImageUpdateUrl = Config.GetString("IMAGEUPDATE");
+            //Register http window
             this.RegisterHttp(this.LocalHost, this.PortNumber);
             this.Listener = new HttpListener();
             this.Listener.Prefixes.Add(String.Format("http://{0}:{1}/", this.LocalHost, this.PortNumber));
@@ -57,12 +61,14 @@ namespace IPSCM.Protocol.Gates
         private String LeavingUrl { get; set; }
         private String CouponReceiveUrl { get; set; }
         private String UpdateUrl { get; set; }
+        private String ImageUpdateUrl { get; set; }
         public Boolean IsDebug { get; private set; }
         public event ReceiveEventHandler OnReceived;
         public event ParkingEventHandler OnParking;
         public event LeavingEventhandler OnLeaving;
         public event CouponEventHandler OnCouponNeed;
         public event UpdateSurplusSpaceEventhandler OnSurplusSpaceUpdate;
+        public event ImageUpdateEventhandler OnImageUpdate;
 
         public void F3Gate_OnReceived(object sender, HttpDataEventArgs arg)
         {
@@ -103,11 +109,11 @@ namespace IPSCM.Protocol.Gates
             {
                 foreach (var key in stringContent.Keys)
                 {
-                    Log.Info(String.Format("Key:{0} Value:{1}",key,stringContent[key]));
+                    Log.Info(String.Format("Key:{0} Value:{1}", key, stringContent[key]));
                 }
                 foreach (var key in binaryContent.Keys)
                 {
-                    Log.Info(String.Format("Key:{0} BinaryLength:{1}",key,binaryContent[key].Length));
+                    Log.Info(String.Format("Key:{0} BinaryLength:{1}", key, binaryContent[key].Length));
                 }
             }
             //Switch urls
@@ -158,11 +164,22 @@ namespace IPSCM.Protocol.Gates
                             new UpdateSurplusSpaceEventArgs(arg.Request, arg.Response,
                                 UInt16.Parse(stringContent[this.Config.GetString("SURPLUSSPACE")])));
                 }
+                else if (url.Equals(this.UpdateUrl))
+                {
+                    var trigger = this.OnImageUpdate;
+                    if(trigger!=null)
+                        trigger(this, new ImageUpdateEventArgs(arg.Request, arg.Response, 
+                            stringContent[this.Config.GetString("PlateNumber")], 
+                            stringContent[this.Config.GetString("ImageTime")],
+                            binaryContent[this.Config.GetString("Image")],
+                            stringContent[this.Config.GetString("ImageType")]
+                            ));
+                }
                 else
                 {
                     arg.Response.OutputStream.Close();
 
-                    throw new ArgumentException(String.Format("Can not find url {0}", arg.Request.Url));
+                    throw new ArgumentException(String.Format("Can not distinguish url {0}", arg.Request.Url));
                 }
             }
             catch (KeyNotFoundException)
@@ -189,7 +206,7 @@ namespace IPSCM.Protocol.Gates
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Can not start F3 gate!",ex);
+                    Log.Error("Can not start F3 gate!", ex);
                     return;
                 }
 

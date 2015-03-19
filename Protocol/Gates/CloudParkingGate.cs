@@ -173,6 +173,18 @@ namespace IPSCM.Protocol.Gates
             return result;
         }
 
+        public Result ImageUpload(String plateNumber, String time, String type, Byte[] image)
+        {
+            var stringData = new Dictionary<string, string>();
+            var binaryData = new Dictionary<String, Byte[]>();
+            stringData.Add(Config.GetString("PlateNumber"), plateNumber);
+            stringData.Add(Config.GetString("IMAGETIME"), time);
+            stringData.Add(Config.GetString("IMAGETYPE"), type);
+            binaryData.Add(Config.GetString("IMAGE"), image);
+            var response = this.Send(this.Config.GetString("IMAGEUPDATEURL"), stringData, binaryData);
+            var result = IPSCMJsonConvert.Parse<Result>(response);
+            return result;
+        }
         private String GetSign(Dictionary<String, String> data)
         {
             var sum = new StringBuilder();

@@ -21,8 +21,8 @@ namespace IPSCM.Core.Transactions
                 try
                 {
 
-                        Engine.GetEngine().UiControl.LoginWindow.ResultString = "Processing";
-                        Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = false;
+                    Engine.GetEngine().UiControl.LoginWindow.ResultString = "Processing";
+                    Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = false;
 
                     var name = userName.Clone().ToString();
                     //TODO:Temporarily do not encode
@@ -32,21 +32,23 @@ namespace IPSCM.Core.Transactions
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                        {
-                            //Success
+                            {
+                                //Success
 
-                            this.LoginSuccess(result);
-                            break;
-                        }
+                                this.LoginSuccess(result);
+                                break;
+                            }
                         default:
-                        {
-                            //Fault
-                            Log.Error(String.Format("Cloud parking failer. Cause:{0} Error code:{1}",
-                                result.ErrorMsg, result.ResultCode));
-                            this.LoginFailure(result.ResultCode, result.ErrorMsg);
-                            break;
-                        }
+                            {
+                                //Fault
+                                Log.Error(String.Format("Cloud parking failer. Cause:{0} Error code:{1}",
+                                    result.ErrorMsg, result.ResultCode));
+                                this.LoginFailure(result.ResultCode, result.ErrorMsg);
+                                break;
+                            }
                     }
+
+                    this.Status = TransactionStatus.Exhausted;
                 }
                 catch (Exception ex)
                 {
@@ -54,7 +56,6 @@ namespace IPSCM.Core.Transactions
                     this.Status = TransactionStatus.Errored;
                 }
 
-                this.Status = TransactionStatus.Exhausted;
             });
         }
 
@@ -78,7 +79,7 @@ namespace IPSCM.Core.Transactions
             {
                 Engine.GetEngine().UiControl.LoginWindow.ResultString = "Success";
                 Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = true;
-                Engine.GetEngine().UiControl.LoginWindow.Visibility=Visibility.Collapsed;
+                Engine.GetEngine().UiControl.LoginWindow.Visibility = Visibility.Collapsed;
             }));
 
             Engine.GetEngine().F3Gate.Start();

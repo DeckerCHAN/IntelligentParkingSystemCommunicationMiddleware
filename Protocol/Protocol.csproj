@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="EventArgs\CouponEventArgs.cs" />
     <Compile Include="EventArgs\HeartBeatEventArgs.cs" />
+    <Compile Include="EventArgs\ImageUpdateEventArgs.cs" />
     <Compile Include="EventArgs\LeavingEventArgs.cs" />
     <Compile Include="EventArgs\LoginEvenArgs.cs" />
     <Compile Include="EventArgs\ParkingEventArgs.cs" />
