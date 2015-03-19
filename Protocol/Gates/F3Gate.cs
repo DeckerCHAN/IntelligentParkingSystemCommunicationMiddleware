@@ -164,7 +164,7 @@ namespace IPSCM.Protocol.Gates
                             new UpdateSurplusSpaceEventArgs(arg.Request, arg.Response,
                                 UInt16.Parse(stringContent[this.Config.GetString("SURPLUSSPACE")])));
                 }
-                else if (url.Equals(this.UpdateUrl))
+                else if (url.Equals(this.ImageUpdateUrl))
                 {
                     var trigger = this.OnImageUpdate;
                     if(trigger!=null)
