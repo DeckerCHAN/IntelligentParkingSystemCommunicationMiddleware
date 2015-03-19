@@ -39,34 +39,29 @@ namespace IPSCM.Core.Transactions
                     {
                         Log.Info(String.Format("Leave started[+0ms]"));
                     }
-                    //Storage messages
-                    this.RecordId = Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, this.OutTime);
+                    //Pre-Storage messages and get record id
+                    this.RecordId = Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, this.OutTime,this.CopeMoney,this.ActualMoney,this.TicketId);
                     if (this.FullOutput)
                     {
                         Log.Info(String.Format("Leave pre-leaved[+{0}ms]", (DateTime.Now - start).TotalMilliseconds));
                     }
+                    //Calculate action
+                    var successfullyChargedByUserBalance = this.RecordId != 0 &&Engine.GetEngine().Storage.TryDeductBalance(this.PlateNumber,this.ActualMoney);
+                                                Log.Info(String.Format("Leave Educted Balance[+{0}ms]",
+                                (DateTime.Now - start).TotalMilliseconds));
+
+                   
+     
+                    
                     //Response F3!
                     var json = String.Empty;
-                    if (this.RecordId == 0)
+                    if (successfullyChargedByUserBalance)
                     {
                         json =
                             IPSCMJsonConvert.ConvertToJson(new Result
                          {
                              ResultCode = ResultCode.SuccessButInsufficientFunds
                          });
-                    }
-                    else if (Engine.GetEngine().Storage.TryDeductBalance(this.PlateNumber, this.ActualMoney))
-                    {
-                        if (this.FullOutput)
-                        {
-                            Log.Info(String.Format("Leave Educted Balance[+{0}ms]",
-                                (DateTime.Now - start).TotalMilliseconds));
-                        }
-                        json =
-                            IPSCMJsonConvert.ConvertToJson(new Result
-                            {
-                                ResultCode = ResultCode.Success
-                            });
                     }
                     else
                     {
@@ -84,7 +79,7 @@ namespace IPSCM.Core.Transactions
                         Log.Info(String.Format("Leave responded to F3[+{0}ms]", (DateTime.Now - start).TotalMilliseconds));
                     }
                     //Used ticket
-                    if (TicketId != 0)
+                    if (successfullyChargedByUserBalance&& this.TicketId != 0)
                     {
                         Engine.GetEngine().Storage.UsedTicket(ticketId, outTime);
                     }
@@ -95,8 +90,13 @@ namespace IPSCM.Core.Transactions
                     }
 
                     //Send message to cloud
-                    // Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, OutTime);
-                    var result = Engine.GetEngine()
+                    if (!successfullyChargedByUserBalance)
+                    {
+                        this.CopeMoney = 0;
+                        this.TicketId = 0;
+                        this.ActualMoney = 0;
+                    }
+                     var result = Engine.GetEngine()
                         .CloudParking.Leaving(this.RecordId, this.PlateNumber, this.OutTime, this.OutImg, this.CopeMoney,
                             this.ActualMoney, this.TicketId);
                     if (this.FullOutput)
@@ -140,7 +140,7 @@ namespace IPSCM.Core.Transactions
         public Byte[] OutImg { get; private set; }
         public Decimal CopeMoney { get; private set; }
         public Decimal ActualMoney { get; private set; }
-        public UInt64 TicketId { get; private set; }
+        public UInt32 TicketId { get; private set; }
         private Config JsonConfig { get; set; }
         private Boolean FullOutput { get; set; }
 

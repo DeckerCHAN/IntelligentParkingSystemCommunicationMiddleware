@@ -50,7 +50,10 @@ namespace IPSCM.Persistence.Storage
         {
             this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.ParkRecord set RecordId='{0}' where Id='{1}'",
                 result.Info.RecordId, Id));
-
+            if (result.Info.UserId == 0)
+            {
+                return;
+            }
             this.DbExecuteNonQuery(String.Format
                 (
                     @"if exists( select * from IPSCM.dbo.Users where UserId = '{0}')
@@ -92,20 +95,20 @@ namespace IPSCM.Persistence.Storage
             }
         }
 
-        public UInt32 PreCarLeave(String plateNumber, DateTime leaveTime)
+        public UInt32 PreCarLeave(String plateNumber, DateTime leaveTime,Decimal copeMoney,Decimal actualMoney,UInt32 ticketId)
         {
             var record = this.DbExecuteScalar(String.Format(
              @"if exists (select * from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL )
             begin
             
             select Top 1 [RecordId] from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL order by [InTime] desc
-            update IPSCM.dbo.ParkRecord set OutTime='{1}' where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL and [RecordId] in (select Top 1 [RecordId] from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL order by [InTime] desc) 
+            update IPSCM.dbo.ParkRecord set [OutTime]='{1}',[CopeMoney]='{3}',[ActualMoney]='{4}',[TicketId]='{5}' where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL and [RecordId] in (select Top 1 [RecordId] from IPSCM.dbo.ParkRecord where PlateNumber=N'{0}' and OutTime is NULL and InTime is not NULL order by [InTime] desc) 
             end
             else
             begin
-            insert into IPSCM.dbo.ParkRecord([Id],[RecordId],[PlateNumber],[InTime],[OutTime]) values ('{2}',NULL,N'{0}',NULL,'{1}')
+            insert into IPSCM.dbo.ParkRecord([Id],[RecordId],[PlateNumber],[InTime],[OutTime],[CopeMoney],[ActualMoney],[TicketId]) values ('{2}',NULL,N'{0}',NULL,'{1}','{3}','{4}','{5}')
             select '0'
-            end", plateNumber, leaveTime.ToString("yyyy-MM-dd HH:mm:ss"), Guid.NewGuid().ToString("D")));
+            end", plateNumber, leaveTime.ToString("yyyy-MM-dd HH:mm:ss"), Guid.NewGuid().ToString("D"),copeMoney,actualMoney,ticketId));
             UInt32 result;
             if (!UInt32.TryParse(record.ToString(), out result))
             {
