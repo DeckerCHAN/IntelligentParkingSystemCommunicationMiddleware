@@ -44,9 +44,9 @@
                         Style="{StaticResource PageSelectButon}" Click="DataStatistics_Click"
                         ></RadioButton>
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                        <Label Width="83" FontSize="18" Foreground="White" Content="{x:Static local:Resources.CheckUpdate}" Margin="0,-3,0,0"  ></Label>
+                        <Button x:Name="CheckUpdateButton" x:FieldModifier="public" Width="83" FontSize="18" Foreground="White" Content="{x:Static local:Resources.CheckUpdate}" Margin="0,-3,0,0"  Style="{DynamicResource BannerButton}"></Button>
                         <RadioButton x:Name="AboutUsRadioButton" Width="83" FontSize="18" Foreground="White" Content="{x:Static local:Resources.AboutUs}" GroupName="PageSelect" Style="{StaticResource PageSelectButon}" Margin="24,0,0,0" Checked="AboutUsRadioButton_Checked"/>
-                        <Label Width="50" FontSize="18" Foreground="White" Content="{x:Static local:Resources.Exit}"   Margin="24,-3,0,0"></Label>
+                        <Button x:Name="ExitButton" Width="50" x:FieldModifier="public"  FontSize="18" Foreground="White" Content="{x:Static local:Resources.Exit}"   Margin="24,-3,0,0" Style="{DynamicResource BannerButton}"></Button>
                     </StackPanel>
 
 

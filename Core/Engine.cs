@@ -35,10 +35,12 @@ namespace IPSCM.Core
         private void Exit()
         {
             Log.Info("Stoping Engine");
+            this.UiControl.Shutdown();
             foreach (var fileConfig in FileConfig.FileConfigs.Values)
             {
                 fileConfig.SaveToFile();
             }
+            Log.Info("All config saved!");
             this.F3Gate.Stop();
             this.CloudParking.Stop();
             this.TransactionPool.Dispose();
@@ -50,15 +52,27 @@ namespace IPSCM.Core
             this.Storage.Initialize();
             this.TransactionPool.WipeThread.Start();
             Log.Info(String.Format("Engine starting running(version:{0})...",
-                Assembly.GetEntryAssembly().GetName().Version));
+                Assembly.GetAssembly(this.GetType()).GetName().Version));
             //F3Gate would start after successful log in.
             this.CloudParking.Start();
             Log.Info("Engine started!");
             this.UiControl.Dispatcher.BeginInvoke(new Action(() =>
             {
                 this.UiControl.MajorWindow.Show();
-                this.UiControl.MajorWindow.MainPage.ParkPage.StatisticsData.ItemsSource =
-                    this.Storage.GetParkingHistoryOrderByTime(0, 10).DefaultView;
+                this.UiControl.MajorWindow.MainPage.ParkPage.RefreshData
+                    (
+                    this.Storage.GetTodayIncome(),
+                    this.Storage.GetTodayParkingCount(),
+                    this.Storage.GetMaxRecordPageNumber(10),
+                    this.Storage.GetParkingHistoryOrderByInTime(0, 10).DefaultView
+
+                    );
+                this.UiControl.MajorWindow.MainPage.TicketPage.RefreshDataView
+                    (
+                       this.Storage.GetTodayUsedTicket(),
+                       this.Storage.GetMaxTicketPageNumber(10),
+                       this.Storage.GetTicketUsageHistoryOrderByUesTime(0, 10).DefaultView
+                    );
                 this.UiControl.LoginWindow.Owner = this.UiControl.MajorWindow;
                 this.UiControl.LoginWindow.ShowDialog();
             }));
@@ -67,7 +81,6 @@ namespace IPSCM.Core
 
         private void RegisterEvents()
         {
-            this.UiControl.Exit += (i, o) => { this.Exit(); };
             this.UiControl.LoginWindow.LoginButton.Click +=
                 (i, o) =>
                 {
@@ -106,8 +119,35 @@ namespace IPSCM.Core
             {
                 var page = this.UiControl.MajorWindow.MainPage.ParkPage.CurrentPage;
                 var start = page * 10 - 10;
-                this.UiControl.MajorWindow.MainPage.ParkPage.StatisticsData.ItemsSource =
-    this.Storage.GetParkingHistoryOrderByTime(start, start + 10).DefaultView;
+                var end = start + 10;
+                this.UiControl.MajorWindow.MainPage.ParkPage.RefreshData
+                    (
+                    this.Storage.GetTodayIncome(),
+                    this.Storage.GetTodayParkingCount(),
+                    this.Storage.GetMaxRecordPageNumber(10),
+                    this.Storage.GetParkingHistoryOrderByInTime(0, 10).DefaultView
+
+                    );
+            };
+            this.UiControl.MajorWindow.MainPage.TicketPage.JumpToPageButton.Click += (i, o) =>
+            {
+                var page = this.UiControl.MajorWindow.MainPage.TicketPage.CurrentPage;
+                var start = page * 10 - 10;
+                var end = start + 10;
+                this.UiControl.MajorWindow.MainPage.TicketPage.RefreshDataView
+                (
+                   this.Storage.GetTodayUsedTicket(),
+                   this.Storage.GetMaxTicketPageNumber(10),
+                   this.Storage.GetTicketUsageHistoryOrderByUesTime(start, end).DefaultView
+                );
+            };
+            this.UiControl.MajorWindow.CheckUpdateButton.Click += (i, o) =>
+            {
+                new PopupWindow(this.UiControl.MainWindow, UI.Properties.Resources.CheckUpdate, "Not supported!").Show();
+            };
+            this.UiControl.MajorWindow.ExitButton.Click += (i, o) =>
+            {
+                this.Exit();
             };
         }
 

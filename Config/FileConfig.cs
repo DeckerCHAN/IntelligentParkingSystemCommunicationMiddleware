@@ -35,7 +35,7 @@ namespace IPSCM.Configuration
 
                     if (String.IsNullOrEmpty(key) || String.IsNullOrEmpty(value))
                     {
-                        throw new FormatException(String.Format("Encountered a mistake during split line:{0}", line));
+                        throw new FormatException(String.Format("Encountered a mistake during split file {0} line:{1}",ConfigFile.Name, line));
                     }
                     this.Set(key, value);
                 }

@@ -12,7 +12,7 @@ namespace Tests
         private static void Main(string[] args)
         {
             DataPool dp=new DataPool();
-            var res = dp.GetParkingHistoryOrderByTime(0,1);
+            var res = dp.GetParkingHistoryOrderByInTime(0,1);
             foreach (DataRow row in res.Rows)
             {
                 foreach (DataColumn column in res.Columns)

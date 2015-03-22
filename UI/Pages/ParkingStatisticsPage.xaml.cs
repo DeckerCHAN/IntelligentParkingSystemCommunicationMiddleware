@@ -16,7 +16,7 @@ namespace IPSCM.UI.Pages
         private UInt32 CurrentPageValue;
         private UInt32 MaxPageValue;
         private UInt64 ParkingCountValue;
-        private ulong ParkingIncomeValue;
+        private Decimal ParkingIncomeValue;
 
         public ParkingStatisticsPage()
         {
@@ -40,7 +40,7 @@ namespace IPSCM.UI.Pages
                     this.ParkingIncome);
             }
         }
-        public UInt64 ParkingIncome
+        public Decimal ParkingIncome
         {
             get { return this.ParkingIncomeValue; }
             set
@@ -101,6 +101,14 @@ namespace IPSCM.UI.Pages
         private void ParkingStatisticsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void RefreshData(Decimal ParkingIncome,UInt32 ParkingCount,UInt32 maxPage,DataView gridDataView)
+        {
+            this.ParkingIncome = ParkingIncome;
+            this.ParkingCount = ParkingCount;
+            this.MaxPage = maxPage;
+            this.StatisticsData.ItemsSource = gridDataView;
         }
     }
 }

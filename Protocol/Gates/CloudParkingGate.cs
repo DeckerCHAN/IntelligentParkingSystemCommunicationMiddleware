@@ -91,10 +91,21 @@ namespace IPSCM.Protocol.Gates
 
         public override void Stop()
         {
-            Log.Info("CloudParking Stoping...");
-            base.Stop();
-            this.TickThread.Interrupt();
-            Log.Info("CloudParking Stopped");
+            try
+            {
+                if (this.RunningStatus != GateStatus.Started) return;
+                Log.Info("CloudParking Stoping...");
+                base.Stop();
+                this.TickThread.Interrupt();
+                Log.Info("CloudParking Stopped");
+            }
+            catch (Exception ex)
+            {
+
+                Log.Error("Cloud park gate did not stopped!", ex);
+                //ignore
+            }
+
         }
 
         public LoginResult LogIn(String userName, String password)

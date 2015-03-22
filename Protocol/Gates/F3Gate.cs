@@ -167,9 +167,9 @@ namespace IPSCM.Protocol.Gates
                 else if (url.Equals(this.ImageUpdateUrl))
                 {
                     var trigger = this.OnImageUpdate;
-                    if(trigger!=null)
-                        trigger(this, new ImageUpdateEventArgs(arg.Request, arg.Response, 
-                            stringContent[this.Config.GetString("PlateNumber")], 
+                    if (trigger != null)
+                        trigger(this, new ImageUpdateEventArgs(arg.Request, arg.Response,
+                            stringContent[this.Config.GetString("PlateNumber")],
                             stringContent[this.Config.GetString("ImageTime")],
                             binaryContent[this.Config.GetString("Image")],
                             stringContent[this.Config.GetString("ImageType")]
@@ -249,11 +249,20 @@ namespace IPSCM.Protocol.Gates
 
         public override void Stop()
         {
-            if (this.RunningStatus != GateStatus.Started) return;
-            Log.Info("F3 stoping...");
-            this.Listener.Stop();
-            this.ListenThread.Interrupt();
-            Log.Info("F3 stopped");
+            try
+            {
+                if (this.RunningStatus != GateStatus.Started) return;
+                Log.Info("F3 stoping...");
+                this.Listener.Stop();
+                this.ListenThread.Interrupt();
+                Log.Info("F3 stopped");
+            }
+            catch (Exception ex)
+            {
+                Log.Error("F3 did not stopped!", ex);
+                //ignore
+            }
+
         }
 
         private void RegisterHttp(String domain, UInt32 port)

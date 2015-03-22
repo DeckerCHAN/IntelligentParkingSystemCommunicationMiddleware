@@ -14,6 +14,7 @@ namespace IPSCM.UI.Pages
     {
         private UInt32 CurrentPageValue;
         private uint TicketUsedSummaryValue;
+        private UInt32 MaxPageValue;
         private DataTable TicketUseStatisticsValue;
 
         public String PageTitle
@@ -51,17 +52,27 @@ namespace IPSCM.UI.Pages
             set
             {
                 this.TicketUseStatisticsValue = value;
-                if (this.StatisticsData!=null) this.StatisticsData.ItemsSource = this.TicketUseStatistics.AsDataView();
+                if (this.StatisticsData != null) this.StatisticsData.ItemsSource = this.TicketUseStatistics.AsDataView();
                 this.OnPropertyChanged("TicketUseStatistics");
             }
         }
-
+        public UInt32 MaxPage
+        {
+            get { return this.MaxPageValue; }
+            set
+            {
+                this.MaxPageValue = value;
+                this.OnPropertyChanged("MaxPage");
+            }
+        }
         public TicketUsageStatisticsPage()
         {
             this.TicketUseStatistics = new DataTable();
             this.DataContext = this;
             this.InitializeComponent();
-             this.TicketUsedSummary = 0;
+            this.MaxPage = 1;
+            this.CurrentPage = 1;
+            this.TicketUsedSummary = 0;
 
         }
 
@@ -77,7 +88,13 @@ namespace IPSCM.UI.Pages
 
         private void SearchButton_OnClick(object sender, RoutedEventArgs e)
         {
-            
+
+        }
+        public void RefreshDataView(UInt32 ticketUsedSummary,UInt32 maxPage,DataView gridDataView)
+        {
+            this.TicketUsedSummary = ticketUsedSummary;
+            this.MaxPage = maxPage;
+            this.StatisticsData.ItemsSource = gridDataView;
         }
     }
 }
