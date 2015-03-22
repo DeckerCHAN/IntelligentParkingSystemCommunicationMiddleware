@@ -12,7 +12,7 @@ using IPSCM.Utils;
 
 #endregion
 
-namespace IPSCM.Persistence.Storage
+namespace IPSCM.Persistence
 {
     public class DataPool
     {

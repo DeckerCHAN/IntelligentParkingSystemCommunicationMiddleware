@@ -5,8 +5,8 @@ using System.Reflection;
 using IPSCM.Configuration;
 using IPSCM.Core.Transactions;
 using IPSCM.Logging;
+using IPSCM.Persistence;
 using IPSCM.Protocol.Gates;
-using IPSCM.Persistence.Storage;
 using IPSCM.UI;
 
 #endregion

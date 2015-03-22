@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using IPSCM.Persistence.Storage;
+using IPSCM.Persistence;
 using IPSCM.UI;
 
 
