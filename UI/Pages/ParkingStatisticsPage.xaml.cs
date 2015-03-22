@@ -12,7 +12,9 @@ namespace IPSCM.UI.Pages
     /// </summary>
     public partial class ParkingStatisticsPage : INotifyPropertyChanged
     {
+        public delegate void CurrentPageChangedEventHandler(object sender, PropertyChangedEventArgs args);
 
+        public event CurrentPageChangedEventHandler OnCurrentPageChanged;
         private UInt32 CurrentPageValue;
         private UInt32 MaxPageValue;
         private UInt64 ParkingCountValue;
@@ -20,8 +22,8 @@ namespace IPSCM.UI.Pages
 
         public ParkingStatisticsPage()
         {
-            this.Config=Configuration.FileConfig.FindConfig("GUI.cfg");
-             this.ParkingStatistics = new DataTable();
+            this.Config = Configuration.FileConfig.FindConfig("GUI.cfg");
+            this.ParkingStatistics = new DataTable();
             this.DataContext = this;
             this.InitializeComponent();
             this.StatisticsData.ItemsSource = this.ParkingStatistics.AsDataView();
@@ -103,12 +105,31 @@ namespace IPSCM.UI.Pages
 
         }
 
-        public void RefreshData(Decimal ParkingIncome,UInt32 ParkingCount,UInt32 maxPage,DataView gridDataView)
+        public void RefreshData(Decimal ParkingIncome, UInt32 ParkingCount, UInt32 maxPage, DataView gridDataView)
         {
             this.ParkingIncome = ParkingIncome;
             this.ParkingCount = ParkingCount;
             this.MaxPage = maxPage;
             this.StatisticsData.ItemsSource = gridDataView;
+        }
+
+        private void NextPageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (this.CurrentPage < this.MaxPage)
+                this.CurrentPage++;
+        }
+
+        private void LastPageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (this.CurrentPage > 1)
+                this.CurrentPage--;
+        }
+
+        private void JumpToPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            UInt32 val;
+            UInt32.TryParse(this.PageJumpTextBox.Text, out val);
+            this.CurrentPage = val;
         }
     }
 }

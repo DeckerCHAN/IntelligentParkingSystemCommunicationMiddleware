@@ -96,5 +96,24 @@ namespace IPSCM.UI.Pages
             this.MaxPage = maxPage;
             this.StatisticsData.ItemsSource = gridDataView;
         }
+
+        private void NextPageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (this.CurrentPage < this.MaxPage)
+                this.CurrentPage++;
+        }
+
+        private void LastPageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (this.CurrentPage > 1)
+                this.CurrentPage--;
+        }
+
+        private void JumpToPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            UInt32 val;
+            UInt32.TryParse(this.PageJumpTextBox.Text, out val);
+            this.CurrentPage = val;
+        }
     }
 }
