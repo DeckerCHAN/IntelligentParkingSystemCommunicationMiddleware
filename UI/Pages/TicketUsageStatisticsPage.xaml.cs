@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using IPSCM.UI.Annotations;
@@ -15,7 +16,34 @@ namespace IPSCM.UI.Pages
         private UInt32 CurrentPageValue;
         private uint TicketUsedSummaryValue;
         private UInt32 MaxPageValue;
-        private DataTable TicketUseStatisticsValue;
+
+        public TicketUsageStatisticsPage()
+        {
+            this.TicketUseStatisticsData = new DataTable();
+            this.DataContext = this;
+            this.InitializeComponent();
+            this.PropertyChanged += TicketUsageStatisticsPage_PropertyChanged;
+            this.MaxPage = 1;
+            this.CurrentPage = 1;
+            this.TicketUsedSummary = 0;
+
+        }
+
+        void TicketUsageStatisticsPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals("CurrentPage"))
+            {
+                var start = (int)this.CurrentPage * 10 - 10;
+
+
+                var select = this.TicketUseStatisticsData.Select().Skip(start).Take(10);
+                if (@select.Any())
+                {
+                    var ds = select.CopyToDataTable();
+                    this.StatisticsData.ItemsSource = ds.DefaultView;
+                }
+            }
+        }
 
         public String PageTitle
         {
@@ -46,16 +74,8 @@ namespace IPSCM.UI.Pages
             }
         }
 
-        public DataTable TicketUseStatistics
-        {
-            get { return this.TicketUseStatisticsValue; }
-            set
-            {
-                this.TicketUseStatisticsValue = value;
-                if (this.StatisticsData != null) this.StatisticsData.ItemsSource = this.TicketUseStatistics.AsDataView();
-                this.OnPropertyChanged("TicketUseStatistics");
-            }
-        }
+        public DataTable TicketUseStatisticsData { get; set; }
+
         public UInt32 MaxPage
         {
             get { return this.MaxPageValue; }
@@ -64,16 +84,6 @@ namespace IPSCM.UI.Pages
                 this.MaxPageValue = value;
                 this.OnPropertyChanged("MaxPage");
             }
-        }
-        public TicketUsageStatisticsPage()
-        {
-            this.TicketUseStatistics = new DataTable();
-            this.DataContext = this;
-            this.InitializeComponent();
-            this.MaxPage = 1;
-            this.CurrentPage = 1;
-            this.TicketUsedSummary = 0;
-
         }
 
 
@@ -86,16 +96,16 @@ namespace IPSCM.UI.Pages
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void SearchButton_OnClick(object sender, RoutedEventArgs e)
-        {
 
-        }
-        public void RefreshDataView(UInt32 ticketUsedSummary,UInt32 maxPage,DataView gridDataView)
+        public void RefreshData(DataTable data)
         {
-            this.TicketUsedSummary = ticketUsedSummary;
-            this.MaxPage = maxPage;
-            this.StatisticsData.ItemsSource = gridDataView;
+            this.TicketUseStatisticsData = data;
+            this.CurrentPage = 1;
+            this.MaxPage = (UInt16)(((double)data.Rows.Count / 10) + 1);
+            this.TicketUsedSummary = (UInt32)data.Rows.Count;
         }
+
+
 
         private void NextPageButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -114,6 +124,16 @@ namespace IPSCM.UI.Pages
             UInt32 val;
             UInt32.TryParse(this.PageJumpTextBox.Text, out val);
             this.CurrentPage = val;
+        }
+
+        private void SearchButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            new PopupWindow(Window.GetWindow(this), "not support", "not support");
+        }
+
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

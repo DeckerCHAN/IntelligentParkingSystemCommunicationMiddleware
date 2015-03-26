@@ -184,90 +184,20 @@ namespace IPSCM.Persistence
         #endregion
         #region History
 
-        public UInt32 GetTodayParkingCount()
+        public DataTable GetTodayParking()
         {
-            var resString = this.DbExecuteScalar(String.Format(@"SELECT count(*) FROM IPSCM.dbo.ParkRecord WHERE InTime > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0)")).ToString();
-            UInt32 res;
-            if (!UInt32.TryParse(resString, out res))
-            {
-                res = 0;
-            }
-            return res;
-        }
-
-        public Decimal GetTodayIncome()
-        {
-            var resString = this.DbExecuteScalar(String.Format(@"SELECT sum([ActualMoney]) FROM IPSCM.dbo.ParkRecord WHERE InTime > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0)")).ToString();
-            Decimal res;
-            if (!Decimal.TryParse(resString, out res))
-            {
-                res = 0;
-            }
-            return res;
-        }
-
-        public UInt32 GetTodayUsedTicket()
-        {
-            var resString = this.DbExecuteScalar(String.Format(@"SELECT count(*) FROM IPSCM.dbo.Tickets WHERE [UsedTime] > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0)")).ToString();
-            UInt32 res;
-            if (!UInt32.TryParse(resString, out res))
-            {
-                res = 0;
-            }
-            return res;
-        }
-
-        public UInt16 GetMaxRecordPageNumber(UInt16 itemNumberEachPage)
-        {
-            UInt64 count;
-            var countString = this.DbExecuteScalar("select count(*) from IPSCM.dbo.ParkRecord").ToString();
-            if (!UInt64.TryParse(countString, out count))
-            {
-                count = 0;
-            }
-            var result = (UInt16) ((double) count/itemNumberEachPage);
-
-            return (ushort) (result + 1);
-        }
-
-        public UInt16 GetMaxTicketPageNumber(UInt16 itemNumberEachPage)
-        {
-            UInt64 count;
-            var countString = this.DbExecuteScalar("select count(*) from IPSCM.dbo.Tickets").ToString();
-            if (!UInt64.TryParse(countString, out count))
-            {
-                count = 0;
-            }
-            var result = (UInt16)((double)count / itemNumberEachPage);
-
-            return (ushort)(result + 1);
-        }
-
-        public DataTable GetParkingHistoryOrderByInTime(UInt32 start, UInt32 end)
-        {
-            var data =
+            return
                 this.DbExecuteDataSet(
-                    String.Format(
-                    @"select [PlateNumber] as 车牌号,[InTime] as 入场时间,[OutTime] as 出场时间,[CopeMoney] as 应收停车费,[ActualMoney] as 实收停车费,[StoreName] as 商家名称 
-                    from  
-                    (
-                    SELECT [PlateNumber],[InTime],[OutTime],[CopeMoney],[ActualMoney],[StoreName], ROW_NUMBER() OVER (ORDER BY [InTime])
-                    as row FROM IPSCM.dbo.ParkRecord left join IPSCM.dbo.Tickets on IPSCM.dbo.ParkRecord.TicketId =IPSCM.dbo.Tickets.TicketId
-                    ) a  where row>{0} and row<={1}", start, end)).Tables[0];
-            return data;
+                    "select [PlateNumber] as 车牌号,[InTime] as 入场时间,[OutTime] as 出场时间,[CopeMoney] as 应收停车费,[ActualMoney] as 实收停车费,[StoreName] as 商家名称 FROM IPSCM.dbo.ParkRecord left join IPSCM.dbo.Tickets on IPSCM.dbo.ParkRecord.TicketId =IPSCM.dbo.Tickets.TicketId WHERE InTime > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0) ")
+                    .Tables[0];
         }
 
-        public DataTable GetTicketUsageHistoryOrderByUesTime(UInt32 start, UInt32 end)
+        public DataTable GetTodayTicketUsed()
         {
-            var data =
-                this.DbExecuteDataSet(
-                    String.Format(
-                    @"select [PlateNumber] as '车牌号',[StoreName] as '商户',[Value] as '停车券',[UsedTime] as '使用时间'
-                    from  
-                    (
-                    SELECT [PlateNumber],[StoreName],[Value],[UsedTime],ROW_NUMBER() OVER (ORDER BY [UsedTime])
-                    as row FROM IPSCM.dbo.Tickets left join IPSCM.dbo.Users on IPSCM.dbo.Tickets.UserId = IPSCM.dbo.Users.UserId) a  where row>{0} and row<={1} and [UsedTime] is not null", start, end)).Tables[0];
-            return data;
+            return
+            this.DbExecuteDataSet(
+                "select [PlateNumber] as '车牌号',[StoreName] as '商户',[Value] as '停车券',[UsedTime] as '使用时间' FROM IPSCM.dbo.Tickets left join IPSCM.dbo.Users on IPSCM.dbo.Tickets.UserId = IPSCM.dbo.Users.UserId WHERE [UsedTime] > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0)")
+                .Tables[0];
         }
 
         #endregion

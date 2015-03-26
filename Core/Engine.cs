@@ -61,18 +61,12 @@ namespace IPSCM.Core
                 this.UiControl.MajorWindow.Show();
                 this.UiControl.MajorWindow.MainPage.ParkPage.RefreshData
                     (
-                    this.Storage.GetTodayIncome(),
-                    this.Storage.GetTodayParkingCount(),
-                    this.Storage.GetMaxRecordPageNumber(10),
-                    this.Storage.GetParkingHistoryOrderByInTime(0, 10).DefaultView
-
+                    this.Storage.GetTodayParking()
                     );
-                this.UiControl.MajorWindow.MainPage.TicketPage.RefreshDataView
+                this.UiControl.MajorWindow.MainPage.TicketPage.RefreshData
                     (
-                       this.Storage.GetTodayUsedTicket(),
-                       this.Storage.GetMaxTicketPageNumber(10),
-                       this.Storage.GetTicketUsageHistoryOrderByUesTime(0, 10).DefaultView
-                    );
+                  this.Storage.GetTodayTicketUsed()
+                  );
                 this.UiControl.LoginWindow.Owner = this.UiControl.MajorWindow;
                 this.UiControl.LoginWindow.ShowDialog();
             }));
@@ -115,38 +109,22 @@ namespace IPSCM.Core
                 {
                     this.TransactionPool.AddBeforeExecute(new ImageUpdateTransaction(o.PlateNumber, o.Time, o.Type, o.Image, o.Response.OutputStream));
                 };
-            this.UiControl.MajorWindow.MainPage.ParkPage.PropertyChanged += (i, o) =>
+            this.UiControl.MajorWindow.MainPage.ParkPage.RefreshButton.Click += (i, o) =>
             {
-                if (o.PropertyName.Equals("CurrentPage"))
-                {
-                    var page = this.UiControl.MajorWindow.MainPage.ParkPage.CurrentPage;
-                    var start = page * 10 - 10;
-                    var end = start + 10;
-                    this.UiControl.MajorWindow.MainPage.ParkPage.RefreshData
-                        (
-                        this.Storage.GetTodayIncome(),
-                        this.Storage.GetTodayParkingCount(),
-                        this.Storage.GetMaxRecordPageNumber(10),
-                        this.Storage.GetParkingHistoryOrderByInTime(start, end).DefaultView
+                this.UiControl.MajorWindow.MainPage.ParkPage.RefreshData
+                (
+                this.Storage.GetTodayParking()
+                );
+            };
 
-                        );
-                }
-            };
-            this.UiControl.MajorWindow.MainPage.TicketPage.PropertyChanged += (i, o) =>
+            this.UiControl.MajorWindow.MainPage.TicketPage.RefreshButton.Click += (i, o) =>
             {
-                if (o.PropertyName.Equals("CurrentPage"))
-                {
-                    var page = this.UiControl.MajorWindow.MainPage.TicketPage.CurrentPage;
-                    var start = page * 10 - 10;
-                    var end = start + 10;
-                    this.UiControl.MajorWindow.MainPage.TicketPage.RefreshDataView
-                    (
-                       this.Storage.GetTodayUsedTicket(),
-                       this.Storage.GetMaxTicketPageNumber(10),
-                       this.Storage.GetTicketUsageHistoryOrderByUesTime(start, end).DefaultView
+                this.UiControl.MajorWindow.MainPage.TicketPage.RefreshData
+                      (
+                    this.Storage.GetTodayTicketUsed()
                     );
-                }
             };
+
             this.UiControl.MajorWindow.CheckUpdateButton.Click += (i, o) =>
             {
                 new PopupWindow(this.UiControl.MainWindow, UI.Properties.Resources.CheckUpdate, "Not supported!").Show();

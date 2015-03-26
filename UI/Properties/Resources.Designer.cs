@@ -337,6 +337,15 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 刷新.
+        /// </summary>
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap refresh_icon {
@@ -385,7 +394,7 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 今日共进出{0}辆车，收取停车费{1}元.
+        ///   Looks up a localized string similar to 今日共进出{0}辆车，收取停车费{1:N2}元.
         /// </summary>
         public static string TodayParkingSummaryFormater {
             get {

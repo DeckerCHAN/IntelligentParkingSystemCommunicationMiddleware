@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Timers;
 using IPSCM.UI.Annotations;
@@ -23,14 +24,17 @@ namespace IPSCM.UI.Pages
         public ParkingStatisticsPage()
         {
             this.Config = Configuration.FileConfig.FindConfig("GUI.cfg");
-            this.ParkingStatistics = new DataTable();
+            this.ParkingStatisticsData = new DataTable();
             this.DataContext = this;
             this.InitializeComponent();
-            this.StatisticsData.ItemsSource = this.ParkingStatistics.AsDataView();
+            this.PropertyChanged += ParkingStatisticsPage_PropertyChanged;
             this.CurrentPage = 1;
-            this.ParkingCount = 3;
-            this.ParkingIncome = 15;
+            this.ParkingCount = 0;
+            this.ParkingIncome = 0;
+
         }
+
+
 
         private Configuration.Config Config;
 
@@ -84,7 +88,7 @@ namespace IPSCM.UI.Pages
             }
         }
 
-        public DataTable ParkingStatistics { get; set; }
+        public DataTable ParkingStatisticsData { get; set; }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -105,12 +109,16 @@ namespace IPSCM.UI.Pages
 
         }
 
-        public void RefreshData(Decimal ParkingIncome, UInt32 ParkingCount, UInt32 maxPage, DataView gridDataView)
+        public void RefreshData(DataTable data)
         {
-            this.ParkingIncome = ParkingIncome;
-            this.ParkingCount = ParkingCount;
-            this.MaxPage = maxPage;
-            this.StatisticsData.ItemsSource = gridDataView;
+            this.ParkingStatisticsData = data;
+            this.CurrentPage = 1;
+            this.MaxPage = (UInt16)(((double)data.Rows.Count / 10) + 1);
+            Decimal val;
+            this.ParkingIncome = Decimal.TryParse(data.Compute("Sum(实收停车费)", String.Empty).ToString(), out val)
+                ? val
+                : 0;
+            this.ParkingCount = (UInt64)data.Rows.Count;
         }
 
         private void NextPageButton_OnClick(object sender, RoutedEventArgs e)
@@ -130,6 +138,33 @@ namespace IPSCM.UI.Pages
             UInt32 val;
             UInt32.TryParse(this.PageJumpTextBox.Text, out val);
             this.CurrentPage = val;
+        }
+        void ParkingStatisticsPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals("CurrentPage"))
+            {
+                var start = (int)this.CurrentPage * 10 - 10;
+
+
+                var select = this.ParkingStatisticsData.Select().Skip(start).Take(10);
+                if (@select.Any())
+                {
+                    var ds = select.CopyToDataTable();
+                    this.StatisticsData.ItemsSource = ds.DefaultView;
+                }
+
+              
+            }
+        }
+
+        private void SearchButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            new PopupWindow(Window.GetWindow(this), "not support", "not support");
+        }
+
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

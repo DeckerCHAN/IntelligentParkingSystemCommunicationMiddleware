@@ -51,7 +51,7 @@ namespace IPSCM.Core.Transactions
                             x => x.Status == TransactionStatus.Errored || x.Status == TransactionStatus.Exhausted);
                     this.Transactions.RemoveAll(
                         x => x.Status == TransactionStatus.Errored || x.Status == TransactionStatus.Exhausted);
-                    Log.Info(String.Format("Transaction pool wiped {0} transactions!", wipeCount));
+                    Log.Info(String.Format("Transaction pool wiped {0} transactions. {1} transactions left.", wipeCount, this.Transactions.Count));
                 }
                 catch (ThreadInterruptedException)
                 {

@@ -170,7 +170,7 @@
     <value>搜索</value>
   </data>
   <data name="TodayParkingSummaryFormater" xml:space="preserve">
-    <value>今日共进出{0}辆车，收取停车费{1}元</value>
+    <value>今日共进出{0}辆车，收取停车费{1:N2}元</value>
   </data>
   <data name="search_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\search_01.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -225,5 +225,8 @@
   </data>
   <data name="logo_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo_icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>刷新</value>
   </data>
 </root>

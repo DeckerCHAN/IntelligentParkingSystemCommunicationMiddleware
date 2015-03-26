@@ -11,17 +11,7 @@ namespace Tests
         [STAThread]
         private static void Main(string[] args)
         {
-            DataPool dp=new DataPool();
-            var res = dp.GetParkingHistoryOrderByInTime(0,1);
-            foreach (DataRow row in res.Rows)
-            {
-                foreach (DataColumn column in res.Columns)
-                {
-                    Console.Write(row[column]+"||");
-                }
-                Console.WriteLine();
-            }
-            //Console.ReadKey();
+            Console.ReadKey();
         }
     }
 }
