@@ -9,48 +9,29 @@ using IPSCM.UI.Annotations;
 namespace IPSCM.UI.Pages
 {
     /// <summary>
-    /// Interaction logic for TicketUsageStatisticsPage.xaml
+    ///     Interaction logic for TicketUsageStatisticsPage.xaml
     /// </summary>
     public partial class TicketUsageStatisticsPage : Page, INotifyPropertyChanged
     {
         private UInt32 CurrentPageValue;
-        private uint TicketUsedSummaryValue;
         private UInt32 MaxPageValue;
+        private String SearchKeyWordValue;
+        private UInt32 TicketUsedSummaryValue;
 
         public TicketUsageStatisticsPage()
         {
             this.TicketUseStatisticsData = new DataTable();
             this.DataContext = this;
             this.InitializeComponent();
-            this.PropertyChanged += TicketUsageStatisticsPage_PropertyChanged;
+            this.PropertyChanged += this.TicketUsageStatisticsPage_PropertyChanged;
             this.MaxPage = 1;
             this.CurrentPage = 1;
             this.TicketUsedSummary = 0;
-
-        }
-
-        void TicketUsageStatisticsPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Equals("CurrentPage"))
-            {
-                var start = (int)this.CurrentPage * 10 - 10;
-
-
-                var select = this.TicketUseStatisticsData.Select().Skip(start).Take(10);
-                if (@select.Any())
-                {
-                    var ds = select.CopyToDataTable();
-                    this.StatisticsData.ItemsSource = ds.DefaultView;
-                }
-            }
         }
 
         public String PageTitle
         {
-            get
-            {
-                return String.Format(Properties.Resources.TodayTicketUseSummaryFormater, this.TicketUsedSummary);
-            }
+            get { return String.Format(Properties.Resources.TodayTicketUseSummaryFormater, this.TicketUsedSummary); }
         }
 
         public UInt32 TicketUsedSummary
@@ -86,8 +67,37 @@ namespace IPSCM.UI.Pages
             }
         }
 
+        public String SearchKeyWord
+        {
+            get { return this.SearchKeyWordValue; }
+            set
+            {
+                this.SearchKeyWordValue = value;
+                this.OnPropertyChanged("SearchKeyWord");
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void TicketUsageStatisticsPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals("CurrentPage"))
+            {
+                var start = (int) this.CurrentPage*10 - 10;
+
+
+                var select = this.TicketUseStatisticsData.Select().Skip(start).Take(10);
+                if (@select.Any())
+                {
+                    var ds = select.CopyToDataTable();
+                    this.StatisticsData.ItemsSource = ds.DefaultView;
+                }
+                else
+                {
+                    this.StatisticsData.ItemsSource = null;
+                }
+            }
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(string propertyName)
@@ -96,16 +106,13 @@ namespace IPSCM.UI.Pages
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
         public void RefreshData(DataTable data)
         {
             this.TicketUseStatisticsData = data;
             this.CurrentPage = 1;
-            this.MaxPage = (UInt16)(((double)data.Rows.Count / 10) + 1);
-            this.TicketUsedSummary = (UInt32)data.Rows.Count;
+            this.MaxPage = (UInt16) (((double) data.Rows.Count/10) + 1);
+            this.TicketUsedSummary = (UInt32) data.Rows.Count;
         }
-
-
 
         private void NextPageButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -128,12 +135,11 @@ namespace IPSCM.UI.Pages
 
         private void SearchButton_OnClick(object sender, RoutedEventArgs e)
         {
-            new PopupWindow(Window.GetWindow(this), "not support", "not support");
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
-
+            this.SearchKeyWord = String.Empty;
         }
     }
 }

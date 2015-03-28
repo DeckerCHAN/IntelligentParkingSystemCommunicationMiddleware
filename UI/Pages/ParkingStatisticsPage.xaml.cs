@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
@@ -13,13 +14,12 @@ namespace IPSCM.UI.Pages
     /// </summary>
     public partial class ParkingStatisticsPage : INotifyPropertyChanged
     {
-        public delegate void CurrentPageChangedEventHandler(object sender, PropertyChangedEventArgs args);
 
-        public event CurrentPageChangedEventHandler OnCurrentPageChanged;
         private UInt32 CurrentPageValue;
         private UInt32 MaxPageValue;
         private UInt64 ParkingCountValue;
         private Decimal ParkingIncomeValue;
+        private string SearchKeyWorkValue;
 
         public ParkingStatisticsPage()
         {
@@ -36,7 +36,7 @@ namespace IPSCM.UI.Pages
 
 
 
-        private Configuration.Config Config;
+        private Configuration.Config Config { get; set; }
 
         public String PageTitle
         {
@@ -54,6 +54,16 @@ namespace IPSCM.UI.Pages
                 this.ParkingIncomeValue = value;
                 this.OnPropertyChanged("ParkingIncome");
                 this.OnPropertyChanged("PageTitle");
+            }
+        }
+
+        public String SearchKeyWork
+        {
+            get { return this.SearchKeyWorkValue; }
+            set
+            {
+                this.SearchKeyWorkValue = value;
+                this.OnPropertyChanged("SearchKeyWork");
             }
         }
 
@@ -89,11 +99,6 @@ namespace IPSCM.UI.Pages
         }
 
         public DataTable ParkingStatisticsData { get; set; }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.MaxPage += 1;
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -152,6 +157,10 @@ namespace IPSCM.UI.Pages
                     var ds = select.CopyToDataTable();
                     this.StatisticsData.ItemsSource = ds.DefaultView;
                 }
+                else
+                {
+                    this.StatisticsData.ItemsSource = null;
+                }
 
               
             }
@@ -159,12 +168,12 @@ namespace IPSCM.UI.Pages
 
         private void SearchButton_OnClick(object sender, RoutedEventArgs e)
         {
-            new PopupWindow(Window.GetWindow(this), "not support", "not support");
+    
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
-
+            this.SearchKeyWork = String.Empty;
         }
     }
 }

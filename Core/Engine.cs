@@ -109,6 +109,7 @@ namespace IPSCM.Core
                 {
                     this.TransactionPool.AddBeforeExecute(new ImageUpdateTransaction(o.PlateNumber, o.Time, o.Type, o.Image, o.Response.OutputStream));
                 };
+            //When parking page refresh button pressed
             this.UiControl.MajorWindow.MainPage.ParkPage.RefreshButton.Click += (i, o) =>
             {
                 this.UiControl.MajorWindow.MainPage.ParkPage.RefreshData
@@ -116,12 +117,30 @@ namespace IPSCM.Core
                 this.Storage.GetTodayParking()
                 );
             };
-
+            //When parking page search button pressed
+            this.UiControl.MajorWindow.MainPage.ParkPage.SearchButton.Click += (i, o) =>
+            {
+                var keyWord = this.UiControl.MajorWindow.MainPage.ParkPage.SearchKeyWork;
+                this.UiControl.MajorWindow.MainPage.ParkPage.RefreshData
+                (
+                String.IsNullOrEmpty(keyWord) ? this.Storage.GetTodayParking() : this.Storage.GetTodayParking(keyWord)
+                );
+            };
+            //When ticket page refresh buttion pressed
             this.UiControl.MajorWindow.MainPage.TicketPage.RefreshButton.Click += (i, o) =>
             {
                 this.UiControl.MajorWindow.MainPage.TicketPage.RefreshData
                       (
                     this.Storage.GetTodayTicketUsed()
+                    );
+            };
+            //When ticket page search button pressed
+            this.UiControl.MajorWindow.MainPage.TicketPage.SearchButton.Click += (i, o) =>
+            {
+                var keyWord = this.UiControl.MajorWindow.MainPage.TicketPage.SearchKeyWord;
+                this.UiControl.MajorWindow.MainPage.TicketPage.RefreshData
+                      (
+                    this.Storage.GetTodayTicketUsed(keyWord)
                     );
             };
 

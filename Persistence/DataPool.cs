@@ -199,6 +199,21 @@ namespace IPSCM.Persistence
                 "select [PlateNumber] as '车牌号',[StoreName] as '商户',[Value] as '停车券',[UsedTime] as '使用时间' FROM IPSCM.dbo.Tickets left join IPSCM.dbo.Users on IPSCM.dbo.Tickets.UserId = IPSCM.dbo.Users.UserId WHERE [UsedTime] > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0)")
                 .Tables[0];
         }
+        public DataTable GetTodayParking(String searchKeyWord)
+        {
+            return
+                this.DbExecuteDataSet(String.Format("select [PlateNumber] as 车牌号,[InTime] as 入场时间,[OutTime] as 出场时间,[CopeMoney] as 应收停车费,[ActualMoney] as 实收停车费,[StoreName] as 商家名称 FROM IPSCM.dbo.ParkRecord left join IPSCM.dbo.Tickets on IPSCM.dbo.ParkRecord.TicketId =IPSCM.dbo.Tickets.TicketId WHERE [StoreName] like N'%{0}%' and InTime > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0) ",searchKeyWord)
+                    )
+                   .Tables[0];
+        }
+
+        public DataTable GetTodayTicketUsed(String searchKeyWord)
+        {
+            return
+            this.DbExecuteDataSet(String.Format("select [PlateNumber] as '车牌号',[StoreName] as '商户',[Value] as '停车券',[UsedTime] as '使用时间' FROM IPSCM.dbo.Tickets left join IPSCM.dbo.Users on IPSCM.dbo.Tickets.UserId = IPSCM.dbo.Users.UserId WHERE [StoreName] like N'%{0}%' and [UsedTime] > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0)",searchKeyWord)
+                )
+               .Tables[0];
+        }
 
         #endregion
         private void DbExecuteNonQuery(String sql)
