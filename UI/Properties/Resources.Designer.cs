@@ -260,7 +260,7 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 登录帐号.
+        ///   Looks up a localized string similar to 登录帐号:.
         /// </summary>
         public static string LoginAccount {
             get {
@@ -328,7 +328,7 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 密码.
+        ///   Looks up a localized string similar to 密码:.
         /// </summary>
         public static string Password {
             get {

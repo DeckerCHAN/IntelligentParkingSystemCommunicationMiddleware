@@ -212,10 +212,10 @@
     <value>今日共使用停车券{0}张</value>
   </data>
   <data name="LoginAccount" xml:space="preserve">
-    <value>登录帐号</value>
+    <value>登录帐号:</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>密码</value>
+    <value>密码:</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>登录</value>

@@ -33,10 +33,12 @@
             </Border>
 
             <Canvas DockPanel.Dock="Bottom" Height="254">
-                <TextBox Text="{Binding UserName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" x:Name="UserNameTextBox"  x:FieldModifier="public"  Style="{DynamicResource NativeLoginAccountTextBoxStyle}"  Canvas.Top="44" Canvas.Left="40" TextWrapping="Wrap" Width="424" Height="48"/>
-                <TextBox Text="{Binding Password,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" x:Name="PasswordTextBox"  x:FieldModifier="public" Style="{DynamicResource NativeLoginPasswordTextBoxStyle}" Canvas.Top="105" Canvas.Left="40" Width="424" Height="48"/>
+                <TextBox Text="{Binding UserName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" x:Name="UserNameTextBox"  x:FieldModifier="public"  Style="{DynamicResource NativeLoginAccountTextBoxStyle}"  Canvas.Top="44" Canvas.Left="112" TextWrapping="Wrap" Width="352" Height="48"/>
+                <TextBox Text="{Binding Password,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" x:Name="PasswordTextBox"  x:FieldModifier="public" Style="{DynamicResource NativeLoginPasswordTextBoxStyle}" Canvas.Top="105" Canvas.Left="112" Width="352" Height="48"/>
                 <Button x:Name="LoginButton" x:FieldModifier="public" IsEnabled="{Binding IsLoginEnable}" Content="{x:Static local:Resources.Login}" Width="86" Height="33" FontSize="14" Foreground="White" Style="{DynamicResource NativeDetermineButton}" Canvas.Left="378" Canvas.Top="174"></Button>
                 <Label FontSize="12" Foreground="#FFFD0202" Content="{Binding ResultString}" Canvas.Left="196" Canvas.Top="13"/>
+                <Label Content="{x:Static local:Resources.LoginAccount}" Canvas.Left="36" Canvas.Top="54" FontSize="14"/>
+                <Label Content="{x:Static local:Resources.Password}" Canvas.Left="48" Canvas.Top="116" FontSize="14"/>
             </Canvas>
 
         </DockPanel>
