@@ -12,16 +12,12 @@ namespace IPSCM.UI
     public partial class LoginWindow : Window, INotifyPropertyChanged
     {
         private string ResultStringValue;
-        private string UserNameValue;
-        private string PasswordValue;
         private bool IsLoginEnableValue;
         private bool PerserverAccountValue;
 
         public LoginWindow()
         {
             this.ResultStringValue = String.Empty;
-            this.UserNameValue = String.Empty;
-            this.PasswordValue = String.Empty;
             this.IsLoginEnableValue = true;
             this.PerserverAccount = true;
             InitializeComponent();
@@ -43,25 +39,6 @@ namespace IPSCM.UI
             }
         }
 
-        public String UserName
-        {
-            get { return this.UserNameValue; }
-            set
-            {
-                this.UserNameValue = value;
-                this.OnPropertyChanged("UserName");
-            }
-        }
-
-        public String Password
-        {
-            get { return this.PasswordValue; }
-            set
-            {
-                this.PasswordValue = value;
-                this.OnPropertyChanged("Password");
-            }
-        }
 
         public Boolean PerserverAccount
         {

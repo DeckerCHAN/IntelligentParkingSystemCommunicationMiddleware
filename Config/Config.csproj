@@ -36,7 +36,6 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="FileConfig.cs" />
-    <Compile Include="FileSyncConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticConfig.cs" />
   </ItemGroup>

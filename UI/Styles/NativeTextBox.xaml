@@ -33,7 +33,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="TextBox" x:Key="NativeLoginTextBoxStyle">
+    <Style TargetType="Control" x:Key="NativeLoginTextBoxStyle">
         <Setter Property="BorderThickness" Value="1"></Setter>
         <Setter Property="BorderBrush" Value="#FFE7E7E7"></Setter>
         <Setter Property="Foreground" Value="Black"></Setter>
@@ -64,10 +64,10 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="TextBox" BasedOn="{StaticResource NativeLoginTextBoxStyle}" x:Key="NativeLoginPasswordTextBoxStyle">
+    <Style TargetType="PasswordBox" BasedOn="{StaticResource NativeLoginTextBoxStyle}" x:Key="NativeLoginPasswordTextBoxStyle">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="TextBox">
+                <ControlTemplate TargetType="PasswordBox">
                     <Border Name="Border"  BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="4" Background="{TemplateBinding Background}">
                         <ScrollViewer
                     x:Name="PART_ContentHost"/>

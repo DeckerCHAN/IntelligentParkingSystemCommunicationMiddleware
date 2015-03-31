@@ -38,10 +38,6 @@ namespace IPSCM.Core
         {
             Log.Info("Stoping Engine");
             this.UiControl.Shutdown();
-            foreach (var fileConfig in FileConfig.FileConfigs.Values)
-            {
-                fileConfig.SaveToFile();
-            }
             Log.Info("All config saved!");
             this.F3Gate.Stop();
             this.CloudParking.Stop();
@@ -58,7 +54,7 @@ namespace IPSCM.Core
             //F3Gate would start after successful log in.
             this.CloudParking.Start();
             Log.Info("Engine started!");
-            this.UiControl.Dispatcher.BeginInvoke(new Action(() =>
+            this.UiControl.Dispatcher.Invoke(new Action(() =>
             {
                 this.UiControl.MajorWindow.Show();
                 this.UiControl.MajorWindow.MainPage.ParkPage.RefreshData
@@ -70,10 +66,10 @@ namespace IPSCM.Core
                   this.Storage.GetTodayTicketUsed()
                   );
                 this.UiControl.LoginWindow.Owner = this.UiControl.MajorWindow;
-                this.UiControl.LoginWindow.UserName =
+                this.UiControl.LoginWindow.UserNameTextBox.Text =
                     LoginUtils.ReadPerservedAccount(
                         new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME"))).Item1;
-                this.UiControl.LoginWindow.Password =
+                this.UiControl.LoginWindow.PasswordTextBox.Password =
                 LoginUtils.ReadPerservedAccount(
                     new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME"))).Item2;
 
@@ -87,8 +83,8 @@ namespace IPSCM.Core
             this.UiControl.LoginWindow.LoginButton.Click +=
                 (i, o) =>
                 {
-                    var username = this.UiControl.LoginWindow.UserName.Clone().ToString();
-                    var password = this.UiControl.LoginWindow.PasswordTextBox.Text.Clone().ToString();
+                    var username = this.UiControl.LoginWindow.UserNameTextBox.Text.Clone().ToString();
+                    var password = this.UiControl.LoginWindow.PasswordTextBox.Password.Clone().ToString();
                     this.TransactionPool.AddBeforeExecute(new LoginTransaction(username, password));
                 };
             this.F3Gate.OnParking +=

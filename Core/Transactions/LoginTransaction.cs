@@ -84,20 +84,24 @@ namespace IPSCM.Core.Transactions
                 Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = true;
                 Engine.GetEngine().UiControl.LoginWindow.Visibility = Visibility.Collapsed;
             }));
-            if (Engine.GetEngine().UiControl.LoginWindow.PerserverAccount)
+            Engine.GetEngine().UiControl.LoginWindow.Dispatcher.Invoke(new Action(() =>
             {
-                LoginUtils.PerserveUserNameAndPasswordToFile(
-         new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME")),
-         Engine.GetEngine().UiControl.LoginWindow.UserName,
-         Engine.GetEngine().UiControl.LoginWindow.Password);
-            }
-            else
-            {
-                LoginUtils.PerserveUserNameAndPasswordToFile(
-         new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME")),
-         String.Empty,
-         String.Empty);
-            }
+                if (Engine.GetEngine().UiControl.LoginWindow.PerserverAccount)
+                {
+
+                    LoginUtils.PerserveUserNameAndPasswordToFile(
+             new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME")),
+             Engine.GetEngine().UiControl.LoginWindow.UserNameTextBox.Text,
+             Engine.GetEngine().UiControl.LoginWindow.PasswordTextBox.Password);
+                }
+                else
+                {
+                    LoginUtils.PerserveUserNameAndPasswordToFile(
+             new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME")),
+             String.Empty,
+             String.Empty);
+                }
+            }));
 
             Engine.GetEngine().F3Gate.Start();
             Engine.GetEngine().CloudParking.TickThread.Start();

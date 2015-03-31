@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 #endregion
 
@@ -53,18 +54,6 @@ namespace IPSCM.Configuration
             }
             var file = new FileInfo("Configs\\" + name);
             return new FileConfig(file);
-        }
-
-        public void SaveToFile()
-        {
-            using (var writer = new StreamWriter(this.ConfigFile.OpenWrite()))
-            {
-                foreach (var key in this.configs.Keys)
-                {
-                    writer.WriteLine("{0}:{1}", key, this.GetString(key));
-                }
-                writer.Flush();
-            }
         }
     }
 }
