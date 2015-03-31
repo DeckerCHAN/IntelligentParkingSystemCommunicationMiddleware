@@ -337,6 +337,15 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 保存帐号.
+        /// </summary>
+        public static string PerserveAccount {
+            get {
+                return ResourceManager.GetString("PerserveAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 刷新.
         /// </summary>
         public static string Refresh {

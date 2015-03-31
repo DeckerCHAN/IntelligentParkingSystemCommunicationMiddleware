@@ -15,6 +15,7 @@ namespace IPSCM.UI
         private string UserNameValue;
         private string PasswordValue;
         private bool IsLoginEnableValue;
+        private bool PerserverAccountValue;
 
         public LoginWindow()
         {
@@ -22,6 +23,7 @@ namespace IPSCM.UI
             this.UserNameValue = String.Empty;
             this.PasswordValue = String.Empty;
             this.IsLoginEnableValue = true;
+            this.PerserverAccount = true;
             InitializeComponent();
         }
 
@@ -54,7 +56,21 @@ namespace IPSCM.UI
         public String Password
         {
             get { return this.PasswordValue; }
-            set { this.PasswordValue = value; }
+            set
+            {
+                this.PasswordValue = value;
+                this.OnPropertyChanged("Password");
+            }
+        }
+
+        public Boolean PerserverAccount
+        {
+            get { return this.PerserverAccountValue; }
+            set
+            {
+                this.PerserverAccountValue = value;
+                this.OnPropertyChanged("PerserverAccount");
+            }
         }
 
         private void Header_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

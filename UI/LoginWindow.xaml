@@ -39,7 +39,9 @@
                 <Label FontSize="12" Foreground="#FFFD0202" Content="{Binding ResultString}" Canvas.Left="196" Canvas.Top="13"/>
                 <Label Content="{x:Static local:Resources.LoginAccount}" Canvas.Left="36" Canvas.Top="54" FontSize="14"/>
                 <Label Content="{x:Static local:Resources.Password}" Canvas.Left="48" Canvas.Top="116" FontSize="14"/>
+                <CheckBox Content="{x:Static local:Resources.PerserveAccount}" Canvas.Left="112" Canvas.Top="184" FontSize="14" IsChecked="{Binding PerserverAccount}"/>
             </Canvas>
+          
 
         </DockPanel>
     </Border>

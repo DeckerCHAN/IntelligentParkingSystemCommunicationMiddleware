@@ -1,10 +1,13 @@
 ﻿#region
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Windows;
+using IPSCM.Configuration;
 using IPSCM.Entities.Results;
 using IPSCM.Logging;
+using IPSCM.Utils;
 
 #endregion
 
@@ -81,6 +84,20 @@ namespace IPSCM.Core.Transactions
                 Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = true;
                 Engine.GetEngine().UiControl.LoginWindow.Visibility = Visibility.Collapsed;
             }));
+            if (Engine.GetEngine().UiControl.LoginWindow.PerserverAccount)
+            {
+                LoginUtils.PerserveUserNameAndPasswordToFile(
+         new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME")),
+         Engine.GetEngine().UiControl.LoginWindow.UserName,
+         Engine.GetEngine().UiControl.LoginWindow.Password);
+            }
+            else
+            {
+                LoginUtils.PerserveUserNameAndPasswordToFile(
+         new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME")),
+         String.Empty,
+         String.Empty);
+            }
 
             Engine.GetEngine().F3Gate.Start();
             Engine.GetEngine().CloudParking.TickThread.Start();

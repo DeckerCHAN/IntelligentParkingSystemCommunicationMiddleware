@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.IO;
 using System.Reflection;
 using IPSCM.Configuration;
 using IPSCM.Core.Transactions;
@@ -8,6 +9,7 @@ using IPSCM.Logging;
 using IPSCM.Persistence;
 using IPSCM.Protocol.Gates;
 using IPSCM.UI;
+using IPSCM.Utils;
 
 #endregion
 
@@ -68,6 +70,13 @@ namespace IPSCM.Core
                   this.Storage.GetTodayTicketUsed()
                   );
                 this.UiControl.LoginWindow.Owner = this.UiControl.MajorWindow;
+                this.UiControl.LoginWindow.UserName =
+                    LoginUtils.ReadPerservedAccount(
+                        new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME"))).Item1;
+                this.UiControl.LoginWindow.Password =
+                LoginUtils.ReadPerservedAccount(
+                    new FileInfo(FileConfig.FindConfig("GUI.cfg").GetString("PERSERVEACCOUNTFILENAME"))).Item2;
+
                 this.UiControl.LoginWindow.ShowDialog();
             }));
             this.UiControl.Run();
