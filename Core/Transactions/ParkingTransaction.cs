@@ -17,7 +17,6 @@ namespace IPSCM.Core.Transactions
     {
         public ParkingTransaction(String plateNum, DateTime inTime, Byte[] inImage, Stream responseStream)
         {
-            this.JsonConfig = FileConfig.FindConfig("Json.cfg");
             this.plateNumber = plateNum;
             this.InTime = inTime;
             this.InImage = inImage;
@@ -26,7 +25,7 @@ namespace IPSCM.Core.Transactions
             {
                 try
                 {
-                    var json = IPSCMJsonConvert.ConvertToJson(new Result {ResultCode = ResultCode.Success});
+                    var json = IPSCMJsonConvert.ConvertToJson(new Result { ResultCode = ResultCode.Success });
                     StreamUtils.WriteToStreamWithUF8(this.ResponseStream, json);
                     this.ResponseStream.Flush();
                     this.ResponseStream.Close();
@@ -37,26 +36,26 @@ namespace IPSCM.Core.Transactions
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                        {
-                            Engine.GetEngine().Storage.PostCarPark(Id, this.plateNumber, result);
-                            break;
-                        }
+                            {
+                                Engine.GetEngine().Storage.PostCarPark(Id, this.plateNumber, result);
+                                break;
+                            }
                         case ResultCode.SuccessButNoBinding:
-                        {
-                            break;
-                        }
+                            {
+                                break;
+                            }
                         default:
-                        {
-                            Log.Error(String.Format("Unexpected result code:{0}", result.ResultCode));
-                            break;
-                        }
+                            {
+                                Log.Error(String.Format("Unexpected result code:{0}", result.ResultCode));
+                                break;
+                            }
                     }
                     this.Status = TransactionStatus.Exhausted;
                 }
                 catch (Exception ex)
                 {
                     Log.Error("Parking Transaction encountered a exception", ex);
-                    this.Status=TransactionStatus.Errored;
+                    this.Status = TransactionStatus.Errored;
                 }
                 finally
                 {
@@ -71,7 +70,7 @@ namespace IPSCM.Core.Transactions
         public Byte[] InImage { get; private set; }
         public Stream ResponseStream { get; private set; }
         public Thread WorkThread { get; private set; }
-        public Config JsonConfig { get; private set; }
+
 
         public override void Execute()
         {

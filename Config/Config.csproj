@@ -49,9 +49,6 @@
     <Content Include="Configs\GUI.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\Json.cfg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Configs\Parking.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

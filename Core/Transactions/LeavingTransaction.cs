@@ -27,8 +27,7 @@ namespace IPSCM.Core.Transactions
             this.ActualMoney = actualMoney;
             this.TicketId = ticketId;
             this.ResponseStream = responseStream;
-            this.JsonConfig = FileConfig.FindConfig("Json.cfg");
-            this.FullOutput = FileConfig.FindConfig("Transaction.cfg").GetBoolean("FullOutput");
+           this.FullOutput = FileConfig.FindConfig("Transaction.cfg").GetBoolean("FullOutput");
 
             this.WorkThread = new Thread(() =>
             {
@@ -141,7 +140,6 @@ namespace IPSCM.Core.Transactions
         public Decimal CopeMoney { get; private set; }
         public Decimal ActualMoney { get; private set; }
         public UInt32 TicketId { get; private set; }
-        private Config JsonConfig { get; set; }
         private Boolean FullOutput { get; set; }
 
         public override void Execute()
