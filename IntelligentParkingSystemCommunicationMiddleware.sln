@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wrapper", "Wrapper\Wrapper.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{643EE4B5-7D96-4DD7-8626-64AD7D742670}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{A14ED6A3-8459-4D37-86B1-70420717BCD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{643EE4B5-7D96-4DD7-8626-64AD7D742670}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{643EE4B5-7D96-4DD7-8626-64AD7D742670}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{643EE4B5-7D96-4DD7-8626-64AD7D742670}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A14ED6A3-8459-4D37-86B1-70420717BCD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A14ED6A3-8459-4D37-86B1-70420717BCD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A14ED6A3-8459-4D37-86B1-70420717BCD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A14ED6A3-8459-4D37-86B1-70420717BCD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
