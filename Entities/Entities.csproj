@@ -28,6 +28,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -62,6 +64,8 @@
     <Compile Include="FundElements\Surplus.cs" />
     <Compile Include="FundElements\Ticket.cs" />
     <Compile Include="FundElements\User.cs" />
+    <Compile Include="Results\Update\UpdateInfo.cs" />
+    <Compile Include="Results\Update\UpdateResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Config\Config.csproj">
