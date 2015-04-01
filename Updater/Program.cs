@@ -15,13 +15,10 @@ namespace Updater
         {
             try
             {
-                args = new string[] { "1.0", "1.1", "http://202.113.76.117/IPSCM(1.5.1).zip" };
                 if (args.Length != 3)
                 {
                     throw new ArgumentException("Wrong argument number!");
                 }
-
-
 
                 var currentVersion = args[0];
                 var targetVersion = args[1];
