@@ -38,7 +38,6 @@ namespace IPSCM.Core
         {
             Log.Info("Stoping Engine");
             this.UiControl.Shutdown();
-            Log.Info("All config saved!");
             this.F3Gate.Stop();
             this.CloudParking.Stop();
             this.TransactionPool.Dispose();
