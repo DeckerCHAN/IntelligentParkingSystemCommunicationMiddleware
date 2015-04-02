@@ -24,7 +24,7 @@ namespace IPSCM.Core.Transactions
                 try
                 {
 
-                    Engine.GetEngine().UiControl.LoginWindow.ResultString = "Processing";
+                    Engine.GetEngine().UiControl.LoginWindow.ResultString = UI.Properties.Resources.LogingIning;
                     Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = false;
 
                     var name = userName.Clone().ToString();
@@ -80,7 +80,7 @@ namespace IPSCM.Core.Transactions
 
             Engine.GetEngine().UiControl.LoginWindow.Dispatcher.Invoke(new Action(() =>
             {
-                Engine.GetEngine().UiControl.LoginWindow.ResultString = "Success";
+                Engine.GetEngine().UiControl.LoginWindow.ResultString = UI.Properties.Resources.LoginSuccess;
                 Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = true;
                 Engine.GetEngine().UiControl.LoginWindow.Visibility = Visibility.Collapsed;
             }));
@@ -112,7 +112,7 @@ namespace IPSCM.Core.Transactions
             Engine.GetEngine().UiControl.LoginWindow.Dispatcher.Invoke(new Action(() =>
             {
                 Engine.GetEngine().UiControl.LoginWindow.ResultString =
-                    String.Format("Login failer!({0}){1}", code,
+                    String.Format(UI.Properties.Resources.LoginFailer, code,
                         message);
                 Engine.GetEngine().UiControl.LoginWindow.IsLoginEnable = true;
             }));

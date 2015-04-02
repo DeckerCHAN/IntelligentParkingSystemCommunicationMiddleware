@@ -34,7 +34,7 @@ namespace IPSCM.Core.Transactions
                         var window = Engine.GetEngine().UiControl.UpdateCheckWindow;
                         Engine.GetEngine().UiControl.Dispatcher.Invoke(new Action(() =>
                         {
-                            window.ContentString = String.Format("Detected newer version:{0}",result.Info.Version);
+                            window.ContentString = String.Format(UI.Properties.Resources.DetectedNewerVersion,result.Info.Version);
                             window.Owner = Engine.GetEngine().UiControl.MajorWindow;
                             window.Show();
                         }));

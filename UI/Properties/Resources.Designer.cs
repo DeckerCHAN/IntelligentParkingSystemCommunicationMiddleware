@@ -173,6 +173,15 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 检测到更新版本: {0}。请点击确定后重启程序更新。.
+        /// </summary>
+        public static string DetectedNewerVersion {
+            get {
+                return ResourceManager.GetString("DetectedNewerVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 退出.
         /// </summary>
         public static string Exit {
@@ -274,6 +283,33 @@ namespace IPSCM.UI.Properties {
         public static string LoginAccount {
             get {
                 return ResourceManager.GetString("LoginAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 登录失败！({0}){1}.
+        /// </summary>
+        public static string LoginFailer {
+            get {
+                return ResourceManager.GetString("LoginFailer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 登陆中....
+        /// </summary>
+        public static string LogingIning {
+            get {
+                return ResourceManager.GetString("LogingIning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 登录成功.
+        /// </summary>
+        public static string LoginSuccess {
+            get {
+                return ResourceManager.GetString("LoginSuccess", resourceCulture);
             }
         }
         
