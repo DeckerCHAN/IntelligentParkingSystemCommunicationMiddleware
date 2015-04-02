@@ -5,7 +5,8 @@ using System.Text;
 
 namespace IPSCM.Entities.Results.Update
 {
-    public class UpdateResult
+    public class UpdateResult:Result
     {
+        public UpdateInfo Info { get; set; }
     }
 }

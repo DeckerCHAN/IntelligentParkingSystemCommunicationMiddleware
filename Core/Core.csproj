@@ -84,6 +84,7 @@
     <Compile Include="Transactions\LoginTransaction.cs" />
     <Compile Include="Transactions\TransactionStatus.cs" />
     <Compile Include="Transactions\SurplusSpaceUpdateTransaction.cs" />
+    <Compile Include="Transactions\UpdateTransaction.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

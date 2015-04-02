@@ -12,6 +12,7 @@ using IPSCM.Entities.Results;
 using IPSCM.Entities.Results.HeartBeat;
 using IPSCM.Entities.Results.Leaving;
 using IPSCM.Entities.Results.Parking;
+using IPSCM.Entities.Results.Update;
 using IPSCM.Logging;
 using IPSCM.Protocol.EventArgs;
 using IPSCM.Utils;
@@ -196,6 +197,14 @@ namespace IPSCM.Protocol.Gates
             var result = IPSCMJsonConvert.Parse<Result>(response);
             return result;
         }
+
+        public UpdateResult CheckUpdate()
+        {
+            var response = this.Send(this.Config.GetString("UPDATEURL"), new Dictionary<string, string>(), new Dictionary<string, byte[]>());
+            var result = IPSCMJsonConvert.Parse<UpdateResult>(response);
+            return result;
+        }
+
         private String GetSign(Dictionary<String, String> data)
         {
             var sum = new StringBuilder();

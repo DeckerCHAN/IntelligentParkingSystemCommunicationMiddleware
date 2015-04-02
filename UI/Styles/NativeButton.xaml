@@ -9,6 +9,11 @@
                         <Border.Background>
                             <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/butten_determine.png"/>
                         </Border.Background>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                         <ContentPresenter
                                     Name="contentPresenter" 
                                     ContentTemplate="{TemplateBinding ContentTemplate}" 

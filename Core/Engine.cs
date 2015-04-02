@@ -151,7 +151,7 @@ namespace IPSCM.Core
 
             this.UiControl.MajorWindow.CheckUpdateButton.Click += (i, o) =>
             {
-                new PopupWindow(this.UiControl.MainWindow, UI.Properties.Resources.CheckUpdate, "Not supported!").Show();
+                this.TransactionPool.AddBeforeExecute(new UpdateTransaction());
             };
             this.UiControl.MajorWindow.ExitButton.Click += (i, o) =>
             {

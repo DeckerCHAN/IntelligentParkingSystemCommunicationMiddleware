@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace IPSCM.UI
 {
@@ -9,6 +10,22 @@ namespace IPSCM.UI
     {
         public LoginWindow LoginWindow { get;private set; }
         public MainWindow MajorWindow { get; private set; }
+
+        public UpdateCheckWindow UpdateCheckWindow
+        {
+            get
+            {
+                UpdateCheckWindow window = null;
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    window=new UpdateCheckWindow();
+                }));
+                return window;
+
+
+            }
+            private set { throw new NotImplementedException(); }
+        }
 
         public UIControl()
         {

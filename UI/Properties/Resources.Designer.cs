@@ -128,6 +128,15 @@ namespace IPSCM.UI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 取消.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 进出场车辆统计.
         /// </summary>
         public static string ChangeToParkingPage {
@@ -294,6 +303,15 @@ namespace IPSCM.UI.Properties {
         public static string MaxPageFormater {
             get {
                 return ResourceManager.GetString("MaxPageFormater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 暂无更新.
+        /// </summary>
+        public static string NoUpdates {
+            get {
+                return ResourceManager.GetString("NoUpdates", resourceCulture);
             }
         }
         

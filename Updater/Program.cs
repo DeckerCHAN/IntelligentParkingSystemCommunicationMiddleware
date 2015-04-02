@@ -59,7 +59,15 @@ namespace Updater
                 foreach (string newPath in Directory.GetFiles(tempDirectoryInfo.FullName, "*.*",
                     SearchOption.AllDirectories))
                 {
-                    File.Copy(newPath, newPath.Replace(tempDirectoryInfo.FullName, currentDirectonryInfo.FullName), true);
+                    try
+                    {
+                        File.Copy(newPath, newPath.Replace(tempDirectoryInfo.FullName, currentDirectonryInfo.FullName), true);
+                        Console.WriteLine("Successful updated:{0}", newPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failure updated:{0}", newPath);
+                    }
                 }
 
             }

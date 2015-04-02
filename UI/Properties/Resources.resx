@@ -232,4 +232,10 @@
   <data name="PerserveAccount" xml:space="preserve">
     <value>保存帐号</value>
   </data>
+  <data name="NoUpdates" xml:space="preserve">
+    <value>暂无更新</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
 </root>

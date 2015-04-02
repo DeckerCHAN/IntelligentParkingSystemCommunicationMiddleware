@@ -1,0 +1,40 @@
+﻿<Window x:Class="IPSCM.UI.UpdateCheckWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:IPSCM.UI.Properties"
+        Style="{DynamicResource NativeWindowStyle}"
+        Title="UpdateCheckWindow" 
+        Height="214" Width="336"
+        WindowStartupLocation="CenterOwner"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/BootStrapButton.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeButton.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeDataGrid.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeTextbox.xaml"/>
+                <ResourceDictionary Source="/IPSCM.UI;component/Styles/NativeWindowStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border Width="320" Height="198" Margin="8" >
+        <Border.Effect>
+            <DropShadowEffect Color="Black"  BlurRadius="8" Direction="-85" RenderingBias="Quality" ShadowDepth="0" Opacity="0.8"/>
+        </Border.Effect>
+        <DockPanel >
+            <Border DockPanel.Dock="Top" Background="#FFE7E7E7" BorderBrush="#FFC8C8C8" Height="42" Width="320" x:Name="TitleBorder" MouseLeftButtonDown="TitleBorder_OnMouseLeftButtonDown">
+                <Border.BorderThickness>
+                    <Thickness Bottom="1"></Thickness>
+                </Border.BorderThickness>
+                <Label Content="{x:Static properties:Resources.CheckUpdate}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold" ></Label>
+            </Border>
+            <Canvas DockPanel.Dock="Bottom" Width="320" Height="156" Background="White">
+                <TextBlock TextAlignment="Center" TextWrapping="Wrap" Foreground="#FF999999"  Text="{Binding ContentString}"  Height="52" Width="320" VerticalAlignment="Top" Canvas.Top="30"/>
+                <Button x:Name="ConfimButton" Height="32" Width="60" Style="{DynamicResource NativeDetermineButton}" Content="{x:Static properties:Resources.Confirm}" Canvas.Left="72" Canvas.Top="102" Click="ButtonConfim_OnClick"></Button>
+                <Button x:Name="CancelButton" Height="32" Width="60" Style="{DynamicResource NativeCancelButton}" Content="{x:Static properties:Resources.Cancel}" Canvas.Left="180" Canvas.Top="102" Click="CancelButton_OnClick"></Button>
+            </Canvas>
+
+        </DockPanel>
+    </Border>
+</Window>
