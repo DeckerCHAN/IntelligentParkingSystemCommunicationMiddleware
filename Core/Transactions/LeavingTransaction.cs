@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using IPSCM.Configuration;
@@ -39,28 +40,37 @@ namespace IPSCM.Core.Transactions
                         Log.Info(String.Format("Leave started[+0ms]"));
                     }
                     //Pre-Storage messages and get record id
-                    this.RecordId = Engine.GetEngine().Storage.PreCarLeave(this.PlateNumber, this.OutTime,this.CopeMoney,this.ActualMoney,this.TicketId);
+                    this.RecordId = Engine.GetEngine()
+                        .Storage.PreCarLeave(this.PlateNumber, this.OutTime, this.CopeMoney, this.ActualMoney,
+                            this.TicketId);
+                    if (this.RecordId == 0)
+                    {
+                        throw new WarningException("Ignore empty-record leave");
+                    }
                     if (this.FullOutput)
                     {
                         Log.Info(String.Format("Leave pre-leaved[+{0}ms]", (DateTime.Now - start).TotalMilliseconds));
                     }
                     //Calculate action
-                    var successfullyChargedByUserBalance = this.RecordId != 0 &&Engine.GetEngine().Storage.TryDeductBalance(this.PlateNumber,this.ActualMoney);
-                                                Log.Info(String.Format("Leave Educted Balance[+{0}ms]",
-                                (DateTime.Now - start).TotalMilliseconds));
+                    var successfullyChargedByUserBalance = this.RecordId != 0 &&
+                                                           Engine.GetEngine()
+                                                               .Storage.TryDeductBalance(RecordId,
+                                                                   this.ActualMoney);
+                    Log.Info(String.Format("Leave Educted Balance[+{0}ms]",
+                        (DateTime.Now - start).TotalMilliseconds));
 
-                   
-     
-                    
+
+
+
                     //Response F3!
                     var json = String.Empty;
                     if (successfullyChargedByUserBalance)
                     {
                         json =
                             IPSCMJsonConvert.ConvertToJson(new Result
-                         {
-                             ResultCode = ResultCode.SuccessButInsufficientFunds
-                         });
+                            {
+                                ResultCode = ResultCode.SuccessButInsufficientFunds
+                            });
                     }
                     else
                     {
@@ -78,7 +88,7 @@ namespace IPSCM.Core.Transactions
                         Log.Info(String.Format("Leave responded to F3[+{0}ms]", (DateTime.Now - start).TotalMilliseconds));
                     }
                     //Used ticket
-                    if (successfullyChargedByUserBalance&& this.TicketId != 0)
+                    if (successfullyChargedByUserBalance && this.TicketId != 0)
                     {
                         Engine.GetEngine().Storage.UsedTicket(ticketId, outTime);
                     }
@@ -95,7 +105,7 @@ namespace IPSCM.Core.Transactions
                         this.TicketId = 0;
                         this.ActualMoney = 0;
                     }
-                     var result = Engine.GetEngine()
+                    var result = Engine.GetEngine()
                         .CloudParking.Leaving(this.RecordId, this.PlateNumber, this.OutTime, this.OutImg, this.CopeMoney,
                             this.ActualMoney, this.TicketId);
                     if (this.FullOutput)
@@ -106,17 +116,23 @@ namespace IPSCM.Core.Transactions
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                            {
-                                Engine.GetEngine().Storage.PostCarLeaved(this.PlateNumber, result);
-                                break;
-                            }
+                        {
+                            Engine.GetEngine().Storage.PostCarLeaved(this.PlateNumber, result);
+                            break;
+                        }
                         default:
-                            {
-                                Log.Error("Leaving transaction do not support Result code：" + result.ResultCode+" and wrong message is:"+result.ErrorMsg);
-                                break;
-                            }
+                        {
+                            Log.Error("Leaving transaction do not support Result code：" + result.ResultCode +
+                                      " and wrong message is:" + result.ErrorMsg);
+                            break;
+                        }
                     }
                     this.Status = TransactionStatus.Exhausted;
+                }
+                catch (WarningException ex)
+                {
+                    this.Status = TransactionStatus.Exhausted;
+                    Log.Info(ex.Message);
                 }
                 catch (Exception ex)
                 {

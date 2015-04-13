@@ -15,7 +15,7 @@ BEGIN
 CREATE TABLE [Users]
 (
 	[UserId] INT NOT NULL PRIMARY KEY, 
-	[PlateNumber] NVARCHAR(30) NOT NULL, 
+	[PlateNumber] NVARCHAR(30) NOT NULL,
 	[Money] MONEY NOT NULL, 
 	[PhoneNumber] CHAR(20) NOT NULL
 )	
@@ -46,6 +46,7 @@ CREATE TABLE [dbo].[ParkRecord] (
     [Id]          UNIQUEIDENTIFIER NOT NULL,
     [RecordId]    INT              NULL,
     [PlateNumber] NVARCHAR (30)    NOT NULL,
+	[UserId] INT NULL,
     [InTime]      DATETIME         NULL,
     [OutTime]     DATETIME         NULL,
     [CopeMoney] MONEY NULL, 

@@ -37,23 +37,6 @@ namespace IPSCM.Persistence
             Log.Info(String.Format("{0} DB initial script executed.", scriptSegment.Length));
         }
 
-
-        public Boolean TryDeductBalance(String plateNumber, Decimal deductBalance)
-        {
-            var remblaObj =
-                this.DbExecuteScalar(String.Format("select [Money] from IPSCM.dbo.Users where PlateNumber=N'{0}'",
-                    plateNumber));
-            var currentBal = remblaObj as Decimal? ?? 0;
-            if (currentBal > deductBalance)
-            {
-                this.DbExecuteNonQuery(
-                    String.Format("update IPSCM.dbo.Users set [Money]=[Money]-{0} where PlateNumber=N'{1}'",
-                        deductBalance, plateNumber));
-                return true;
-            }
-            return false;
-        }
-
         public void UsedTicket(UInt32 ticketId, DateTime useTime)
         {
             try
@@ -89,6 +72,102 @@ namespace IPSCM.Persistence
             return ticket;
         }
 
+
+
+        public void UpdateSurplus(Surplus surplus)
+        {
+            this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.Users set [Money]='{1}' where [UserId]='{0}'",
+                surplus.UserId, surplus.Money));
+        }
+        #region Insert Or Update
+        public void InsertOrUpdateUser(User user)
+        {
+            this.DbExecuteNonQuery(String.Format(
+                @"if exists (select * from IPSCM.dbo.Users where [UserId] = '{0}')
+                begin
+                update IPSCM.dbo.Users set [PlateNumber]=N'{1}',[Money]='{2}',[PhoneNumber]='{3}' where [UserId] = '{0}'
+                end
+                else
+                begin
+                insert into IPSCM.dbo.Users ([UserId],[PlateNumber],[Money],[PhoneNumber]) values ('{0}',N'{1}','{2}','{3}')
+                end", user.UserId, user.PlateNumber, user.Money, user.PhoneNumber
+                ));
+        }
+
+        public void InsertOrUpdateTicket(Ticket ticket)
+        {
+            this.DbExecuteNonQuery(String.Format(
+                @"if exists (select * from IPSCM.dbo.Tickets where [TicketId] = '{0}')
+                begin
+                update IPSCM.dbo.Tickets set [Type]='{1}',[Value]='{2}',[UserId]='{3}',[StoreName]=N'{4}'
+                end
+                else
+                begin
+                insert into IPSCM.dbo.Tickets ([TicketId],[Type],[Value],[UserId],[StoreName]) values ('{0}','{1}','{2}','{3}',N'{4}')
+                end",
+                ticket.TicketId, ticket.Type, ticket.Value, ticket.UserId, ticket.StoreName
+                ));
+        }
+        #endregion
+
+        #region Park
+        public Guid PreCarPark(String plateNumber, DateTime parkTime)
+        {
+            var g = Guid.NewGuid();
+            this.DbExecuteNonQuery(String.Format(
+                "insert into IPSCM.dbo.ParkRecord([Id],[RecordId],[PlateNumber],[InTime],[OutTime]) values('{0}',NULL,N'{1}','{2}',NULL)", g.ToString("D"), plateNumber,
+                parkTime.ToString("yyyy-MM-dd HH:mm:ss")));
+            return g;
+        }
+
+        public void PostCarPark(Guid id, String plateNumber, ParkingResult result)
+        {
+            this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.ParkRecord set [RecordId]='{0}',[UserId]='{1}' where Id='{2}'",
+                result.Info.RecordId, result.Info.UserId == 0 ? result.Info.UserId.ToString() : "NULL", id));
+            if (result.Info.UserId == 0)
+            {
+                return;
+            }
+            this.DbExecuteNonQuery(String.Format
+                (
+                @"if exists( select * from IPSCM.dbo.Users where UserId = '{0}')
+                begin
+                update IPSCM.dbo.Users set [Money]='{1}',PlateNumber=N'{3}',PhoneNumber='{2}' where UserId = '{0}'
+                end
+                else
+                begin
+                insert into IPSCM.dbo.Users ([UserId],[PlateNumber],[Money],[PhoneNumber]) values ('{0}',N'{3}','{1}','{2}')
+                end"
+                    , result.Info.UserId, result.Info.Money, result.Info.PhoneNumber, plateNumber));
+        }
+
+        #endregion
+        #region Leave
+
+
+        public Boolean TryDeductBalance(UInt64 recordId, Decimal deductBalance)
+        {
+            var userIdObj =
+                this.DbExecuteScalar(String.Format("select [UserId] from IPSCM.dbo.Users where [RecordId]='{0}'",
+                    recordId));
+            var userId = userIdObj as UInt32? ?? 0;
+            if (userId == 0)
+            {
+                return false;
+            }
+            var remblaObj =
+                this.DbExecuteScalar(String.Format("select [Money] from IPSCM.dbo.Users where [UserId]=N'{0}'",
+                    userId));
+            var currentBal = remblaObj as Decimal? ?? 0;
+            if (currentBal > deductBalance)
+            {
+                this.DbExecuteNonQuery(
+                    String.Format("update IPSCM.dbo.Users set [Money]=[Money]-{0} where PlateNumber=N'{1}'",
+                        deductBalance, userId));
+                return true;
+            }
+            return false;
+        }
         public UInt32 PreCarLeave(String plateNumber, DateTime leaveTime, Decimal copeMoney, Decimal actualMoney, UInt32 ticketId)
         {
             var record = this.DbExecuteScalar(String.Format(
@@ -114,74 +193,8 @@ namespace IPSCM.Persistence
         public void PostCarLeaved(String plateNumber, LeavingResult result)
         {
         }
-
-        public void UpdateSurplus(Surplus surplus)
-        {
-            this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.Users set [Money]='{1}' where [UserId]='{0}'",
-                surplus.UserId, surplus.Money));
-        }
-        #region Insert Or Update
-        public void InsertOrUpdateUser(User user)
-        {
-            this.DbExecuteNonQuery(String.Format(
-                @"if exists (select * from IPSCM.dbo.Users where [UserId] = '{0}')
-                begin
-                update IPSCM.dbo.Users set [PlateNumber]=N'{1}',[Money]='{2}',[PhoneNumber]='{3}'
-                end
-                else
-                begin
-                insert into IPSCM.dbo.Users ([UserId],[PlateNumber],[Money],[PhoneNumber]) values ('{0}',N'{1}','{2}','{3}')
-                end", user.UserId, user.PlateNumber, user.Money, user.PhoneNumber
-                ));
-        }
-
-        public void InsertOrUpdateTicket(Ticket ticket)
-        {
-            this.DbExecuteNonQuery(String.Format(
-                @"if exists (select * from IPSCM.dbo.Tickets where [TicketId] = '{0}')
-                begin
-                update IPSCM.dbo.Tickets set [Type]='{1}',[Value]='{2}',[UserId]='{3}',[StoreName]=N'{4}'
-                end
-                else
-                begin
-                insert into IPSCM.dbo.Tickets ([TicketId],[Type],[Value],[UserId],[StoreName]) values ('{0}','{1}','{2}','{3}',N'{4}')
-                end",
-                ticket.TicketId, ticket.Type, ticket.Value, ticket.UserId, ticket.StoreName
-                ));
-        }
         #endregion
-        #region Park
-        public Guid PreCarPark(String plateNumber, DateTime parkTime)
-        {
-            var g = Guid.NewGuid();
-            this.DbExecuteNonQuery(String.Format(
-                "insert into IPSCM.dbo.ParkRecord([Id],[RecordId],[PlateNumber],[InTime],[OutTime]) values('{0}',NULL,N'{1}','{2}',NULL)", g.ToString("D"), plateNumber,
-                parkTime.ToString("yyyy-MM-dd HH:mm:ss")));
-            return g;
-        }
 
-        public void PostCarPark(Guid Id, String plateNumber, ParkingResult result)
-        {
-            this.DbExecuteNonQuery(String.Format("update IPSCM.dbo.ParkRecord set RecordId='{0}' where Id='{1}'",
-                result.Info.RecordId, Id));
-            if (result.Info.UserId == 0)
-            {
-                return;
-            }
-            this.DbExecuteNonQuery(String.Format
-                (
-                    @"if exists( select * from IPSCM.dbo.Users where UserId = '{0}')
-                begin
-                update IPSCM.dbo.Users set [Money]='{1}',PlateNumber=N'{3}',PhoneNumber='{2}' where UserId = '{0}'
-                end
-                else
-                begin
-                insert into IPSCM.dbo.Users ([UserId],[PlateNumber],[Money],[PhoneNumber]) values ('{0}',N'{3}','{1}','{2}')
-                end"
-                    , result.Info.UserId, result.Info.Money, result.Info.PhoneNumber, plateNumber));
-        }
-
-        #endregion
         #region History
 
         public DataTable GetTodayParking()
@@ -210,7 +223,7 @@ namespace IPSCM.Persistence
         public DataTable GetTodayTicketUsed(String searchKeyWord)
         {
             return
-            this.DbExecuteDataSet(String.Format("select [PlateNumber] as '车牌号',[StoreName] as '商户',[Value] as '停车券',[UsedTime] as '使用时间' FROM IPSCM.dbo.Tickets left join IPSCM.dbo.Users on IPSCM.dbo.Tickets.UserId = IPSCM.dbo.Users.UserId WHERE [StoreName] like N'%{0}%' and [UsedTime] > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0)",searchKeyWord)
+            this.DbExecuteDataSet(String.Format("select [PlateNumber] as '车牌号',[StoreName] as '商户',[Value] as '停车券',[UsedTime] as '使用时间' FROM IPSCM.dbo.Tickets left join IPSCM.dbo.Users on IPSCM.dbo.Tickets.UserId = IPSCM.dbo.Users.UserId WHERE [StoreName] like N'%{0}%' and [UsedTime] > DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0)", searchKeyWord)
                 )
                .Tables[0];
         }
