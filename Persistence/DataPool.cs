@@ -148,7 +148,7 @@ namespace IPSCM.Persistence
         public Boolean TryDeductBalance(UInt64 recordId, Decimal deductBalance)
         {
             var userIdObj =
-                this.DbExecuteScalar(String.Format("select [UserId] from IPSCM.dbo.Users where [RecordId]='{0}'",
+                this.DbExecuteScalar(String.Format("select [UserId] from IPSCM.dbo.ParkRecord where [RecordId]='{0}'",
                     recordId));
             var userId = userIdObj as UInt32? ?? 0;
             if (userId == 0)
