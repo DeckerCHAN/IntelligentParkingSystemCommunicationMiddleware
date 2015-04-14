@@ -47,15 +47,13 @@ namespace IPSCM.Core.Transactions
                     {
                         Log.Info(String.Format("Leave pre-leaved[+{0}ms]", (DateTime.Now - start).TotalMilliseconds));
                     }
-                    Boolean successfullyChargedByUserBalance =false;
-                    if (this.RecordId != 0)
-                    {
-                        //Calculate action
-                        successfullyChargedByUserBalance = this.RecordId != 0 &&
-                                                               Engine.GetEngine()
-                                                                   .Storage.TryDeductBalance(RecordId,
-                                                                       this.ActualMoney);
-                    }
+
+                    //Calculate action
+                        var successfullyChargedByUserBalance = this.RecordId != 0 &&
+                                                                Engine.GetEngine()
+                                                                    .Storage.TryDeductBalance(this.RecordId,
+                                                                        this.ActualMoney);
+                    
 
 
                     Log.Info(String.Format("Leave Educted Balance[+{0}ms]",
@@ -65,13 +63,13 @@ namespace IPSCM.Core.Transactions
 
 
                     //Response F3!
-                    var json = String.Empty;
+                    String json;
                     if (successfullyChargedByUserBalance)
                     {
                         json =
                             IPSCMJsonConvert.ConvertToJson(new Result
                             {
-                                ResultCode = ResultCode.SuccessButInsufficientFunds
+                                ResultCode = ResultCode.Success
                             });
                     }
                     else
