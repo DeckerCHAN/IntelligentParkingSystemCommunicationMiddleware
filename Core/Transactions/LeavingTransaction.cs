@@ -28,7 +28,7 @@ namespace IPSCM.Core.Transactions
             this.ActualMoney = actualMoney;
             this.TicketId = ticketId;
             this.ResponseStream = responseStream;
-           this.FullOutput = FileConfig.FindConfig("Transaction.cfg").GetBoolean("FullOutput");
+            this.FullOutput = FileConfig.FindConfig("Transaction.cfg").GetBoolean("FullOutput");
 
             this.WorkThread = new Thread(() =>
             {
@@ -43,19 +43,21 @@ namespace IPSCM.Core.Transactions
                     this.RecordId = Engine.GetEngine()
                         .Storage.PreCarLeave(this.PlateNumber, this.OutTime, this.CopeMoney, this.ActualMoney,
                             this.TicketId);
-                    if (this.RecordId == 0)
-                    {
-                        throw new WarningException("Ignore empty-record leave");
-                    }
                     if (this.FullOutput)
                     {
                         Log.Info(String.Format("Leave pre-leaved[+{0}ms]", (DateTime.Now - start).TotalMilliseconds));
                     }
-                    //Calculate action
-                    var successfullyChargedByUserBalance = this.RecordId != 0 &&
-                                                           Engine.GetEngine()
-                                                               .Storage.TryDeductBalance(RecordId,
-                                                                   this.ActualMoney);
+                    Boolean successfullyChargedByUserBalance =false;
+                    if (this.RecordId != 0)
+                    {
+                        //Calculate action
+                        successfullyChargedByUserBalance = this.RecordId != 0 &&
+                                                               Engine.GetEngine()
+                                                                   .Storage.TryDeductBalance(RecordId,
+                                                                       this.ActualMoney);
+                    }
+
+
                     Log.Info(String.Format("Leave Educted Balance[+{0}ms]",
                         (DateTime.Now - start).TotalMilliseconds));
 
@@ -116,23 +118,18 @@ namespace IPSCM.Core.Transactions
                     switch (result.ResultCode)
                     {
                         case ResultCode.Success:
-                        {
-                            Engine.GetEngine().Storage.PostCarLeaved(this.PlateNumber, result);
-                            break;
-                        }
+                            {
+                                Engine.GetEngine().Storage.PostCarLeaved(this.PlateNumber, result);
+                                break;
+                            }
                         default:
-                        {
-                            Log.Error("Leaving transaction do not support Result code：" + result.ResultCode +
-                                      " and wrong message is:" + result.ErrorMsg);
-                            break;
-                        }
+                            {
+                                Log.Error("Leaving transaction do not support Result code：" + result.ResultCode +
+                                          " and wrong message is:" + result.ErrorMsg);
+                                break;
+                            }
                     }
                     this.Status = TransactionStatus.Exhausted;
-                }
-                catch (WarningException ex)
-                {
-                    this.Status = TransactionStatus.Exhausted;
-                    Log.Info(ex.Message);
                 }
                 catch (Exception ex)
                 {
